@@ -2,25 +2,174 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+}
 
-  color-scheme: dark light;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #020617;
+html, body {
+    overflow-x: clip;
+}
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@supports not (overflow: clip) {
+    html, body {
+        overflow-x: hidden;
+    }
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    background: #F6F3EC;
+    color: #181B20;
+}
+
+::selection {
+    background: #BC4B0E;
+    color: #F6F3EC;
+}
+
+:focus-visible {
+    outline: 2px solid #BC4B0E;
+    outline-offset: 3px;
+}
+
+/* Utils and Animations from reference */
+.rv {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .75s ease, transform .75s cubic-bezier(.22, .7, .2, 1);
+}
+
+.rv.in {
+    opacity: 1;
+    transform: none;
+}
+
+.mask {
+    overflow: hidden;
+}
+
+.mask > .split {
+    display: block;
+}
+
+.mask > .split .ln {
+    display: block;
+    transform: translateY(112%);
+    transition: transform .95s cubic-bezier(.22, .7, .2, 1);
+}
+
+.mask.in > .split .ln {
+    transform: none;
+}
+
+.curtain {
+    position: relative;
+    overflow: hidden;
+}
+
+.curtain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #181B20;
+    transform: scaleY(1);
+    transform-origin: top;
+    transition: transform .9s cubic-bezier(.7, 0, .2, 1);
+}
+
+.curtain.in::after {
+    transform: scaleY(0);
+}
+
+@keyframes kb {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+}
+
+.kenburns img {
+    animation: kb 20s ease-in-out infinite alternate;
+}
+
+@keyframes marq {
+    to { transform: translateX(-50%); }
+}
+
+.marq-track {
+    display: flex;
+    width: max-content;
+    animation: marq var(--marquee-speed, 28s) linear infinite;
+}
+
+.marq:hover .marq-track {
+    animation-play-state: paused;
+}
+
+@keyframes spinSlow {
+    to { transform: rotate(360deg); }
+}
+
+.spin-badge {
+    animation: spinSlow 22s linear infinite;
+}
+
+.u-link {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1.5px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size .35s ease;
+}
+
+.u-link:hover {
+    background-size: 100% 1.5px;
+}
+
+.acc-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .5s cubic-bezier(.22, .7, .2, 1);
+}
+
+.acc-body.open {
+    grid-template-rows: 1fr;
+}
+
+.acc-body > div {
+    overflow: hidden;
+}
+
+/* Custom Cursor */
+html.has-cursor,
+html.has-cursor * {
+    cursor: none !important;
+}
+
+#afr-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    background: #BC4B0E;
+    z-index: 200;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: width .25s, height .25s, background-color .25s, opacity .3s;
+    opacity: 0;
+}
+
+#afr-cursor.on {
+    opacity: 1;
+}
+
+#afr-cursor.grow {
+    width: 34px;
+    height: 34px;
+    background: rgba(24, 27, 32, .12);
+}
+
+@media (pointer: coarse) {
+    #afr-cursor {
+        display: none;
+    }
 }

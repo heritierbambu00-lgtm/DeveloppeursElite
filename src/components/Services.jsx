@@ -1,43 +1,124 @@
-import React from 'react';
-import { Monitor, Smartphone, Globe } from 'lucide-react';
-
-const ServiceCard = ({ icon: Icon, title, description }) => (
-  <div className="bg-slate-900/50 border border-slate-800 p-8 rounded-2xl hover:border-elite-blue transition-colors group">
-    <div className="bg-elite-blue/10 w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:bg-elite-blue/20">
-      <Icon className="text-elite-blue w-8 h-8" />
-    </div>
-    <h3 className="text-2xl font-bold mb-4 text-white uppercase">{title}</h3>
-    <p className="text-gray-400 leading-relaxed">
-      {description}
-    </p>
-  </div>
-);
+import React, { useState, useEffect, useRef } from 'react';
 
 const Services = () => {
+  const [openAcc, setOpenAcc] = useState(0);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const elements = sectionRef.current.querySelectorAll('.rv');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   const services = [
     {
-      icon: Monitor,
-      title: "Création des Applications Desktop",
-      description: "Des applications desktop puissantes, sécurisées et intuitives pour optimiser vos processus et booster votre productivité."
+      num_str: '01',
+      title: 'Ingénierie Logicielle',
+      description: 'Conception et développement d\'applications sur mesure, architectures cloud et solutions scalables.',
+      tags: [{ icon: 'fa-code', text: 'React / Node' }, { icon: 'fa-mobile-screen', text: 'Mobile' }],
+      image_url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'
     },
     {
-      icon: Smartphone,
-      title: "Création des Applications Mobiles",
-      description: "Des applications mobiles modernes, rapides et ergonomiques pour Android et iOS qui approchent votre entreprise de vos utilisateurs."
+      num_str: '02',
+      title: 'Intelligence Artificielle',
+      description: 'Entraînement de modèles LLM, computer vision et analyse prédictive pour vos données.',
+      tags: [{ icon: 'fa-brain', text: 'Deep Learning' }, { icon: 'fa-robot', text: 'Automation' }],
+      image_url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=600&q=80'
     },
     {
-      icon: Globe,
-      title: "Création des Applications Web",
-      description: "Des sites web modernes, responsives et optimisés pour offrir la meilleure expérience à vos visiteurs et renforcer votre présence en ligne."
+      num_str: '03',
+      title: 'Infrastructures & Réseaux',
+      description: 'Déploiement de réseaux locaux, sécurisation des données et maintenance critique.',
+      tags: [{ icon: 'fa-server', text: 'Cisco / Azure' }, { icon: 'fa-shield-halved', text: 'Cybersecurity' }],
+      image_url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80'
+    },
+    {
+      num_str: '04',
+      title: 'Recherche & Développement',
+      description: 'Exploration de solutions innovantes pour les problématiques locales africaines.',
+      tags: [{ icon: 'fa-microscope', text: 'Prototypes' }, { icon: 'fa-lightbulb', text: 'Innovation' }],
+      image_url: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=600&q=80'
+    },
+    {
+      num_str: '05',
+      title: 'Formation & Transmission',
+      description: 'Mentorat et bootcamps intensifs pour la nouvelle génération d\'ingénieurs.',
+      tags: [{ icon: 'fa-graduation-cap', text: 'Mentoring' }, { icon: 'fa-users', text: 'Bootcamps' }],
+      image_url: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=80'
     }
   ];
 
   return (
-    <section className="py-20 px-4 max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {services.map((service, index) => (
-          <ServiceCard key={index} {...service} />
-        ))}
+    <section id="services" ref={sectionRef} className="py-24 lg:py-32 bg-white border-y border-line">
+      <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
+        <div className="max-w-2xl mb-14">
+          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">(02) — Nos services</p>
+          <h2 className="rv mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05]" style={{ transitionDelay: '0.08s' }}>
+            Cinq pôles, une même exigence.
+          </h2>
+          <p className="rv mt-5 text-[15px] leading-relaxed text-smoke" style={{ transitionDelay: '0.16s' }}>
+            Du code à l'infrastructure, nous couvrons la chaîne complète — et nous formons celles et ceux qui la feront vivre demain.
+          </p>
+        </div>
+
+        <div className="border-t border-line">
+          {services.map((s, idx) => (
+            <div key={idx} className="rv border-b border-line">
+              <button
+                className="w-full grid grid-cols-[3rem_1fr_2.5rem] sm:grid-cols-[4.5rem_1fr_3rem] items-center gap-3 py-6 sm:py-7 text-left group"
+                onClick={() => setOpenAcc(openAcc === idx ? null : idx)}
+                aria-expanded={openAcc === idx}
+              >
+                <span className="font-display font-semibold text-smoke group-hover:text-clay transition-colors">
+                  {s.num_str}
+                </span>
+                <span className="font-display font-bold text-xl sm:text-2xl lg:text-[1.65rem] tracking-tight group-hover:text-clay transition-colors">
+                  {s.title}
+                </span>
+                <span
+                  className={`justify-self-end w-9 h-9 rounded-full border border-line grid place-items-center transition-all duration-500 ${
+                    openAcc === idx ? 'rotate-45 bg-ink border-ink text-paper' : ''
+                  }`}
+                >
+                  <i className="fa-solid fa-plus text-[13px]"></i>
+                </span>
+              </button>
+
+              <div className={`acc-body ${openAcc === idx ? 'open' : ''}`}>
+                <div>
+                  <div className="grid md:grid-cols-12 gap-8 pb-9 md:pl-[4.5rem]">
+                    <div className="md:col-span-7 min-w-0">
+                      <p className="text-[15px] leading-relaxed text-ink/75">{s.description}</p>
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        {s.tags.map((t, i) => (
+                          <span key={i} className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold px-3 py-1.5 bg-paper border border-line rounded-full">
+                            <i className={`fa-solid ${t.icon} text-clay text-[10px]`}></i>
+                            <span>{t.text}</span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <figure className="md:col-span-5 rounded-md overflow-hidden border border-line min-w-0">
+                      <img src={s.image_url} alt={s.title} className="w-full h-44 object-cover" />
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
