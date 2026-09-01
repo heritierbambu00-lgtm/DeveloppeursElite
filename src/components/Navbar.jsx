@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Logo from './Logo';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -41,12 +42,7 @@ const Navbar = () => {
       >
         <nav className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] h-[72px] flex items-center justify-between gap-4">
           <a href="#accueil" className="flex items-center gap-3 group min-w-0" aria-label="DEVELITE TECH — accueil">
-            <svg width="34" height="34" viewBox="0 0 40 40" fill="none" className="transition-transform duration-300 group-hover:rotate-90 shrink-0">
-              <rect x="1.5" y="1.5" width="17" height="17" fill="#181B20" />
-              <rect x="21.5" y="1.5" width="17" height="17" fill="#181B20" />
-              <rect x="1.5" y="21.5" width="17" height="17" fill="#181B20" />
-              <rect x="21.5" y="21.5" width="17" height="17" fill="#BC4B0E" />
-            </svg>
+            <Logo className="w-9 h-9 transition-transform duration-300 group-hover:rotate-12 shrink-0" />
             <span className="leading-none min-w-0">
               <span className="block font-display font-bold text-[15px] tracking-tight truncate max-w-[11rem] xl:max-w-[16rem]">
                 DEVELITE

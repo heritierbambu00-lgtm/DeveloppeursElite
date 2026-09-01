@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import Logo from './Logo';
 
 const Hero = () => {
   const sectionRef = useRef(null);
@@ -104,8 +105,8 @@ const Hero = () => {
                 </text>
               </svg>
 
-              <span className="absolute inset-0 grid place-items-center overflow-hidden rounded-full p-6">
-                <img src="/badge.jpg" alt="" className="w-full h-full object-contain rounded-full" />
+              <span className="absolute inset-0 grid place-items-center p-6">
+                <Logo className="w-full h-full" />
               </span>
             </div>
           </div>
