@@ -108,12 +108,12 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="users" element={
-            <ProtectedRoute allowedRoles={['CEO', 'admin']}>
+            <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
               <UserManagement />
             </ProtectedRoute>
           } />
           <Route path="inbox" element={
-            <ProtectedRoute allowedRoles={['CEO', 'COO', 'admin', 'manager']}>
+            <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
               <Inbox />
             </ProtectedRoute>
           } />

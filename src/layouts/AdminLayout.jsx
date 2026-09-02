@@ -36,7 +36,7 @@ const AdminLayout = () => {
     { label: 'Home', icon: 'fa-house', path: '/admin', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager', 'member'] },
     { label: 'Projets', icon: 'fa-shapes', path: '/admin/projects', roles: ['CEO', 'CTO', 'admin', 'manager'] },
     { label: 'Messages', icon: 'fa-comment-dots', path: '/admin/inbox', roles: ['CEO', 'COO', 'admin', 'manager'] },
-    { label: 'Équipe', icon: 'fa-user-group', path: '/admin/users', roles: ['CEO', 'admin'] },
+    { label: 'Équipe', icon: 'fa-user-group', path: '/admin/users', roles: ['CEO', 'CTO', 'admin'] },
     { label: 'Mon Profil', icon: 'fa-user-gear', path: '/admin/profile', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager', 'member'] },
   ];
 
@@ -130,7 +130,9 @@ const AdminLayout = () => {
              <div className="flex items-center gap-4 pl-6 border-l border-white/10">
                 <div className="text-right hidden sm:block">
                    <p className="text-sm font-bold">{profile?.full_name?.split(' ')[0] || 'User'}</p>
-                   <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{profile?.user_role}</p>
+                   <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
+                     {profile?.user_role === 'CTO' ? 'CTO (Super Admin)' : profile?.user_role}
+                   </p>
                 </div>
                 <Link to="/admin/profile" className="w-10 h-10 rounded-2xl p-0.5 bg-neon-purple shadow-lg shadow-luma-purple/20 hover:scale-105 transition-transform">
                    <div className="w-full h-full rounded-[14px] overflow-hidden bg-luma-dark">
