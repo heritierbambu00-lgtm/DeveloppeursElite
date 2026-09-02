@@ -35,6 +35,13 @@ const Team = () => {
       image: '/justin.jpeg',
       bio: 'Spécialiste en infrastructures réseaux et sécurité informatique.',
       icon: 'fa-server'
+    },
+    {
+      name: 'Jospin',
+      role: 'Creative Director & UI/UX',
+      image: '/Jospin.jpeg',
+      bio: 'Visionnaire du design et garant de l\'expérience utilisateur premium.',
+      icon: 'fa-pen-nib'
     }
   ];
 
