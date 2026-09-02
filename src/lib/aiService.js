@@ -14,11 +14,11 @@ export const chatWithAI = async (message) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: "qwen/qwen3.6-27b", // Nouveau modèle recommandé par Groq (Performance Exceptionnelle)
+        model: "openai/gpt-oss-20b", // Nouveau standard recommandé, plus concis
         messages: [
           {
             role: "system",
-            content: "Tu es DEVELITE AI. Sois ultra-concis, direct et professionnel. Ne montre JAMAIS de balises de réflexion comme <think>. Réponds immédiatement au message sans fioritures inutiles."
+            content: "Tu es DEVELITE AI. Réponds de façon ultra-courte, directe et professionnelle. Pas de salutations inutiles, pas de blabla, et SURTOUT pas de balises <think> ou de réflexions internes. Juste la réponse brute."
           },
           { role: "user", content: message }
         ],
