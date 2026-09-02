@@ -21,29 +21,31 @@ import UserManagement from './pages/admin/UserManagement';
 import Inbox from './pages/admin/Inbox';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
-// Landing Page Component
-const LandingPage = ({ loading, setLoading }) => {
+// External Refresh Revelations for consistent animation triggering
+const refreshReveals = () => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.05, rootMargin: '0px 0px 50px 0px' }
+  );
+  const elements = document.querySelectorAll('.rv, .curtain, .rv-mask, .mask');
+  elements.forEach((el) => observer.observe(el));
+};
+
+const LandingPage = () => {
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (!loading) {
-      setTimeout(refreshReveals, 100);
+      setTimeout(refreshReveals, 150);
     }
   }, [loading]);
-
-  const refreshReveals = () => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.05, rootMargin: '0px 0px 50px 0px' }
-    );
-    const elements = document.querySelectorAll('.rv, .curtain, .rv-mask, .mask');
-    elements.forEach((el) => observer.observe(el));
-  };
 
   return (
     <div className="min-h-screen bg-paper selection:bg-clay selection:text-paper font-body text-ink antialiased">
@@ -86,24 +88,13 @@ const LandingPage = ({ loading, setLoading }) => {
 };
 
 function App() {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (loading && window.location.pathname === '/') {
-      document.body.classList.add('loading');
-    } else {
-      document.body.classList.remove('loading');
-    }
-  }, [loading]);
-
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingPage loading={loading} setLoading={setLoading} />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/denied" element={<AccessDenied />} />
 
-        {/* Protected Dashboard Area */}
         <Route path="/admin" element={
           <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager', 'member']}>
             <AdminLayout />
@@ -111,8 +102,6 @@ function App() {
         }>
           <Route index element={<MainDashboard />} />
           <Route path="profile" element={<ProfileSettings />} />
-
-          {/* Restricted to Direction and Managers */}
           <Route path="projects" element={
             <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin', 'manager']}>
               <ProjectManager />

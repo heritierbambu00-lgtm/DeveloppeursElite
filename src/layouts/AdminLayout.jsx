@@ -60,7 +60,7 @@ const AdminLayout = () => {
         <nav className="flex-1 py-6 px-4 space-y-2">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
-            const hasAccess = item.roles.includes(profile?.user_role);
+            const hasAccess = profile ? item.roles.includes(profile.user_role) : false;
 
             if (!hasAccess && profile) return null;
 
@@ -149,7 +149,7 @@ const AdminLayout = () => {
       </div>
 
       {/* Right AI Sidebar */}
-      <AISidebar isOpen={isAISidebarOpen} onClose={() => setIsAISidebarOpen(false)} />
+      <AISidebar isOpen={isAISidebarOpen} onClose={() => setIsAISidebarOpen(false)} profile={profile} />
     </div>
   );
 };

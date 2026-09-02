@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
 import { chatWithAI } from '../../lib/aiService';
 import { supabase } from '../../lib/supabaseClient';
 
-const AISidebar = ({ isOpen, onClose }) => {
-  const { profile } = useOutletContext();
+const AISidebar = ({ isOpen, onClose, profile }) => {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: `Systèmes activés. Bonjour ${profile?.full_name?.split(' ')[0] || ''}, comment puis-je assister la direction aujourd'hui ?` }
   ]);
