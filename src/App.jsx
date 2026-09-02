@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import Loader from './components/Loader';
 import LoginPage from './pages/auth/LoginPage';
+import AccessDenied from './pages/auth/AccessDenied';
 import AdminLayout from './layouts/AdminLayout';
 import MainDashboard from './pages/admin/MainDashboard';
 import ProfileSettings from './pages/admin/ProfileSettings';
@@ -84,7 +85,7 @@ const LandingPage = ({ loading, setLoading }) => {
 };
 
 function App() {
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (loading && window.location.pathname === '/') {
@@ -99,15 +100,28 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage loading={loading} setLoading={setLoading} />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/denied" element={<AccessDenied />} />
+
+        {/* Protected Dashboard Area */}
         <Route path="/admin" element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['admin', 'manager', 'member']}>
             <AdminLayout />
           </ProtectedRoute>
         }>
           <Route index element={<MainDashboard />} />
           <Route path="profile" element={<ProfileSettings />} />
-          <Route path="projects" element={<ProjectManager />} />
-          <Route path="inbox" element={<Inbox />} />
+
+          {/* Restricted to Admins and Managers */}
+          <Route path="projects" element={
+            <ProtectedRoute allowedRoles={['admin', 'manager']}>
+              <ProjectManager />
+            </ProtectedRoute>
+          } />
+          <Route path="inbox" element={
+            <ProtectedRoute allowedRoles={['admin', 'manager']}>
+              <Inbox />
+            </ProtectedRoute>
+          } />
         </Route>
       </Routes>
     </Router>

@@ -2,22 +2,47 @@ import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 
-const ProtectedRoute = ({ children }) => {
-  const [session, setSession] = useState(null);
+const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const [loading, setLoading] = useState(true);
+  const [authorized, setAuthorized] = useState(false);
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
+
+      if (session) {
+        // Fetch profile to check role
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('user_role')
+          .eq('id', session.user.id)
+          .single();
+
+        if (allowedRoles.length === 0 || (profile && allowedRoles.includes(profile.user_role))) {
+          setAuthorized(true);
+        } else {
+          setAuthorized(false);
+        }
+      }
       setLoading(false);
-    });
+    };
+
+    checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (!session) {
+        setAuthorized(false);
+        setLoading(false);
+      } else {
+        checkAuth();
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [allowedRoles]);
 
   if (loading) {
     return (
@@ -29,6 +54,10 @@ const ProtectedRoute = ({ children }) => {
 
   if (!session) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (!authorized) {
+    return <Navigate to="/denied" replace />;
   }
 
   return children;
