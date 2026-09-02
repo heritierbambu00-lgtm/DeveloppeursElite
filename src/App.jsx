@@ -17,6 +17,7 @@ import AdminLayout from './layouts/AdminLayout';
 import MainDashboard from './pages/admin/MainDashboard';
 import ProfileSettings from './pages/admin/ProfileSettings';
 import ProjectManager from './pages/admin/ProjectManager';
+import UserManagement from './pages/admin/UserManagement';
 import Inbox from './pages/admin/Inbox';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -115,6 +116,11 @@ function App() {
           <Route path="projects" element={
             <ProtectedRoute allowedRoles={['admin', 'manager']}>
               <ProjectManager />
+            </ProtectedRoute>
+          } />
+          <Route path="users" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <UserManagement />
             </ProtectedRoute>
           } />
           <Route path="inbox" element={
