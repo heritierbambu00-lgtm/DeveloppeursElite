@@ -14,11 +14,11 @@ export const chatWithAI = async (message) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant", // Modèle haute performance et haute disponibilité
+        model: "qwen/qwen3.6-27b", // Nouveau modèle recommandé par Groq (Performance Exceptionnelle)
         messages: [
           {
             role: "system",
-            content: "Tu es DEVELITE AI, l'assistant intelligent du dashboard DEVELITE TECH. Tu aides les membres à gérer leurs projets, analyser les statistiques et répondre aux messages clients. Ton ton est professionnel, technologique et futuriste."
+            content: "Tu es DEVELITE AI. Sois ultra-concis, direct et professionnel. Ne montre JAMAIS de balises de réflexion comme <think>. Réponds immédiatement au message sans fioritures inutiles."
           },
           { role: "user", content: message }
         ],
