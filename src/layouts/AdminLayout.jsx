@@ -121,9 +121,9 @@ const AdminLayout = () => {
           <div className="flex items-center gap-6">
              <button
                onClick={() => setIsAISidebarOpen(true)}
-               className="relative w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-white/40 hover:text-luma-purple hover:bg-white/10 transition-all shadow-lg"
+               className="relative w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-white/40 hover:text-luma-purple hover:bg-white/10 transition-all shadow-lg border border-white/5"
              >
-                <i className="fa-solid fa-sparkles text-lg"></i>
+                <i className="fa-solid fa-wand-magic-sparkles text-lg"></i>
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-luma-purple rounded-full border-2 border-luma-dark animate-pulse"></span>
              </button>
 
