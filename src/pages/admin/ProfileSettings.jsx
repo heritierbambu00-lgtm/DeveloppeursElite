@@ -53,6 +53,7 @@ const ProfileSettings = () => {
       const updates = {
         id: user.id,
         full_name: profile.fullName,
+        // Role (Job title) can be changed, but user_role (system permissions) is locked for non-admins
         role: profile.role,
         bio: profile.bio,
         avatar_url: profile.avatarUrl,
