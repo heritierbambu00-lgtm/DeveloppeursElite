@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Marquee from './components/Marquee';
@@ -9,16 +10,15 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import Loader from './components/Loader';
+import LoginPage from './pages/auth/LoginPage';
+import AdminLayout from './layouts/AdminLayout';
+import MainDashboard from './pages/admin/MainDashboard';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
-function App() {
-  const [loading, setLoading] = useState(true);
-
+// Landing Page Component
+const LandingPage = ({ loading, setLoading }) => {
   useEffect(() => {
-    if (loading) {
-      document.body.classList.add('loading');
-    } else {
-      document.body.classList.remove('loading');
-      // Trigger reveals after loader is gone
+    if (!loading) {
       setTimeout(refreshReveals, 100);
     }
   }, [loading]);
@@ -33,12 +33,8 @@ function App() {
           }
         });
       },
-      {
-        threshold: 0.05,
-        rootMargin: '0px 0px 50px 0px'
-      }
+      { threshold: 0.05, rootMargin: '0px 0px 50px 0px' }
     );
-
     const elements = document.querySelectorAll('.rv, .curtain, .rv-mask, .mask');
     elements.forEach((el) => observer.observe(el));
   };
@@ -48,12 +44,9 @@ function App() {
       {loading && <Loader onFinish={() => setLoading(false)} />}
       <CustomCursor />
       <Navbar />
-
       <main id="accueil">
         <Hero />
         <Marquee />
-
-        {/* About Section */}
         <section id="apropos" className="py-24 lg:py-32">
           <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] grid lg:grid-cols-12 gap-12">
             <div className="lg:col-span-4 min-w-0">
@@ -75,15 +68,43 @@ function App() {
             </div>
           </div>
         </section>
-
         <Services />
         <Team />
         <Impact />
         <Contact />
       </main>
-
       <Footer />
     </div>
+  );
+};
+
+function App() {
+  const [loading, setLoading] = React.useState(true);
+
+  useEffect(() => {
+    if (loading && window.location.pathname === '/') {
+      document.body.classList.add('loading');
+    } else {
+      document.body.classList.remove('loading');
+    }
+  }, [loading]);
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage loading={loading} setLoading={setLoading} />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<MainDashboard />} />
+          <Route path="profile" element={<div>Gestion Profil (À venir)</div>} />
+          <Route path="projects" element={<div>Gestion Projets (À venir)</div>} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
