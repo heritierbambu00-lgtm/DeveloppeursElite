@@ -7,8 +7,18 @@ const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newUserData, setNewUserData] = useState({ email: '', fullName: '', role: 'member' });
-  const [isInviting, setIsInviting] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+
+  // Full Form State
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    fullName: '',
+    jobTitle: '',
+    bio: '',
+    icon: 'fa-code',
+    systemRole: 'member'
+  });
 
   useEffect(() => {
     fetchUsers();
@@ -47,16 +57,42 @@ const UserManagement = () => {
 
   const handleAddUser = async (e) => {
     e.preventDefault();
-    setIsInviting(true);
+    setIsCreating(true);
 
-    // Note: To invite a real user via email, you typically use supabase.auth.admin
-    // which requires a service_role key. In a frontend app, we usually create a
-    // 'pre-profile' or instruct the admin to use the Supabase dashboard for auth.
+    try {
+      // 1. Create Auth User
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
 
-    alert(`Instruction : Pour inviter ${newUserData.email}, veuillez utiliser l'onglet 'Authentication' de votre console Supabase. Une fois son compte créé, son profil apparaîtra ici.`);
+      if (authError) throw authError;
 
-    setIsInviting(false);
-    setIsModalOpen(false);
+      if (authData.user) {
+        // 2. Create Profile entry
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert([{
+            id: authData.user.id,
+            full_name: formData.fullName,
+            role: formData.jobTitle,
+            bio: formData.bio,
+            icon: formData.icon,
+            user_role: formData.systemRole
+          }]);
+
+        if (profileError) throw profileError;
+
+        alert(`Membre ${formData.fullName} ajouté avec succès !`);
+        setIsModalOpen(false);
+        setFormData({ email: '', password: '', fullName: '', jobTitle: '', bio: '', icon: 'fa-code', systemRole: 'member' });
+        fetchUsers();
+      }
+    } catch (error) {
+      alert(`Erreur: ${error.message}`);
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const isCTO = currentUser?.user_role === 'CTO';
@@ -113,7 +149,7 @@ const UserManagement = () => {
                         u.user_role === 'CEO' ? 'bg-clay/20 text-clay border border-clay/20' :
                         u.user_role === 'CTO' ? 'bg-luma-purple/20 text-luma-purple border border-luma-purple/20' :
                         u.user_role === 'COO' ? 'bg-luma-blue/20 text-luma-blue border border-luma-blue/20' :
-                        'bg-white/5 text-white/40'
+                        'bg-white/10 text-white/40'
                       }`}>
                         {u.user_role}
                       </span>
@@ -150,38 +186,124 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* ADD USER MODAL */}
+      {/* ADD USER MODAL - FULL FORM */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
-           <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setIsModalOpen(false)}></div>
-           <div className="relative bg-[#120E1E] border border-white/10 p-10 rounded-[3rem] w-full max-w-lg shadow-2xl animate-in zoom-in-95 duration-300">
-              <h3 className="text-2xl font-display font-black text-white mb-2">Ajouter personnel</h3>
-              <p className="text-white/40 text-sm mb-8">Veuillez renseigner les informations d'accès pour le nouveau membre de la matrice.</p>
+           <div className="absolute inset-0 bg-black/80 backdrop-blur-lg" onClick={() => !isCreating && setIsModalOpen(false)}></div>
+           <div className="relative bg-[#120E1E] border border-white/10 p-10 rounded-[3rem] w-full max-w-2xl shadow-2xl animate-in zoom-in-95 duration-300 overflow-y-auto max-h-[90vh] custom-scrollbar">
+              <div className="flex justify-between items-start mb-8">
+                <div>
+                  <h3 className="text-3xl font-display font-black text-white mb-2 tracking-tight uppercase italic">Ajouter personnel</h3>
+                  <p className="text-white/40 text-sm">Initialisation d'une nouvelle unité dans la matrice DEVELITE.</p>
+                </div>
+                <button onClick={() => setIsModalOpen(false)} className="text-white/20 hover:text-white transition-colors">
+                  <i className="fa-solid fa-xmark text-2xl"></i>
+                </button>
+              </div>
 
-              <form onSubmit={handleAddUser} className="space-y-6">
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Email Professionnel</label>
-                    <input
-                      required type="email"
-                      className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-purple/40 text-white font-bold"
-                      placeholder="nom@deve-lite.tech"
-                    />
-                 </div>
-
-                 <div className="grid grid-cols-2 gap-6">
+              <form onSubmit={handleAddUser} className="grid md:grid-cols-2 gap-8">
+                 {/* Auth Section */}
+                 <div className="space-y-6">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-luma-purple border-b border-white/5 pb-2">Identifiants d'accès</p>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Email Professionnel</label>
+                       <input
+                         required type="email"
+                         value={formData.email}
+                         onChange={e => setFormData({...formData, email: e.target.value})}
+                         className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-purple/40 text-white font-bold"
+                         placeholder="nom@deve-lite.tech"
+                       />
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Mot de passe</label>
+                       <input
+                         required type="password"
+                         value={formData.password}
+                         onChange={e => setFormData({...formData, password: e.target.value})}
+                         className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-purple/40 text-white font-bold"
+                         placeholder="••••••••"
+                       />
+                    </div>
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Rang Système</label>
-                       <select className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-purple/40 text-white font-bold appearance-none">
+                       <select
+                         value={formData.systemRole}
+                         onChange={e => setFormData({...formData, systemRole: e.target.value})}
+                         className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-purple/40 text-white font-bold appearance-none cursor-pointer"
+                       >
                           <option value="member">MEMBER</option>
                           <option value="manager">MANAGER</option>
                           <option value="COO">COO</option>
                        </select>
                     </div>
-                    <div className="space-y-2 flex flex-col justify-end">
-                       <button type="submit" className="w-full bg-white text-luma-dark p-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-luma-purple hover:text-white transition-all shadow-xl shadow-white/5">
-                          Confirmer l'ajout
-                       </button>
+                 </div>
+
+                 {/* Profile Section */}
+                 <div className="space-y-6">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-luma-blue border-b border-white/5 pb-2">Fiche d'identité</p>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Nom Complet</label>
+                       <input
+                         required type="text"
+                         value={formData.fullName}
+                         onChange={e => setFormData({...formData, fullName: e.target.value})}
+                         className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold"
+                         placeholder="Jean Dupont"
+                       />
                     </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Titre / Poste</label>
+                       <input
+                         required type="text"
+                         value={formData.jobTitle}
+                         onChange={e => setFormData({...formData, jobTitle: e.target.value})}
+                         className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold"
+                         placeholder="Full-Stack Dev"
+                       />
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Icône Favoris</label>
+                       <input
+                         type="text"
+                         value={formData.icon}
+                         onChange={e => setFormData({...formData, icon: e.target.value})}
+                         className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold"
+                         placeholder="fa-code"
+                       />
+                    </div>
+                 </div>
+
+                 {/* Full width Bio */}
+                 <div className="md:col-span-2 space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Biographie Technique</label>
+                    <textarea
+                      rows="3"
+                      value={formData.bio}
+                      onChange={e => setFormData({...formData, bio: e.target.value})}
+                      className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-purple/40 text-white font-medium resize-none"
+                      placeholder="Décrivez l'expertise de cette unité..."
+                    ></textarea>
+                 </div>
+
+                 <div className="md:col-span-2 pt-4">
+                    <button
+                      type="submit"
+                      disabled={isCreating}
+                      className="w-full bg-neon-purple text-white p-5 rounded-[1.5rem] font-black text-sm uppercase tracking-[0.2em] shadow-2xl shadow-luma-purple/30 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-4"
+                    >
+                       {isCreating ? (
+                         <>
+                           <i className="fa-solid fa-circle-notch fa-spin"></i>
+                           Synchronisation...
+                         </>
+                       ) : (
+                         <>
+                           <i className="fa-solid fa-user-plus"></i>
+                           Finaliser l'ajout du personnel
+                         </>
+                       )}
+                    </button>
                  </div>
               </form>
            </div>
