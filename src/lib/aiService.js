@@ -1,10 +1,27 @@
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
-export const chatWithAI = async (message) => {
-  if (!GROQ_API_KEY) {
-    console.error("GROQ_API_KEY est manquante dans les variables d'environnement.");
-    return "Erreur de configuration : La clé API Groq est manquante.";
-  }
+export const chatWithAI = async (message, context = {}) => {
+  if (!GROQ_API_KEY) return "Erreur : Clé API manquante.";
+
+  const { user = {}, stats = {} } = context;
+
+  // Prompt système enrichi avec le contexte utilisateur et les données réelles
+  const systemPrompt = `
+    Tu es DEVELITE AI, l'assistant à conscience augmentée de DEVELITE TECH.
+    Tu parles actuellement avec ${user.fullName || 'un membre'}, qui occupe le poste de ${user.role || 'Expert'}.
+
+    ÉTAT ACTUEL DE LA MATRICE :
+    - Projets en cours : ${stats.projects || 0}
+    - Messages en attente : ${stats.messages || 0}
+    - Effectif total : ${stats.members || 0} membres.
+
+    CONSIGNES DE RÉPONSE :
+    1. Sois ultra-concis et direct.
+    2. Adopte un ton professionnel, technologique et visionnaire.
+    3. NE MONTRE JAMAIS de balises <think> ou de réflexions internes.
+    4. Réponds toujours en français.
+    5. Utilise les fonctions de direction (CEO: Vision/Stratégie, CTO: Technique/Code, COO: Opérations) pour personnaliser tes conseils si nécessaire.
+  `;
 
   try {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -14,29 +31,19 @@ export const chatWithAI = async (message) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: "openai/gpt-oss-20b", // Nouveau standard recommandé, plus concis
+        model: "openai/gpt-oss-20b",
         messages: [
-          {
-            role: "system",
-            content: "Tu es DEVELITE AI. Réponds de façon ultra-courte, directe et professionnelle. Pas de salutations inutiles, pas de blabla, et SURTOUT pas de balises <think> ou de réflexions internes. Juste la réponse brute."
-          },
+          { role: "system", content: systemPrompt },
           { role: "user", content: message }
         ],
-        temperature: 0.7,
-        max_tokens: 1024
+        temperature: 0.5,
+        max_tokens: 512
       })
     });
 
     const data = await response.json();
-
-    if (data.error) {
-      console.error('Groq API Error:', data.error);
-      return `Erreur Groq: ${data.error.message}`;
-    }
-
     return data.choices[0].message.content;
   } catch (error) {
-    console.error('AI Connection Error:', error);
-    return "Impossible de contacter DEVELITE AI. Vérifiez votre connexion internet ou la validité de la clé API.";
+    return "Connexion interrompue. Vérifiez la validité de la matrice (API Key).";
   }
 };

@@ -77,6 +77,8 @@ const ProfileSettings = () => {
       if (!event.target.files || event.target.files.length === 0) throw new Error('Sélectionnez une image.');
 
       const file = event.target.files[0];
+      if (file.size > 7 * 1024 * 1024) throw new Error('Image trop lourde. Limite : 7 Mo.');
+
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random()}.${fileExt}`;
       const filePath = `${fileName}`;
@@ -198,7 +200,7 @@ const ProfileSettings = () => {
                   {uploading ? 'Chargement...' : 'Télécharger une photo'}
                   <input type="file" className="hidden" accept="image/*" onChange={uploadAvatar} disabled={uploading} />
                 </label>
-                <p className="text-[10px] text-white/30 mt-3 font-bold uppercase tracking-widest">Dimension recommandée: 800x800px</p>
+                <p className="text-[10px] text-white/30 mt-3 font-bold uppercase tracking-widest">Dimension recommandée: 800x800px. Limite : 7 Mo.</p>
               </div>
             </div>
 
