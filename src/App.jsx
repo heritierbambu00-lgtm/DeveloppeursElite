@@ -105,26 +105,26 @@ function App() {
 
         {/* Protected Dashboard Area */}
         <Route path="/admin" element={
-          <ProtectedRoute allowedRoles={['admin', 'manager', 'member']}>
+          <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager', 'member']}>
             <AdminLayout />
           </ProtectedRoute>
         }>
           <Route index element={<MainDashboard />} />
           <Route path="profile" element={<ProfileSettings />} />
 
-          {/* Restricted to Admins and Managers */}
+          {/* Restricted to Direction and Managers */}
           <Route path="projects" element={
-            <ProtectedRoute allowedRoles={['admin', 'manager']}>
+            <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin', 'manager']}>
               <ProjectManager />
             </ProtectedRoute>
           } />
           <Route path="users" element={
-            <ProtectedRoute allowedRoles={['admin']}>
+            <ProtectedRoute allowedRoles={['CEO', 'admin']}>
               <UserManagement />
             </ProtectedRoute>
           } />
           <Route path="inbox" element={
-            <ProtectedRoute allowedRoles={['admin', 'manager']}>
+            <ProtectedRoute allowedRoles={['CEO', 'COO', 'admin', 'manager']}>
               <Inbox />
             </ProtectedRoute>
           } />

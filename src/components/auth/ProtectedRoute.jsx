@@ -8,46 +8,63 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
+    let mounted = true;
+
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
+      try {
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
 
-      if (session) {
-        // Fetch profile to check role
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('user_role')
-          .eq('id', session.user.id)
-          .single();
+        if (!mounted) return;
+        setSession(currentSession);
 
-        if (allowedRoles.length === 0 || (profile && allowedRoles.includes(profile.user_role))) {
-          setAuthorized(true);
-        } else {
-          setAuthorized(false);
+        if (currentSession) {
+          // Fetch profile
+          const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('user_role')
+            .eq('id', currentSession.user.id)
+            .single();
+
+          if (!mounted) return;
+
+          // Si on ne trouve pas de profil, on crée un profil par défaut ou on autorise l'accès de base
+          const userRole = profile?.user_role || 'member';
+
+          if (allowedRoles.length === 0 || allowedRoles.includes(userRole)) {
+            setAuthorized(true);
+          } else {
+            setAuthorized(false);
+          }
         }
+      } catch (err) {
+        console.error("Auth Check Error:", err);
+      } finally {
+        if (mounted) setLoading(false);
       }
-      setLoading(false);
     };
 
     checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (!session) {
-        setAuthorized(false);
-        setLoading(false);
-      } else {
+      if (mounted) {
+        setSession(session);
         checkAuth();
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, [allowedRoles]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-clay border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-luma-dark flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+           <div className="w-10 h-10 border-4 border-luma-purple border-t-transparent rounded-full animate-spin"></div>
+           <p className="text-white/20 text-xs font-bold uppercase tracking-widest">Séquence d'accès...</p>
+        </div>
       </div>
     );
   }

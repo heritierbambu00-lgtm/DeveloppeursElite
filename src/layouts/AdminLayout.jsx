@@ -33,11 +33,11 @@ const AdminLayout = () => {
   };
 
   const menuItems = [
-    { label: 'Home', icon: 'fa-house', path: '/admin', roles: ['admin', 'manager', 'member'] },
-    { label: 'Projets', icon: 'fa-shapes', path: '/admin/projects', roles: ['admin', 'manager'] },
-    { label: 'Messages', icon: 'fa-comment-dots', path: '/admin/inbox', roles: ['admin', 'manager'] },
-    { label: 'Équipe', icon: 'fa-user-group', path: '/admin/users', roles: ['admin'] },
-    { label: 'Mon Profil', icon: 'fa-user-gear', path: '/admin/profile', roles: ['admin', 'manager', 'member'] },
+    { label: 'Home', icon: 'fa-house', path: '/admin', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager', 'member'] },
+    { label: 'Projets', icon: 'fa-shapes', path: '/admin/projects', roles: ['CEO', 'CTO', 'admin', 'manager'] },
+    { label: 'Messages', icon: 'fa-comment-dots', path: '/admin/inbox', roles: ['CEO', 'COO', 'admin', 'manager'] },
+    { label: 'Équipe', icon: 'fa-user-group', path: '/admin/users', roles: ['CEO', 'admin'] },
+    { label: 'Mon Profil', icon: 'fa-user-gear', path: '/admin/profile', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager', 'member'] },
   ];
 
   return (
