@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
 const Footer = () => {
@@ -46,6 +47,12 @@ const Footer = () => {
               <li><a href="#equipe" className="hover:text-clay transition-colors">Équipe</a></li>
               <li><a href="#services" className="hover:text-clay transition-colors">Services</a></li>
               <li><a href="#contact" className="hover:text-clay transition-colors">Contact</a></li>
+              <li className="pt-2 border-t border-line mt-2">
+                <Link to="/login" className="text-clay font-bold hover:text-ink transition-colors flex items-center gap-2">
+                  <i className="fa-solid fa-lock text-[10px]"></i>
+                  Console Membre
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
 const Navbar = () => {
@@ -60,6 +61,14 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
+            <Link
+              to="/login"
+              className="w-10 h-10 hidden sm:grid place-items-center rounded-md border border-line text-ink hover:text-clay hover:border-clay transition-all duration-300"
+              aria-label="Accès membre"
+            >
+              <i className="fa-solid fa-user-shield text-[15px]"></i>
+            </Link>
+
             <a
               href="#contact"
               className="group hidden sm:inline-flex items-center gap-2.5 bg-ink text-paper text-[13px] font-semibold px-5 py-2.5 rounded-md hover:bg-clay transition-colors duration-300"
@@ -125,6 +134,16 @@ const Navbar = () => {
           >
             Nous contacter <i className="fa-solid fa-arrow-right text-[12px]"></i>
           </a>
+
+          <Link
+            to="/login"
+            onClick={() => setOpen(false)}
+            className={`mt-4 inline-flex items-center justify-center gap-3 border border-line text-ink font-semibold text-xs px-6 py-3 rounded-md transition-opacity duration-500 ${
+              open ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <i className="fa-solid fa-user-lock"></i> Espace Membre
+          </Link>
 
           <p className="mt-6 text-xs uppercase tracking-[0.3em] text-smoke">Butembo, RDC - Depuis 2025</p>
         </div>
