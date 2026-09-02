@@ -10,18 +10,22 @@ const CEODashboard = ({ profile }) => {
   }, []);
 
   const fetchData = async () => {
-    const { count: pCount } = await supabase.from('projects').select('*', { count: 'exact', head: true });
-    const { count: mCount } = await supabase.from('contacts').select('*', { count: 'exact', head: true });
-    const { count: tCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+    try {
+      const { count: pCount } = await supabase.from('projects').select('*', { count: 'exact', head: true });
+      const { count: mCount } = await supabase.from('contacts').select('*', { count: 'exact', head: true });
+      const { count: tCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
 
-    setStats({ projects: pCount || 0, messages: mCount || 0, members: tCount || 0 });
+      setStats({ projects: pCount || 0, messages: mCount || 0, members: tCount || 0 });
 
-    const { data: projects } = await supabase
-      .from('projects')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(3);
-    setRecentProjects(projects || []);
+      const { data: projects } = await supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(5);
+      setRecentProjects(projects || []);
+    } catch (error) {
+      console.error("CEO Fetch Error:", error);
+    }
   };
 
   return (

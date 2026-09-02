@@ -32,13 +32,12 @@ const UserManagement = () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('*')
-        .order('user_role', { ascending: true });
+        .select('*');
 
       if (error) throw error;
       setUsers(data || []);
     } catch (error) {
-      console.error(error.message);
+      console.error("Fetch Users Error:", error.message);
     } finally {
       setLoading(false);
     }
@@ -148,6 +147,30 @@ const UserManagement = () => {
     }
   };
 
+  const deleteUser = async (user) => {
+    if (!isCTO) return;
+    if (user.id === currentUser.id) {
+      alert("Erreur : Vous ne pouvez pas supprimer votre propre compte Super Admin.");
+      return;
+    }
+
+    if (!window.confirm(`Voulez-vous vraiment révoquer l'accès de ${user.full_name || 'cet utilisateur'} ? Cette action supprimera son profil de la matrice.`)) return;
+
+    try {
+      setLoading(true);
+      // Delete from profiles table (Auth deletion requires Admin API or manual action in Supabase)
+      const { error } = await supabase.from('profiles').delete().eq('id', user.id);
+      if (error) throw error;
+
+      alert("Accès révoqué avec succès.");
+      fetchUsers();
+    } catch (error) {
+      alert(`Erreur de suppression : ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const isCTO = currentUser?.user_role === 'CTO';
 
   return (
@@ -211,7 +234,11 @@ const UserManagement = () => {
                          <button onClick={() => openEditModal(u)} className="w-10 h-10 rounded-xl inline-flex items-center justify-center text-white/20 hover:text-luma-blue hover:bg-luma-blue/5 transition-all">
                             <i className="fa-solid fa-pen-to-square text-sm"></i>
                          </button>
-                         <button className="w-10 h-10 rounded-xl inline-flex items-center justify-center text-white/20 hover:text-red-400 hover:bg-red-400/5 transition-all">
+                         <button
+                           onClick={() => deleteUser(u)}
+                           className="w-10 h-10 rounded-xl inline-flex items-center justify-center text-white/20 hover:text-red-400 hover:bg-red-400/5 transition-all"
+                           title="Supprimer"
+                         >
                             <i className="fa-solid fa-user-slash text-sm"></i>
                          </button>
                       </td>
