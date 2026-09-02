@@ -3,24 +3,34 @@ const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 export const chatWithAI = async (message, context = {}) => {
   if (!GROQ_API_KEY) return "Erreur : Clé API manquante.";
 
-  const { user = {}, stats = {} } = context;
+  const { user = {}, stats = {}, team = [] } = context;
 
-  // Prompt système enrichi avec le contexte utilisateur et les données réelles
+  // Format team list for AI
+  const teamList = team.map(m => `- ${m.full_name} (${m.user_role}): ${m.role}`).join('\n');
+
   const systemPrompt = `
     Tu es DEVELITE AI, l'assistant à conscience augmentée de DEVELITE TECH.
     Tu parles actuellement avec ${user.fullName || 'un membre'}, qui occupe le poste de ${user.role || 'Expert'}.
 
     ÉTAT ACTUEL DE LA MATRICE :
-    - Projets en cours : ${stats.projects || 0}
-    - Messages en attente : ${stats.messages || 0}
+    - Projets : ${stats.projects || 0}
+    - Messages : ${stats.messages || 0}
     - Effectif total : ${stats.members || 0} membres.
 
+    LISTE DES MEMBRES DE L'ÉQUIPE :
+    ${teamList || 'Aucune donnée sur l\'équipe.'}
+
+    FONCTIONS DE DIRECTION :
+    - CEO (Chief Executive Officer) : Vision, stratégie et business.
+    - CTO (Chief Technology Officer) : Technique, code et choix technologiques.
+    - COO (Chief Operating Officer) : Fonctionnement quotidien et opérations.
+
     CONSIGNES DE RÉPONSE :
-    1. Sois ultra-concis et direct.
-    2. Adopte un ton professionnel, technologique et visionnaire.
+    1. Sois ultra-concis, direct et professionnel.
+    2. Réponds précisément aux questions sur l'équipe (ex: "Qui est le deuxième ?").
     3. NE MONTRE JAMAIS de balises <think> ou de réflexions internes.
     4. Réponds toujours en français.
-    5. Utilise les fonctions de direction (CEO: Vision/Stratégie, CTO: Technique/Code, COO: Opérations) pour personnaliser tes conseils si nécessaire.
+    5. Pour les questions hors site, réponds normalement avec ton expertise technique.
   `;
 
   try {

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { chatWithAI } from '../../lib/aiService';
 import { supabase } from '../../lib/supabaseClient';
 
@@ -22,14 +23,15 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Récupérer les stats en temps réel pour l'IA
+    // Récupérer TOUTES les données de la base en temps réel pour l'IA
     const { count: pCount } = await supabase.from('projects').select('*', { count: 'exact', head: true });
     const { count: mCount } = await supabase.from('contacts').select('*', { count: 'exact', head: true });
-    const { count: tCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+    const { data: teamData } = await supabase.from('profiles').select('full_name, user_role, role').order('updated_at', { ascending: true });
 
     const context = {
       user: { fullName: profile?.full_name, role: profile?.user_role },
-      stats: { projects: pCount, messages: mCount, members: tCount }
+      stats: { projects: pCount, messages: mCount, members: teamData?.length || 0 },
+      team: teamData || []
     };
 
     const userMessage = { role: 'user', content: input };
