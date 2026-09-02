@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
 const Contact = () => {
   const [form, setForm] = useState({
@@ -10,56 +11,42 @@ const Contact = () => {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState(null);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const elements = sectionRef.current.querySelectorAll('.rv');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSending(true);
     setError(null);
 
-    // Simulation of API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const { error: submitError } = await supabase
+        .from('contacts')
+        .insert([form]);
+
+      if (submitError) throw submitError;
+
       setSent(true);
       setForm({ name: '', email: '', subject: 'Développement logiciel', message: '' });
     } catch (err) {
-      setError("Une erreur est survenue.");
+      setError("Impossible d'envoyer le message. Veuillez réessayer plus tard.");
+      console.error('Contact error:', err.message);
     } finally {
       setSending(false);
     }
   };
 
   return (
-    <section id="contact" ref={sectionRef} className="py-24 lg:py-32">
+    <section id="contact" className="py-24 lg:py-32">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] grid lg:grid-cols-12 gap-12">
         <div className="lg:col-span-5 min-w-0">
           <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">(07) — Contact</p>
-          <h2 className="rv mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05]" style={{ transitionDelay: '0.08s' }}>
+          <h2 className="rv mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05]">
             Parlons de votre projet.
           </h2>
-          <p className="rv mt-5 text-[15px] leading-relaxed text-smoke max-w-md" style={{ transitionDelay: '0.16s' }}>
+          <p className="rv mt-5 text-[15px] leading-relaxed text-smoke max-w-md">
             Un logiciel à concevoir, un réseau à installer, une formation à organiser — ou simplement une idée à éprouver ? Écrivez-nous.
           </p>
 
-          <div className="rv mt-10 space-y-6" style={{ transitionDelay: '0.24s' }}>
+          <div className="rv mt-10 space-y-6">
             <div className="flex items-start gap-4">
               <span className="w-10 h-10 rounded-md bg-white border border-line grid place-items-center shrink-0">
                 <i className="fa-solid fa-location-dot text-clay"></i>
@@ -113,6 +100,7 @@ const Contact = () => {
                   <textarea id="f-msg" required value={form.message} onChange={e => setForm({...form, message: e.target.value})} rows="5" placeholder="Décrivez votre besoin..."
                             className="w-full rounded-md border border-line bg-paper px-4 py-3 text-[14.5px] focus:border-clay focus:ring-2 focus:ring-clay/20 outline-none transition resize-none"></textarea>
                 </div>
+                {error && <p className="text-red-600 text-xs font-semibold">{error}</p>}
                 <button type="submit" disabled={sending}
                         className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-ink text-paper font-semibold text-sm px-8 py-4 rounded-md hover:bg-clay transition-colors duration-300 disabled:opacity-70">
                   {sending ? <i className="fa-solid fa-circle-notch fa-spin"></i> : <span>Envoyer le message <i className="fa-solid fa-paper-plane text-[12px] ml-2"></i></span>}
@@ -124,6 +112,7 @@ const Contact = () => {
                   <i className="fa-solid fa-check text-moss text-[20px]"></i>
                 </span>
                 <h3 className="font-display font-bold text-2xl tracking-tight">Message bien reçu.</h3>
+                <p className="mt-3 text-sm text-smoke">Merci pour votre confiance. Notre équipe vous répondra sous 24 heures.</p>
                 <button onClick={() => setSent(false)} className="mt-7 u-link text-sm font-semibold text-clay">Envoyer un autre message</button>
               </div>
             )}

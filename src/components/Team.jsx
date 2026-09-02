@@ -1,56 +1,36 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
 const Team = () => {
-  const sectionRef = useRef(null);
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const elements = sectionRef.current.querySelectorAll('.rv');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
+    fetchTeam();
   }, []);
 
-  const teamMembers = [
-    {
-      name: 'Héritier Bambu',
-      role: 'CEO & Software Architect',
-      image: '/Heritier.jpg',
-      bio: 'Expert en ingénierie logicielle et systèmes distribués.',
-      icon: 'fa-code'
-    },
-    {
-      name: 'Justin Kombi',
-      role: 'Co-Founder & Lead Network',
-      image: '/justin.jpeg',
-      bio: 'Spécialiste en infrastructures réseaux et sécurité informatique.',
-      icon: 'fa-server'
-    },
-    {
-      name: 'Jospin',
-      role: 'Creative Director & UI/UX',
-      image: '/Jospin.jpeg',
-      bio: 'Visionnaire du design et garant de l\'expérience utilisateur premium.',
-      icon: 'fa-pen-nib'
+  async function fetchTeam() {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('updated_at', { ascending: true });
+
+      if (error) throw error;
+      setTeamMembers(data || []);
+    } catch (error) {
+      console.error('Error fetching team:', error.message);
+    } finally {
+      setLoading(false);
     }
-  ];
+  }
 
   return (
-    <section id="equipe" ref={sectionRef} className="py-24 lg:py-32 bg-white border-y border-line">
+    <section id="equipe" className="py-24 lg:py-32 bg-white border-y border-line">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
         <div className="max-w-2xl mb-14">
           <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">(06) — L'équipe</p>
-          <h2 className="rv mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05]">
+          <h2 className="rv d1 mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05]">
             Des passionnés aux commandes.
           </h2>
           <p className="rv mt-5 text-[15px] leading-relaxed text-smoke">
@@ -59,26 +39,32 @@ const Team = () => {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
-          {teamMembers.map((tm, i) => (
-            <article key={i} className="rv group min-w-0" style={{ transitionDelay: `${i * 0.1}s` }}>
-              <figure className="relative rounded-lg overflow-hidden border border-line">
-                <img
-                  src={tm.image}
-                  alt={tm.name}
-                  className="w-full aspect-[4/5] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-[1.03]"
-                />
-              </figure>
+          {loading ? (
+            <p className="text-smoke italic">Chargement de l'équipe...</p>
+          ) : teamMembers.length === 0 ? (
+            <p className="text-smoke italic">Aucun membre profilé pour le moment.</p>
+          ) : (
+            teamMembers.map((tm, i) => (
+              <article key={tm.id} className="rv group min-w-0" style={{ transitionDelay: `${i * 0.1}s` }}>
+                <figure className="relative rounded-lg overflow-hidden border border-line">
+                  <img
+                    src={tm.avatar_url || '/Heritier.jpg'}
+                    alt={tm.full_name}
+                    className="w-full aspect-[4/5] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-[1.03]"
+                  />
+                </figure>
 
-              <div className="mt-4">
-                <h3 className="font-display font-bold text-lg tracking-tight">{tm.name}</h3>
-                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-clay mt-1">
-                  <i className={`fa-solid ${tm.icon} mr-1.5`}></i>
-                  <span>{tm.role}</span>
-                </p>
-                <p className="mt-2 text-[13px] leading-relaxed text-smoke">{tm.bio}</p>
-              </div>
-            </article>
-          ))}
+                <div className="mt-4">
+                  <h3 className="font-display font-bold text-lg tracking-tight">{tm.full_name}</h3>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-clay mt-1">
+                    <i className={`fa-solid ${tm.icon || 'fa-code'} mr-1.5`}></i>
+                    <span>{tm.role}</span>
+                  </p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-smoke">{tm.bio}</p>
+                </div>
+              </article>
+            ))
+          )}
 
           <article className="rv rounded-lg bg-paper border border-line border-dashed p-8 flex flex-col justify-center items-center text-center">
              <div className="w-16 h-16 rounded-full bg-mist grid place-items-center mb-4">

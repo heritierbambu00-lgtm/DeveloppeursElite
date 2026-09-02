@@ -21,7 +21,7 @@ const AdminLayout = () => {
         </div>
 
         <nav className="flex-1 px-4 py-4 space-y-1">
-          <Link to="/admin" className="flex items-center gap-3 px-4 py-3 rounded-md bg-paper/10 text-paper font-medium transition-colors">
+          <Link to="/admin" className="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-paper/5 text-paper/70 hover:text-paper transition-colors font-medium">
             <i className="fa-solid fa-gauge-high text-clay"></i>
             Dashboard
           </Link>
@@ -32,6 +32,10 @@ const AdminLayout = () => {
           <Link to="/admin/projects" className="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-paper/5 text-paper/70 hover:text-paper transition-colors font-medium">
             <i className="fa-solid fa-folder-open"></i>
             Projets
+          </Link>
+          <Link to="/admin/inbox" className="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-paper/5 text-paper/70 hover:text-paper transition-colors font-medium">
+            <i className="fa-solid fa-envelope"></i>
+            Messages
           </Link>
         </nav>
 

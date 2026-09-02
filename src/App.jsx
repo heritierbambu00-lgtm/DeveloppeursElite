@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import Marquee from './components/Marquee';
 import Services from './components/Services';
 import Team from './components/Team';
+import Projects from './components/Projects';
 import Impact from './components/Impact';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
@@ -13,6 +14,9 @@ import Loader from './components/Loader';
 import LoginPage from './pages/auth/LoginPage';
 import AdminLayout from './layouts/AdminLayout';
 import MainDashboard from './pages/admin/MainDashboard';
+import ProfileSettings from './pages/admin/ProfileSettings';
+import ProjectManager from './pages/admin/ProjectManager';
+import Inbox from './pages/admin/Inbox';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Landing Page Component
@@ -69,6 +73,7 @@ const LandingPage = ({ loading, setLoading }) => {
           </div>
         </section>
         <Services />
+        <Projects />
         <Team />
         <Impact />
         <Contact />
@@ -100,8 +105,9 @@ function App() {
           </ProtectedRoute>
         }>
           <Route index element={<MainDashboard />} />
-          <Route path="profile" element={<div>Gestion Profil (À venir)</div>} />
-          <Route path="projects" element={<div>Gestion Projets (À venir)</div>} />
+          <Route path="profile" element={<ProfileSettings />} />
+          <Route path="projects" element={<ProjectManager />} />
+          <Route path="inbox" element={<Inbox />} />
         </Route>
       </Routes>
     </Router>
