@@ -1,27 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import Logo from './Logo';
 
 const Hero = () => {
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const elements = sectionRef.current.querySelectorAll('.rv, .curtain, .rv-mask');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
-
   const stats = [
     { number: '25+', label: 'Projets livrés' },
     { number: '12', label: 'Experts Tech' },
@@ -30,29 +10,29 @@ const Hero = () => {
   ];
 
   return (
-    <section ref={sectionRef} className="relative pt-[110px] lg:pt-[140px] pb-14 lg:pb-24 overflow-hidden">
+    <section className="relative pt-[110px] lg:pt-[140px] pb-14 lg:pb-24 overflow-hidden">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 xl:gap-16 items-center">
           <div className="lg:col-span-7 min-w-0">
             <h1 className="font-display font-bold tracking-tight leading-[1.04] text-[clamp(2.5rem,6.3vw,4.9rem)]">
               <span className="mask rv-mask">
-                <span className="split block">Des solutions</span>
+                <span className="split block"><span className="ln">Des solutions</span></span>
               </span>
               <span className="mask rv-mask">
-                <span className="split block">numériques qui font</span>
+                <span className="split block"><span className="ln">numériques qui font</span></span>
               </span>
               <span className="mask rv-mask">
                 <span className="split block">
-                  <em className="not-italic text-clay">avancer</em> l'Afrique.
+                  <span className="ln"><em className="not-italic text-clay">avancer</em> l'Afrique.</span>
                 </span>
               </span>
             </h1>
 
-            <p className="rv mt-7 max-w-xl text-[15.5px] sm:text-base leading-relaxed text-ink/70 break-words" style={{ transitionDelay: '0.16s' }}>
+            <p className="rv d2 mt-7 max-w-xl text-[15.5px] sm:text-base leading-relaxed text-ink/70 break-words">
               DEVELITE TECH conçoit des logiciels, entraîne des modèles d'IA, forme la nouvelle génération d'ingénieurs et bâtit les infrastructures numériques de la RDC et du monde.
             </p>
 
-            <div className="rv mt-9 flex flex-wrap items-center gap-5" style={{ transitionDelay: '0.24s' }}>
+            <div className="rv d3 mt-9 flex flex-wrap items-center gap-5">
               <a
                 href="#produits"
                 className="group inline-flex items-center gap-3 bg-ink text-paper font-semibold text-sm px-7 py-4 rounded-md hover:bg-clay transition-colors duration-300"
@@ -71,7 +51,7 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-5 relative rv min-w-0" style={{ transitionDelay: '0.16s' }}>
+          <div className="lg:col-span-5 relative rv d2 min-w-0">
             <figure className="curtain rv-mask rounded-lg overflow-hidden border border-line shadow-[0_24px_60px_-30px_rgba(24,27,32,0.35)]">
               <div className="kenburns aspect-[3/4] overflow-hidden">
                 <img
@@ -114,7 +94,7 @@ const Hero = () => {
       </div>
 
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] mt-16 lg:mt-20">
-        <div className="rv border-t border-line pt-8 grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="rv d1 border-t border-line pt-8 grid grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((st, i) => (
             <div key={i} className="min-w-0">
               <p className="font-display font-bold text-4xl sm:text-5xl tracking-tight">

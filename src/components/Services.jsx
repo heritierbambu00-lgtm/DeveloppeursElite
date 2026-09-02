@@ -1,26 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 
 const Services = () => {
   const [openAcc, setOpenAcc] = useState(0);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const elements = sectionRef.current.querySelectorAll('.rv');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
 
   const services = [
     {
@@ -61,14 +42,14 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" ref={sectionRef} className="py-24 lg:py-32 bg-white border-y border-line">
+    <section id="services" className="py-24 lg:py-32 bg-white border-y border-line">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
         <div className="max-w-2xl mb-14">
           <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">(02) — Nos services</p>
-          <h2 className="rv mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05]" style={{ transitionDelay: '0.08s' }}>
+          <h2 className="rv d1 mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05]">
             Cinq pôles, une même exigence.
           </h2>
-          <p className="rv mt-5 text-[15px] leading-relaxed text-smoke" style={{ transitionDelay: '0.16s' }}>
+          <p className="rv d2 mt-5 text-[15px] leading-relaxed text-smoke">
             Du code à l'infrastructure, nous couvrons la chaîne complète — et nous formons celles et ceux qui la feront vivre demain.
           </p>
         </div>
@@ -110,7 +91,7 @@ const Services = () => {
                         ))}
                       </div>
                     </div>
-                    <figure className="md:col-span-5 rounded-md overflow-hidden border border-line min-w-0">
+                    <figure className="curtain rv-mask md:col-span-5 rounded-md overflow-hidden border border-line min-w-0">
                       <img src={s.image_url} alt={s.title} className="w-full h-44 object-cover" />
                     </figure>
                   </div>

@@ -8,34 +8,21 @@ const Logo = ({ className = "w-8 h-8" }) => {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Structural Base - Deep Ink */}
+      {/* Structural Geometry - Deep Ink */}
+      <rect x="15" y="15" width="50" height="70" rx="4" className="fill-ink" />
       <path
-        d="M20 20H65C76.0457 20 85 28.9543 85 40C85 51.0457 76.0457 60 65 60H20V20Z"
-        className="fill-ink"
-      />
-
-      {/* Decorative Elite Layer - Polished Clay */}
-      <path
-        d="M35 40H80C88.2843 40 95 46.7157 95 55C95 63.2843 88.2843 70 80 70H35V40Z"
+        d="M65 15H75C83.2843 15 90 21.7157 90 30V70C90 78.2843 83.2843 85 75 85H65V15Z"
         className="fill-clay"
-        style={{ mixBlendMode: 'multiply', opacity: 0.9 }}
       />
 
-      {/* Tech Geometry - Negative Space Accents */}
-      <rect x="20" y="20" width="8" height="50" fill="white" className="opacity-10" />
+      {/* Precision Detail - Deep Ink Contrast on Clay */}
+      <rect x="70" y="35" width="10" height="30" rx="1" className="fill-ink" />
 
-      {/* Inner Precision Chevron */}
-      <path
-        d="M45 35L55 45L45 55"
-        stroke="white"
-        strokeWidth="5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      {/* Elite Core - Clay Accent on Ink */}
+      <rect x="25" y="25" width="20" height="20" rx="2" className="fill-clay" />
 
-      {/* Bottom Foundation Bar */}
-      <rect x="20" y="75" width="40" height="5" rx="2.5" className="fill-ink" />
-      <rect x="65" y="75" width="15" height="5" rx="2.5" className="fill-clay" />
+      {/* Tech Line - Bottom Foundation */}
+      <rect x="15" y="80" width="75" height="4" rx="2" className="fill-ink" />
     </svg>
   );
 };

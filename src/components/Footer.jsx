@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="bg-paper text-ink border-t border-line">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] pt-20 pb-10">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 border-b border-line pb-12">
+        <div className="rv flex flex-col lg:flex-row lg:items-end justify-between gap-8 border-b border-line pb-12">
           <h2 className="font-display font-bold tracking-tight text-[clamp(2rem,4.6vw,3.4rem)] leading-[1.05] max-w-2xl">
             Construisons ensemble<br />ce qui vient.
           </h2>
@@ -17,7 +17,7 @@ const Footer = () => {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 py-12">
-          <div className="min-w-0">
+          <div className="rv d1 min-w-0">
             <div className="flex items-center gap-3">
               <Logo className="w-8 h-8" />
               <span className="leading-none min-w-0">
@@ -39,7 +39,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="min-w-0">
+          <div className="rv d2 min-w-0">
             <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-ink/40 mb-4">Entreprise</p>
             <ul className="space-y-2.5 text-[13.5px] text-ink/75">
               <li><a href="#apropos" className="hover:text-clay transition-colors">Le labo</a></li>
@@ -49,7 +49,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="min-w-0">
+          <div className="rv d3 min-w-0">
             <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-ink/40 mb-4">Spécialités</p>
             <ul className="space-y-2.5 text-[13.5px] text-ink/75">
               <li>Ingénierie Logicielle</li>
@@ -59,7 +59,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="min-w-0">
+          <div className="rv d4 min-w-0">
             <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-ink/40 mb-4">Contact</p>
             <ul className="space-y-2.5 text-[13.5px] text-ink/75">
               <li className="flex items-center gap-2">
@@ -74,7 +74,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-line pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] text-ink/45">
+        <div className="rv d4 border-t border-line pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] text-ink/45">
           <p>© 2026 DEVELITE TECH — Excellence Technologique.</p>
           <div className="flex gap-5">
             <a href="#" className="hover:text-clay transition-colors">Mentions légales</a>
