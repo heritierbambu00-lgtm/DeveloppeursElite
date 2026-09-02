@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
 import { supabase } from '../../lib/supabaseClient';
 
 const UserManagement = () => {
@@ -30,9 +31,11 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from('profiles')
-        .select('*');
+        .select('*')
+        .order('user_role', { ascending: true });
 
       if (error) throw error;
       setUsers(data || []);
@@ -112,8 +115,16 @@ const UserManagement = () => {
         if (error) throw error;
         alert(`Profil de ${formData.fullName} mis à jour !`);
       } else {
-        // CREATE NEW USER
-        const { data: authData, error: authError } = await supabase.auth.signUp({
+        // CREATE NEW USER WITHOUT LOGGING OUT (Special Client)
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+        // We use a temp client without session persistence to avoid logging out the CTO
+        const tempClient = createClient(supabaseUrl, supabaseAnonKey, {
+          auth: { persistSession: false }
+        });
+
+        const { data: authData, error: authError } = await tempClient.auth.signUp({
           email: formData.email,
           password: formData.password,
         });
@@ -121,6 +132,7 @@ const UserManagement = () => {
         if (authError) throw authError;
 
         if (authData.user) {
+          // INSERT PROFILE (Using the main CTO session which has the RLS right)
           const { error: profileError } = await supabase
             .from('profiles')
             .insert([{
@@ -134,7 +146,7 @@ const UserManagement = () => {
             }]);
 
           if (profileError) throw profileError;
-          alert(`Membre ${formData.fullName} ajouté avec succès !`);
+          alert(`Membre ${formData.fullName} (Unité ${formData.systemRole}) ajouté avec succès !`);
         }
       }
 
@@ -150,22 +162,19 @@ const UserManagement = () => {
   const deleteUser = async (user) => {
     if (!isCTO) return;
     if (user.id === currentUser.id) {
-      alert("Erreur : Vous ne pouvez pas supprimer votre propre compte Super Admin.");
+      alert("Erreur : Impossible de révoquer votre propre accès.");
       return;
     }
-
-    if (!window.confirm(`Voulez-vous vraiment révoquer l'accès de ${user.full_name || 'cet utilisateur'} ? Cette action supprimera son profil de la matrice.`)) return;
+    if (!window.confirm(`Voulez-vous vraiment révoquer l'accès de ${user.full_name} ?`)) return;
 
     try {
       setLoading(true);
-      // Delete from profiles table (Auth deletion requires Admin API or manual action in Supabase)
       const { error } = await supabase.from('profiles').delete().eq('id', user.id);
       if (error) throw error;
-
-      alert("Accès révoqué avec succès.");
+      alert("Accès révoqué.");
       fetchUsers();
     } catch (error) {
-      alert(`Erreur de suppression : ${error.message}`);
+      alert(error.message);
     } finally {
       setLoading(false);
     }
@@ -181,10 +190,7 @@ const UserManagement = () => {
            <h1 className="font-display font-black text-4xl tracking-tight text-white">Gestion de l'Équipe</h1>
         </div>
         {isCTO && (
-          <button
-            onClick={openAddModal}
-            className="bg-neon-purple px-8 py-3 rounded-2xl text-sm font-black shadow-lg shadow-luma-purple/20 hover:scale-105 transition-all"
-          >
+          <button onClick={openAddModal} className="bg-neon-purple px-8 py-3 rounded-2xl text-sm font-black shadow-lg shadow-luma-purple/20 hover:scale-105 transition-all">
             Ajouter personnel
           </button>
         )}
@@ -202,7 +208,9 @@ const UserManagement = () => {
             </thead>
             <tbody className="divide-y divide-white/5">
               {loading ? (
-                <tr><td colSpan="4" className="px-8 py-20 text-center text-white/10 italic">Lecture de la base de données...</td></tr>
+                <tr><td colSpan="3" className="px-8 py-20 text-center text-white/10 italic">Lecture de la base de données...</td></tr>
+              ) : users.length === 0 ? (
+                <tr><td colSpan="3" className="px-8 py-20 text-center text-white/10 italic">Aucun membre détecté dans la matrice.</td></tr>
               ) : (
                 users.map((u) => (
                   <tr key={u.id} className="hover:bg-white/[0.02] transition-colors group">
@@ -214,7 +222,7 @@ const UserManagement = () => {
                            </div>
                         </div>
                         <div>
-                          <p className="font-black text-sm text-white uppercase tracking-tight">{u.full_name || 'Utilisateur Anonyme'}</p>
+                          <p className="font-black text-sm text-white uppercase tracking-tight">{u.full_name || 'Unité Anonyme'}</p>
                           <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest mt-1">{u.role || 'Poste non défini'}</p>
                         </div>
                       </div>
@@ -229,20 +237,18 @@ const UserManagement = () => {
                         {u.user_role}
                       </span>
                     </td>
-                    {isCTO && (
-                      <td className="px-8 py-6 text-right space-x-2">
-                         <button onClick={() => openEditModal(u)} className="w-10 h-10 rounded-xl inline-flex items-center justify-center text-white/20 hover:text-luma-blue hover:bg-luma-blue/5 transition-all">
-                            <i className="fa-solid fa-pen-to-square text-sm"></i>
-                         </button>
-                         <button
-                           onClick={() => deleteUser(u)}
-                           className="w-10 h-10 rounded-xl inline-flex items-center justify-center text-white/20 hover:text-red-400 hover:bg-red-400/5 transition-all"
-                           title="Supprimer"
-                         >
-                            <i className="fa-solid fa-user-slash text-sm"></i>
-                         </button>
-                      </td>
-                    )}
+                    <td className="px-8 py-6 text-right space-x-2">
+                       {isCTO && (
+                         <>
+                           <button onClick={() => openEditModal(u)} className="w-10 h-10 rounded-xl inline-flex items-center justify-center text-white/20 hover:text-luma-blue hover:bg-luma-blue/5 transition-all" title="Modifier">
+                             <i className="fa-solid fa-pen-to-square text-sm"></i>
+                           </button>
+                           <button onClick={() => deleteUser(u)} className="w-10 h-10 rounded-xl inline-flex items-center justify-center text-white/20 hover:text-red-400 hover:bg-red-400/5 transition-all" title="Supprimer">
+                             <i className="fa-solid fa-user-slash text-sm"></i>
+                           </button>
+                         </>
+                       )}
+                    </td>
                   </tr>
                 ))
               )}
@@ -269,7 +275,6 @@ const UserManagement = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-8">
-                 {/* Visual Selector */}
                  <div className="flex flex-col items-center justify-center pb-8 border-b border-white/5">
                     <div className="w-32 h-32 rounded-3xl p-1 bg-neon-purple shadow-2xl shadow-luma-purple/20 mb-4">
                        <div className="w-full h-full rounded-[20px] overflow-hidden bg-luma-dark relative group">
@@ -303,19 +308,16 @@ const UserManagement = () => {
                         </div>
                       </>
                     )}
-
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Nom Complet</label>
                        <input required type="text" value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})}
                          className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold" placeholder="Nom du membre" />
                     </div>
-
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Titre du Poste</label>
                        <input required type="text" value={formData.jobTitle} onChange={e => setFormData({...formData, jobTitle: e.target.value})}
                          className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold" placeholder="ex: CTO, Dev, Designer" />
                     </div>
-
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Rang Système</label>
                        <select value={formData.systemRole} onChange={e => setFormData({...formData, systemRole: e.target.value})}
@@ -327,20 +329,17 @@ const UserManagement = () => {
                           <option value="CEO">CEO</option>
                        </select>
                     </div>
-
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Icône Favoris</label>
                        <input type="text" value={formData.icon} onChange={e => setFormData({...formData, icon: e.target.value})}
                          className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold" placeholder="fa-code" />
                     </div>
                  </div>
-
                  <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Biographie Technique</label>
                     <textarea rows="4" value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})}
                       className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-purple/40 text-white font-medium resize-none" placeholder="Expertise et vision de l'unité..."></textarea>
                  </div>
-
                  <button type="submit" disabled={isCreating || uploading}
                     className="w-full bg-neon-purple text-white p-5 rounded-[1.5rem] font-black text-sm uppercase tracking-[0.2em] shadow-2xl shadow-luma-purple/30 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-4">
                     {isCreating ? <><i className="fa-solid fa-circle-notch fa-spin"></i> Synchronisation...</> : <><i className={`fa-solid ${isEditMode ? 'fa-floppy-disk' : 'fa-user-plus'}`}></i> {isEditMode ? 'Sauvegarder les changements' : 'Finaliser l\'ajout du personnel'}</>}
