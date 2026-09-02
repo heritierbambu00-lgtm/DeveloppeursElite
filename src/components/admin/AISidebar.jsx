@@ -21,6 +21,13 @@ const AISidebar = ({ isOpen, onClose }) => {
     e.preventDefault();
     if (!input.trim()) return;
 
+    const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+    if (!apiKey) {
+      setMessages(prev => [...prev, { role: 'user', content: input }, { role: 'assistant', content: "⚠️ Configuration manquante : La clé VITE_GROQ_API_KEY n'est pas définie dans votre fichier .env ou sur Vercel." }]);
+      setInput('');
+      return;
+    }
+
     const userMessage = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
