@@ -2,6 +2,8 @@ import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 import CEODashboard from './CEODashboard';
 import CTODashboard from './CTODashboard';
+import COODashboard from './COODashboard';
+import MemberDashboard from './MemberDashboard';
 
 const MainDashboard = () => {
   const { profile } = useOutletContext();
@@ -17,7 +19,15 @@ const MainDashboard = () => {
     return <CEODashboard profile={profile} />;
   }
 
-  // Default to CTO/Manager/Member view
+  if (profile.user_role === 'COO') {
+    return <COODashboard profile={profile} />;
+  }
+
+  if (profile.user_role === 'member') {
+    return <MemberDashboard profile={profile} />;
+  }
+
+  // Default to CTO/Admin view
   return <CTODashboard profile={profile} />;
 };
 

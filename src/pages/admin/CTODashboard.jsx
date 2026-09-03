@@ -98,5 +98,4 @@ const CTODashboard = ({ profile }) => {
     </div>
   );
 };
-
 export default CTODashboard;
