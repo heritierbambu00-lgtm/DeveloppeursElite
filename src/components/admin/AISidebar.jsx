@@ -50,8 +50,8 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden" onClick={onClose}></div>
       )}
 
-      <aside className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-[#0B0813]/98 backdrop-blur-3xl border-l border-white/10 z-40 transition-transform duration-500 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="flex flex-col h-full">
+      <aside className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-[#0B0813] border-l border-white/10 z-[100] transition-transform duration-500 ease-out shadow-2xl ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex flex-col h-full bg-[#0B0813]">
           <div className="h-20 flex items-center justify-between px-8 border-b border-white/5 bg-white/[0.02]">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-neon-purple rounded-lg flex items-center justify-center shadow-lg shadow-luma-purple/40 animate-pulse">
