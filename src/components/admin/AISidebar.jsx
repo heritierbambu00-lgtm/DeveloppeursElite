@@ -8,7 +8,8 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isListening, setIsCreating] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isPureVoiceMode, setIsPureVoiceMode] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Voice Recognition Setup
@@ -25,23 +26,20 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
 
         rec.onresult = (event) => {
           const transcript = event.results[0][0].transcript;
-          setInput(transcript);
-          setIsCreating(false);
-          // Auto-send voice command
-          processMessage(transcript);
+          setIsListening(false);
+          processMessage(transcript, isPureVoiceMode);
         };
 
-        rec.onerror = () => setIsCreating(false);
-        rec.onend = () => setIsCreating(false);
+        rec.onerror = () => setIsListening(false);
+        rec.onend = () => setIsListening(false);
 
         setRecognition(rec);
       }
     }
-  }, [profile]);
+  }, [profile, isPureVoiceMode]);
 
   const speak = (text) => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
-      // Cancel previous speech
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'fr-FR';
@@ -54,8 +52,9 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
   const toggleListening = () => {
     if (isListening) {
       recognition?.stop();
+      setIsListening(false);
     } else {
-      setIsCreating(true);
+      setIsListening(true);
       recognition?.start();
     }
   };
@@ -68,13 +67,15 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const processMessage = async (text) => {
+  const processMessage = async (text, pureVoice = false) => {
     if (!text.trim()) return;
 
-    const userMessage = { role: 'user', content: text };
-    const updatedMessages = [...messages, userMessage];
+    // In normal mode, we add to history. In pure voice, we don't.
+    if (!pureVoice) {
+      const userMessage = { role: 'user', content: text };
+      setMessages(prev => [...prev, userMessage]);
+    }
 
-    setMessages(updatedMessages);
     setInput('');
     setIsTyping(true);
 
@@ -89,13 +90,21 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
         team: teamData || []
       };
 
-      const aiResponse = await chatWithAI(updatedMessages, context);
-      setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
-      // Vocal response
+      // We still send the context and history to Groq
+      // If pureVoice, we use the current message as a one-off or we can maintain a hidden history
+      // For simplicity and logic, we use the visible history as context
+      const aiResponse = await chatWithAI([...messages, { role: 'user', content: text }], context);
+
+      if (!pureVoice) {
+        setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
+      }
+
       speak(aiResponse);
     } catch (err) {
-      const errorMsg = "Désolé, j'ai perdu le fil de notre conversation. Une erreur technique est survenue.";
-      setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }]);
+      const errorMsg = "Erreur de communication avec la matrice.";
+      if (!pureVoice) {
+        setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }]);
+      }
       speak(errorMsg);
     } finally {
       setIsTyping(false);
@@ -104,17 +113,18 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
 
   const handleSend = (e) => {
     e.preventDefault();
-    processMessage(input);
+    processMessage(input, false);
   };
 
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 lg:z-30" onClick={onClose}></div>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[90]" onClick={onClose}></div>
       )}
 
       <aside className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-[#0B0813] border-l border-white/10 z-[100] transition-transform duration-500 ease-out shadow-2xl ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex flex-col h-full bg-[#0B0813]">
+          {/* Header */}
           <div className="h-20 flex items-center justify-between px-8 border-b border-white/5 bg-white/[0.02]">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-neon-purple rounded-lg flex items-center justify-center shadow-lg shadow-luma-purple/40 animate-pulse">
@@ -122,10 +132,32 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
               </div>
               <span className="font-display font-black text-sm tracking-tighter uppercase text-white">DEVELITE AI <span className="text-[9px] bg-white/10 text-white/40 px-1.5 py-0.5 rounded-md ml-2 tracking-widest">AWARE</span></span>
             </div>
-            <button onClick={onClose} className="text-white/40 hover:text-white transition-colors"><i className="fa-solid fa-xmark text-xl"></i></button>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsPureVoiceMode(!isPureVoiceMode)}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isPureVoiceMode ? 'bg-luma-purple text-white' : 'text-white/20 hover:text-white'}`}
+                title={isPureVoiceMode ? "Mode Vocal Pur : Activé" : "Activer le Mode Vocal Pur"}
+              >
+                <i className={`fa-solid ${isPureVoiceMode ? 'fa-headset' : 'fa-headphones'}`}></i>
+              </button>
+              <button onClick={onClose} className="text-white/40 hover:text-white transition-colors"><i className="fa-solid fa-xmark text-xl"></i></button>
+            </div>
           </div>
 
+          {/* Chat Messages */}
           <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 custom-scrollbar text-white">
+            {/* Visual Indicator for Pure Voice Mode */}
+            {isPureVoiceMode && (
+              <div className="bg-luma-purple/10 border border-luma-purple/20 p-4 rounded-2xl flex items-center gap-4 animate-in fade-in duration-500">
+                <div className="flex gap-1.5">
+                   <div className="w-1.5 h-6 bg-luma-purple rounded-full animate-[bounce_1s_infinite]"></div>
+                   <div className="w-1.5 h-10 bg-luma-purple rounded-full animate-[bounce_1s_infinite_0.2s]"></div>
+                   <div className="w-1.5 h-6 bg-luma-purple rounded-full animate-[bounce_1s_infinite_0.4s]"></div>
+                </div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-luma-purple">Mode Vocal Pur Actif • Liaison Directe</p>
+              </div>
+            )}
+
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[90%] p-4 rounded-2xl text-[13.5px] leading-relaxed font-medium ${msg.role === 'user' ? 'bg-luma-purple text-white shadow-xl shadow-luma-purple/10 rounded-tr-none' : 'bg-white/5 text-white/80 border border-white/5 rounded-tl-none'}`}>
@@ -145,28 +177,32 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
             <div ref={messagesEndRef} />
           </div>
 
+          {/* Input Area */}
           <div className="p-6 sm:p-8 border-t border-white/5 bg-white/[0.01]">
             <form onSubmit={handleSend} className="flex gap-3">
               <div className="relative flex-1">
                 <input
                   type="text" value={input} onChange={(e) => setInput(e.target.value)}
-                  placeholder={`Message Develite AI...`}
+                  placeholder={isPureVoiceMode ? "Parlez pour communiquer..." : "Message Develite AI..."}
                   className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-6 pr-12 text-sm outline-none focus:border-luma-purple/40 focus:bg-white/10 transition-all text-white placeholder:text-white/20"
+                  disabled={isPureVoiceMode}
                 />
                 <button
                   type="button"
                   onClick={toggleListening}
-                  className={`absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isListening ? 'bg-red-500 text-white animate-pulse' : 'text-white/20 hover:text-white'}`}
+                  className={`absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isListening ? 'bg-red-500 text-white animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'text-white/20 hover:text-white'}`}
                 >
                   <i className={`fa-solid ${isListening ? 'fa-microphone' : 'fa-microphone-lines'}`}></i>
                 </button>
               </div>
-              <button type="submit" disabled={!input.trim() || isTyping} className="w-12 h-12 bg-neon-purple rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-105 transition-all disabled:opacity-50 shrink-0">
-                <i className="fa-solid fa-paper-plane text-sm"></i>
-              </button>
+              {!isPureVoiceMode && (
+                <button type="submit" disabled={!input.trim() || isTyping} className="w-12 h-12 bg-neon-purple rounded-2xl flex items-center justify-center text-white shadow-lg hover:scale-105 transition-all disabled:opacity-50 shrink-0">
+                  <i className="fa-solid fa-paper-plane text-sm"></i>
+                </button>
+              )}
             </form>
             <p className="mt-4 text-[9px] text-center text-white/10 font-bold uppercase tracking-widest leading-none">
-              Commandes Vocales : Français (FR)
+              {isPureVoiceMode ? "Liaison Vocale Privée • Zéro Trace Écrite" : "Mode Standard • Historique Activé"}
             </p>
           </div>
         </div>
