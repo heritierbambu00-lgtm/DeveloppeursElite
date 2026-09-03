@@ -23,25 +23,32 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Récupérer TOUTES les données de la base en temps réel pour l'IA
-    const { count: pCount } = await supabase.from('projects').select('*', { count: 'exact', head: true });
-    const { count: mCount } = await supabase.from('contacts').select('*', { count: 'exact', head: true });
-    const { data: teamData } = await supabase.from('profiles').select('full_name, user_role, role').order('updated_at', { ascending: true });
-
-    const context = {
-      user: { fullName: profile?.full_name, role: profile?.user_role },
-      stats: { projects: pCount, messages: mCount, members: teamData?.length || 0 },
-      team: teamData || []
-    };
-
     const userMessage = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+
+    setMessages(updatedMessages);
     setInput('');
     setIsTyping(true);
 
-    const response = await chatWithAI(input, context);
-    setMessages(prev => [...prev, { role: 'assistant', content: response }]);
-    setIsTyping(false);
+    try {
+      // Récupérer les données de la base pour le contexte frais
+      const { count: pCount } = await supabase.from('projects').select('*', { count: 'exact', head: true });
+      const { count: mCount } = await supabase.from('contacts').select('*', { count: 'exact', head: true });
+      const { data: teamData } = await supabase.from('profiles').select('full_name, user_role, role').order('updated_at', { ascending: true });
+
+      const context = {
+        user: { fullName: profile?.full_name, role: profile?.user_role },
+        stats: { projects: pCount, messages: mCount, members: teamData?.length || 0 },
+        team: teamData || []
+      };
+
+      const aiResponse = await chatWithAI(updatedMessages, context);
+      setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
+    } catch (err) {
+      setMessages(prev => [...prev, { role: 'assistant', content: "Désolé, j'ai perdu le fil de notre conversation. Une erreur technique est survenue." }]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   return (
@@ -62,7 +69,7 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
             <button onClick={onClose} className="text-white/40 hover:text-white transition-colors"><i className="fa-solid fa-xmark text-xl"></i></button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar text-white">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[90%] p-4 rounded-2xl text-[13.5px] leading-relaxed font-medium ${msg.role === 'user' ? 'bg-luma-purple text-white shadow-xl shadow-luma-purple/10 rounded-tr-none' : 'bg-white/5 text-white/80 border border-white/5 rounded-tl-none'}`}>
