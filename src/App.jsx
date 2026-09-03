@@ -103,7 +103,7 @@ function App() {
           <Route index element={<MainDashboard />} />
           <Route path="profile" element={<ProfileSettings />} />
           <Route path="projects" element={
-            <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin', 'manager']}>
+            <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
               <ProjectManager />
             </ProtectedRoute>
           } />
