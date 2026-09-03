@@ -9,10 +9,15 @@ const AdminLayout = () => {
   const location = useLocation();
   const [profile, setProfile] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAISidebarOpen, setIsAISidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchProfile();
+    // Auto-close sidebar on small screens
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false);
+    }
   }, []);
 
   const fetchProfile = async () => {
@@ -41,15 +46,25 @@ const AdminLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-luma-dark text-white flex font-body overflow-hidden">
+    <div className="min-h-screen bg-luma-dark text-white flex font-body overflow-hidden relative">
+      {/* Mobile Backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        ></div>
+      )}
+
       {/* Lumaora Sidebar */}
-      <aside className={`bg-[#120E1E] border-r border-white/5 transition-all duration-500 flex flex-col z-20 relative ${isSidebarOpen ? 'w-64' : 'w-24'}`}>
-        <div className="h-20 flex items-center px-6">
+      <aside className={`bg-[#120E1E] border-r border-white/5 transition-all duration-500 flex flex-col z-40 fixed lg:relative h-full ${
+        isSidebarOpen ? 'w-64 translate-x-0' : 'w-24 lg:translate-x-0 -translate-x-full'
+      } ${isMobileMenuOpen ? 'translate-x-0 w-64' : ''}`}>
+        <div className="h-20 flex items-center px-6 shrink-0">
           <div className="flex items-center gap-3">
              <div className="p-2 bg-neon-purple rounded-lg shadow-[0_0_15px_rgba(158,122,255,0.4)]">
                 <Logo className="w-6 h-6 fill-white" />
              </div>
-             {isSidebarOpen && (
+             {(isSidebarOpen || isMobileMenuOpen) && (
                <span className="font-display font-black text-lg tracking-tighter uppercase italic animate-in fade-in duration-500">
                  DEVE<span className="text-luma-purple">LITE</span>
                </span>
@@ -57,7 +72,7 @@ const AdminLayout = () => {
           </div>
         </div>
 
-        <nav className="flex-1 py-6 px-4 space-y-2">
+        <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto custom-scrollbar">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
             const hasAccess = profile ? item.roles.includes(profile.user_role) : false;
@@ -68,6 +83,7 @@ const AdminLayout = () => {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group relative ${
                   isActive
                   ? 'bg-white/10 text-luma-purple'
@@ -75,7 +91,7 @@ const AdminLayout = () => {
                 }`}
               >
                 <i className={`fa-solid ${item.icon} text-lg w-6 text-center`}></i>
-                {isSidebarOpen && <span className="font-semibold text-sm animate-in fade-in duration-500">{item.label}</span>}
+                {(isSidebarOpen || isMobileMenuOpen) && <span className="font-semibold text-sm animate-in fade-in duration-500">{item.label}</span>}
                 {isActive && (
                   <div className="absolute left-0 w-1 h-6 bg-luma-purple rounded-r-full shadow-[0_0_10px_#9E7AFF]"></div>
                 )}
@@ -84,10 +100,10 @@ const AdminLayout = () => {
           })}
         </nav>
 
-        <div className="p-4 border-t border-white/5">
+        <div className="p-4 border-t border-white/5 shrink-0">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-all"
+            className="hidden lg:flex w-full items-center gap-4 px-4 py-3 rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-all"
           >
             <i className={`fa-solid ${isSidebarOpen ? 'fa-angles-left' : 'fa-angles-right'} w-6 text-center`}></i>
             {isSidebarOpen && <span className="text-sm font-bold animate-in fade-in duration-500">Réduire</span>}
@@ -98,27 +114,36 @@ const AdminLayout = () => {
             className="mt-2 w-full flex items-center gap-4 px-4 py-3 rounded-xl text-white/40 hover:text-red-400 hover:bg-red-400/5 transition-all"
           >
             <i className="fa-solid fa-arrow-right-from-bracket w-6 text-center"></i>
-            {isSidebarOpen && <span className="text-sm font-bold animate-in fade-in duration-500">Déconnexion</span>}
+            {(isSidebarOpen || isMobileMenuOpen) && <span className="text-sm font-bold animate-in fade-in duration-500">Déconnexion</span>}
           </button>
         </div>
       </aside>
 
       {/* Main View Area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-luma-gradient relative">
-        <header className="h-20 flex items-center justify-between px-10 sticky top-0 z-10 backdrop-blur-md bg-luma-dark/50 border-b border-white/5">
-          <div className="flex-1 max-w-xl">
-             <div className="relative group">
-                <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-luma-purple transition-colors"></i>
-                <input
-                  type="text"
-                  placeholder="Rechercher projets, membres, messages..."
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-12 pr-4 text-sm outline-none focus:border-luma-purple/40 focus:bg-white/10 transition-all text-white"
-                />
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-white/20 bg-white/5 px-1.5 py-0.5 rounded-md">⌘K</div>
+      <div className="flex-1 flex flex-col min-w-0 bg-luma-gradient relative overflow-hidden">
+        <header className="h-20 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-20 backdrop-blur-md bg-luma-dark/50 border-b border-white/5 shrink-0">
+          <div className="flex items-center gap-4 flex-1">
+             <button
+               onClick={() => setIsMobileMenuOpen(true)}
+               className="lg:hidden w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl text-white/60"
+             >
+                <i className="fa-solid fa-bars-staggered"></i>
+             </button>
+
+             <div className="hidden md:block flex-1 max-w-xl">
+                <div className="relative group">
+                   <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-luma-purple transition-colors"></i>
+                   <input
+                     type="text"
+                     placeholder="Rechercher..."
+                     className="w-full bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-12 pr-4 text-sm outline-none focus:border-luma-purple/40 focus:bg-white/10 transition-all text-white"
+                   />
+                   <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-white/20 bg-white/5 px-1.5 py-0.5 rounded-md">⌘K</div>
+                </div>
              </div>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 lg:gap-6">
              <button
                onClick={() => setIsAISidebarOpen(true)}
                className="relative w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-white/40 hover:text-luma-purple hover:bg-white/10 transition-all shadow-lg border border-white/5"
@@ -127,11 +152,11 @@ const AdminLayout = () => {
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-luma-purple rounded-full border-2 border-luma-dark animate-pulse"></span>
              </button>
 
-             <div className="flex items-center gap-4 pl-6 border-l border-white/10">
+             <div className="flex items-center gap-3 lg:gap-4 pl-3 lg:pl-6 border-l border-white/10">
                 <div className="text-right hidden sm:block">
-                   <p className="text-sm font-bold">{profile?.full_name?.split(' ')[0] || 'User'}</p>
-                   <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
-                     {profile?.user_role === 'CTO' ? 'CTO (Super Admin)' : profile?.user_role}
+                   <p className="text-sm font-bold truncate max-w-[120px]">{profile?.full_name?.split(' ')[0] || 'User'}</p>
+                   <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest leading-none mt-1">
+                     {profile?.user_role === 'CTO' ? 'CTO' : profile?.user_role}
                    </p>
                 </div>
                 <Link to="/admin/profile" className="w-10 h-10 rounded-2xl p-0.5 bg-neon-purple shadow-lg shadow-luma-purple/20 hover:scale-105 transition-transform">
@@ -143,8 +168,8 @@ const AdminLayout = () => {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-10 custom-scrollbar">
-          <div className="animate-in fade-in slide-in-from-bottom-2 duration-700">
+        <main id="admin-main-area" className="flex-1 overflow-y-auto p-6 lg:p-10 custom-scrollbar">
+          <div className="animate-in fade-in slide-in-from-bottom-2 duration-700 h-full">
             <Outlet context={{ profile }} />
           </div>
         </main>
