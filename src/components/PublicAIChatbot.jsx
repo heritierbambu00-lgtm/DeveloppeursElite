@@ -11,7 +11,7 @@ const PublicAIChatbot = () => {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [currentTicketId, setCurrentTicketId] = useState(null); // Pour la consolidation (Upsert)
+  const [currentTicketId, setCurrentTicketId] = useState(null);
   const endRef = useRef(null);
 
   useEffect(() => {
@@ -19,8 +19,11 @@ const PublicAIChatbot = () => {
   }, [messages]);
 
   const submitLeadToMatrix = async (aiContent, fullHistory) => {
-    // Si l'IA confirme qu'elle transmet ou si le client semble sérieux
-    if (aiContent.toLowerCase().includes('transmet') || aiContent.toLowerCase().includes('noté') || aiContent.toLowerCase().includes('envoyé')) {
+    // On transmet si l'IA montre une intention d'enregistrement ou de transmission
+    const triggerWords = ['transmet', 'noté', 'envoyé', 'contact', 'dossier'];
+    const hasIntent = triggerWords.some(word => aiContent.toLowerCase().includes(word));
+
+    if (hasIntent) {
       try {
         const lastUserMsg = fullHistory.filter(m => m.role === 'user').pop()?.content || '';
         const aiRouting = await classifyContactMessage(lastUserMsg);
@@ -33,28 +36,24 @@ const PublicAIChatbot = () => {
           subject: 'Session Chat Live (Matrix)',
           message: conversationLog,
           assigned_to: aiRouting.assigned_to,
-          ai_analysis: "Lead en cours de qualification via Chatbot Public"
+          ai_analysis: "Lead qualifié dynamiquement via Chatbot Public"
         };
 
         if (currentTicketId) {
-          // Mise à jour (Upsert) pour éviter les doublons
           await supabase.from('contacts').update(leadData).eq('id', currentTicketId);
         } else {
-          // Création initiale
-          const { data, error } = await supabase.from('contacts').insert([leadData]).select();
+          const { data } = await supabase.from('contacts').insert([leadData]).select();
           if (data?.[0]) setCurrentTicketId(data[0].id);
 
-          // Notification email seulement au début ou lors de l'assignation
           await sendNotificationEmail({
             name: 'Nouveau Lead Chat',
             email: 'ia@develite.tech',
-            subject: 'Signal Matrix : Nouveau Prospect sur le Chat',
-            message: 'Un client potentiel a entamé une discussion avec l\'IA publique.'
+            subject: 'Signal Matrix : Discussion Prospect en cours',
+            message: 'Un client potentiel discute avec l\'IA et demande une assistance direction.'
           }, aiRouting.assigned_to);
         }
-
       } catch (err) {
-        console.error("Erreur Matrix Sync:", err);
+        console.error("Matrix Sync Error:", err);
       }
     }
   };
@@ -75,15 +74,8 @@ const PublicAIChatbot = () => {
         stats: { projects: 12, members: 8 }
       };
 
-      const publicSystemPrompt = {
-        role: "system",
-        content: `Tu es l'agent d'accueil de DEVELITE TECH.
-        Tes contacts de direction: CEO Jospin (jospinkavulivwadev@gmail.com), CTO Héritier (heritierbambu00@gmail.com), COO Justin (justinkombi017@gmail.com).
-        SI le client veut une mise en relation, dis-lui CLAIREMENT: "Je transmet immédiatement votre demande à la direction."
-        Une fois que tu as dit cela, le système enregistre automatiquement toute la conversation.`
-      };
-
-      const response = await chatWithAI([publicSystemPrompt, ...updatedMessages], context);
+      // Appel avec le flag isPublic = true
+      const response = await chatWithAI(updatedMessages, context, true);
       const newHistory = [...updatedMessages, { role: 'assistant', content: response }];
       setMessages(newHistory);
 
@@ -111,7 +103,7 @@ const PublicAIChatbot = () => {
                    <div className="w-8 h-8 bg-clay rounded-lg flex items-center justify-center shadow-lg shadow-clay/20">
                       <i className="fa-solid fa-wand-magic-sparkles text-xs"></i>
                    </div>
-                   <span className="font-display font-bold text-sm tracking-tight uppercase">Develite Matrix Bot</span>
+                   <span className="font-display font-bold text-sm tracking-tight uppercase">Develite AI</span>
                 </div>
                 <button onClick={() => setIsOpen(false)} className="text-paper/40 hover:text-paper transition-colors"><i className="fa-solid fa-xmark"></i></button>
              </div>

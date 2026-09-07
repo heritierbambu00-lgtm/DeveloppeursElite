@@ -1,35 +1,39 @@
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
-export const chatWithAI = async (messagesHistory, context = {}) => {
+export const chatWithAI = async (messagesHistory, context = {}, isPublic = false) => {
   if (!GROQ_API_KEY) return "Erreur : Clé API manquante.";
 
   const { user = {}, stats = {}, team = [] } = context;
   const teamList = team.map(m => `- ${m.full_name} (${m.user_role}): ${m.role}`).join('\n');
 
+  // Unified System Prompt with dynamic instructions
   const systemPrompt = {
     role: "system",
     content: `
-      Tu es DEVELITE AI, l'assistant à conscience augmentée de DEVELITE TECH.
-      Tu parles actuellement avec ${user.fullName || 'un membre'}, qui occupe le poste de ${user.role || 'Expert'}.
+      Tu es DEVELITE AI, l'assistant intelligent de DEVELITE TECH.
+      ${isPublic ?
+        `Tu es en mode PUBLIC (Accueil). Tu es la secrétaire de la direction.
+         Tes contacts de direction :
+         - CEO (Jospin Kavulivwa) : jospinkavulivwadev@gmail.com
+         - CTO (Héritier Bambu) : heritierbambu00@gmail.com
+         - COO (Justin Kombi) : justinkombi017@gmail.com
+         RÔLE : Réponds aux questions sur les services et l'équipe. SI un client veut une mise en relation ou a un projet, dis-lui poliment que tu TRANSMETS son dossier à la direction.` :
+        `Tu es en mode ADMIN. Tu parles avec ${user.fullName || 'un membre'} (${user.role || 'Expert'}).
+         Tu as accès à la matrice interne.`
+      }
 
-      ÉTAT ACTUEL DE LA MATRICE :
+      ÉTAT DE LA MATRICE :
       - Projets : ${stats.projects || 0}
-      - Messages : ${stats.messages || 0}
       - Effectif total : ${stats.members || 0} membres.
 
-      LISTE DES MEMBRES DE L'ÉQUIPE :
-      ${teamList || 'Aucune donnée sur l\'équipe.'}
+      ${!isPublic ? `LISTE DES MEMBRES : \n${teamList}` : ''}
 
-      FONCTIONS DE DIRECTION :
-      - CEO (Jospin Kavulivwa) : Vision, stratégie et business. Contact: jospinkavulivwadev@gmail.com
-      - CTO (Héritier Bambu) : Technique, code et choix technologiques. Contact: heritierbambu00@gmail.com
-      - COO (Justin Kombi) : Fonctionnement quotidien et opérations. Contact: justinkombi017@gmail.com
-
-      CONSIGNES DE RÉPONSE :
-      1. Sois ultra-concis, direct et professionnel.
-      2. Tu peux donner les adresses email de la direction si un client les demande poliment pour une collaboration.
-      3. NE MONTRE JAMAIS de balises <think> ou de réflexions internes.
+      CONSIGNES :
+      1. Sois concis, direct et professionnel.
+      2. Réponds PRÉCISÉMENT à la question posée (ex: si on demande un email, donne-le).
+      3. NE RÉPÈTE PAS la même phrase en boucle.
       4. Réponds toujours en français.
+      5. Pas de balises <think>.
     `
   };
 
@@ -42,8 +46,8 @@ export const chatWithAI = async (messagesHistory, context = {}) => {
       },
       body: JSON.stringify({
         model: "openai/gpt-oss-20b",
-        messages: [systemPrompt, ...messagesHistory],
-        temperature: 0.5,
+        messages: [systemPrompt, ...messagesHistory.filter(m => m.role !== 'system')],
+        temperature: 0.6,
         max_tokens: 512
       })
     });
@@ -51,30 +55,25 @@ export const chatWithAI = async (messagesHistory, context = {}) => {
     const data = await response.json();
     return data.choices[0].message.content;
   } catch (error) {
-    return "Connexion interrompue. Vérifiez la matrice.";
+    return "Connexion interrompue avec la matrice.";
   }
 };
 
 /**
- * Analyse un message de contact et assigne un destinataire (CEO, CTO, COO)
+ * Analyse un message de contact et assigne un destinataire
  */
 export const classifyContactMessage = async (message) => {
-  if (!GROQ_API_KEY) return { assigned_to: 'CEO', analysis: 'API Key manquante, routage par défaut.' };
+  if (!GROQ_API_KEY) return { assigned_to: 'CEO', analysis: 'Clé manquante.' };
 
   const classifierPrompt = `
-    En tant que DEVELITE AI, analyse le message suivant envoyé via le formulaire de contact.
-    Identifie quel membre de la direction est le plus apte à répondre :
-    - CEO (Jospin) : Opportunités d'affaires, partenariats, vision globale, devis commerciaux.
-    - CTO (Héritier) : Défis techniques, développement logiciel, code, architecture, IA, bugs.
-    - COO (Justin) : Réseaux, infrastructure physique, logistique, opérations quotidiennes.
+    Analyse ce message de contact pour DEVELITE TECH.
+    Qui doit répondre ?
+    - CEO (Jospin) : Business, Partenariat.
+    - CTO (Héritier) : Technique, Code, IA.
+    - COO (Justin) : Réseaux, Opérations.
 
-    MESSAGE À ANALYSER : "${message}"
-
-    RÉPONDS UNIQUEMENT AU FORMAT JSON SUIVANT :
-    {
-      "assigned_to": "CEO" | "CTO" | "COO",
-      "analysis": "Brève explication de ton choix en 10 mots"
-    }
+    Message : "${message}"
+    Réponds en JSON : {"assigned_to": "CEO"|"CTO"|"COO", "analysis": "raison"}
   `;
 
   try {
@@ -87,7 +86,7 @@ export const classifyContactMessage = async (message) => {
       body: JSON.stringify({
         model: "openai/gpt-oss-20b",
         messages: [{ role: "user", content: classifierPrompt }],
-        temperature: 0.1, // Basse température pour plus de précision
+        temperature: 0.1,
         response_format: { type: "json_object" }
       })
     });
@@ -95,7 +94,6 @@ export const classifyContactMessage = async (message) => {
     const data = await response.json();
     return JSON.parse(data.choices[0].message.content);
   } catch (error) {
-    console.error('Classification error:', error);
-    return { assigned_to: 'CEO', analysis: 'Erreur lors de l\'analyse automatique.' };
+    return { assigned_to: 'CEO', analysis: 'Erreur.' };
   }
 };
