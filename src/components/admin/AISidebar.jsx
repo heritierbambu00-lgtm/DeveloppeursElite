@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { chatWithAI } from '../../lib/aiService';
 import { supabase } from '../../lib/supabaseClient';
+import { formatMessageWithLinks } from '../../lib/textUtils';
 
 const AISidebar = ({ isOpen, onClose, profile }) => {
   const [messages, setMessages] = useState([
@@ -167,7 +168,7 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[90%] p-4 rounded-2xl text-[13.5px] leading-relaxed font-medium ${msg.role === 'user' ? 'bg-luma-purple text-white shadow-xl shadow-luma-purple/10 rounded-tr-none' : 'bg-white/5 text-white/80 border border-white/5 rounded-tl-none'}`}>
-                  {msg.content}
+                  {formatMessageWithLinks(msg.content)}
                 </div>
               </div>
             ))}

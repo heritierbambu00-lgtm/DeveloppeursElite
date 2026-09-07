@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { chatWithAI, classifyContactMessage } from '../lib/aiService';
 import { supabase } from '../lib/supabaseClient';
 import { sendNotificationEmail } from '../lib/emailService';
+import { formatMessageWithLinks } from '../lib/textUtils';
 
 const PublicAIChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -112,7 +113,7 @@ const PublicAIChatbot = () => {
                 {messages.map((m, i) => (
                   <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                      <div className={`max-w-[85%] p-4 rounded-2xl text-[13px] leading-relaxed ${m.role === 'user' ? 'bg-clay text-white rounded-tr-none shadow-lg shadow-clay/10' : 'bg-white text-ink shadow-sm border border-line rounded-tl-none'}`}>
-                        {m.content}
+                        {formatMessageWithLinks(m.content)}
                      </div>
                   </div>
                 ))}

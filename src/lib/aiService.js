@@ -32,8 +32,9 @@ export const chatWithAI = async (messagesHistory, context = {}, isPublic = false
       1. Sois concis, direct et professionnel.
       2. Réponds PRÉCISÉMENT à la question posée (ex: si on demande un email, donne-le).
       3. NE RÉPÈTE PAS la même phrase en boucle.
-      4. Réponds toujours en français.
-      5. Pas de balises <think>.
+      4. N'UTILISE JAMAIS de symboles de formatage Markdown comme les doubles astérisques (**) pour le gras ou (_) pour l'italique. Envoie du texte pur.
+      5. Réponds toujours en français.
+      6. Pas de balises <think>.
     `
   };
 
