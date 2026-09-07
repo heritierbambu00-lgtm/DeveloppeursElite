@@ -46,7 +46,7 @@ const AdminLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-luma-dark text-white flex font-body overflow-hidden relative">
+    <div className="h-screen bg-luma-dark text-white flex font-body overflow-hidden relative">
       {/* Mobile Backdrop */}
       {isMobileMenuOpen && (
         <div
@@ -56,7 +56,7 @@ const AdminLayout = () => {
       )}
 
       {/* Lumaora Sidebar */}
-      <aside className={`bg-[#120E1E] border-r border-white/5 transition-all duration-500 flex flex-col z-40 fixed lg:relative h-full ${
+      <aside className={`bg-[#120E1E] border-r border-white/5 transition-all duration-500 flex flex-col z-40 fixed lg:relative h-full shrink-0 ${
         isSidebarOpen ? 'w-64 translate-x-0' : 'w-24 lg:translate-x-0 -translate-x-full'
       } ${isMobileMenuOpen ? 'translate-x-0 w-64' : ''}`}>
         <div className="h-20 flex items-center px-6 shrink-0">

@@ -56,6 +56,10 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
     } else {
       setIsListening(true);
       recognition?.start();
+      // "Wake up" speech synthesis on first interaction
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
     }
   };
 
@@ -70,7 +74,7 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
   const processMessage = async (text, pureVoice = false) => {
     if (!text.trim()) return;
 
-    // In normal mode, we add to history. In pure voice, we don't.
+    // Normal mode: add to history. Pure voice: don't.
     if (!pureVoice) {
       const userMessage = { role: 'user', content: text };
       setMessages(prev => [...prev, userMessage]);
@@ -90,9 +94,6 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
         team: teamData || []
       };
 
-      // We still send the context and history to Groq
-      // If pureVoice, we use the current message as a one-off or we can maintain a hidden history
-      // For simplicity and logic, we use the visible history as context
       const aiResponse = await chatWithAI([...messages, { role: 'user', content: text }], context);
 
       if (!pureVoice) {
@@ -124,7 +125,6 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
 
       <aside className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-[#0B0813] border-l border-white/10 z-[100] transition-transform duration-500 ease-out shadow-2xl ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex flex-col h-full bg-[#0B0813]">
-          {/* Header */}
           <div className="h-20 flex items-center justify-between px-8 border-b border-white/5 bg-white/[0.02]">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-neon-purple rounded-lg flex items-center justify-center shadow-lg shadow-luma-purple/40 animate-pulse">
@@ -135,7 +135,7 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setIsPureVoiceMode(!isPureVoiceMode)}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isPureVoiceMode ? 'bg-luma-purple text-white' : 'text-white/20 hover:text-white'}`}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isPureVoiceMode ? 'bg-luma-purple text-white shadow-[0_0_15px_#9E7AFF]' : 'text-white/20 hover:text-white'}`}
                 title={isPureVoiceMode ? "Mode Vocal Pur : Activé" : "Activer le Mode Vocal Pur"}
               >
                 <i className={`fa-solid ${isPureVoiceMode ? 'fa-headset' : 'fa-headphones'}`}></i>
@@ -144,15 +144,15 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
             </div>
           </div>
 
-          {/* Chat Messages */}
           <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 custom-scrollbar text-white">
-            {/* Visual Indicator for Pure Voice Mode */}
             {isPureVoiceMode && (
               <div className="bg-luma-purple/10 border border-luma-purple/20 p-4 rounded-2xl flex items-center gap-4 animate-in fade-in duration-500">
-                <div className="flex gap-1.5">
-                   <div className="w-1.5 h-6 bg-luma-purple rounded-full animate-[bounce_1s_infinite]"></div>
-                   <div className="w-1.5 h-10 bg-luma-purple rounded-full animate-[bounce_1s_infinite_0.2s]"></div>
-                   <div className="w-1.5 h-6 bg-luma-purple rounded-full animate-[bounce_1s_infinite_0.4s]"></div>
+                <div className="flex gap-1.5 items-center">
+                   <div className="w-1.5 h-4 bg-luma-purple rounded-full animate-[bounce_0.6s_infinite]"></div>
+                   <div className="w-1.5 h-8 bg-luma-purple rounded-full animate-[bounce_0.6s_infinite_0.1s]"></div>
+                   <div className="w-1.5 h-10 bg-luma-purple rounded-full animate-[bounce_0.6s_infinite_0.2s]"></div>
+                   <div className="w-1.5 h-8 bg-luma-purple rounded-full animate-[bounce_0.6s_infinite_0.3s]"></div>
+                   <div className="w-1.5 h-4 bg-luma-purple rounded-full animate-[bounce_0.6s_infinite_0.4s]"></div>
                 </div>
                 <p className="text-[10px] font-black uppercase tracking-widest text-luma-purple">Mode Vocal Pur Actif • Liaison Directe</p>
               </div>
@@ -177,7 +177,6 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area */}
           <div className="p-6 sm:p-8 border-t border-white/5 bg-white/[0.01]">
             <form onSubmit={handleSend} className="flex gap-3">
               <div className="relative flex-1">
@@ -185,7 +184,7 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
                   type="text" value={input} onChange={(e) => setInput(e.target.value)}
                   placeholder={isPureVoiceMode ? "Parlez pour communiquer..." : "Message Develite AI..."}
                   className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-6 pr-12 text-sm outline-none focus:border-luma-purple/40 focus:bg-white/10 transition-all text-white placeholder:text-white/20"
-                  disabled={isPureVoiceMode}
+                  disabled={isPureVoiceMode && !isListening}
                 />
                 <button
                   type="button"
