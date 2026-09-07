@@ -10,7 +10,7 @@ const Hero = () => {
   ];
 
   return (
-    <section className="relative pt-[110px] lg:pt-[140px] pb-14 lg:pb-24 overflow-hidden bg-paper">
+    <section className="relative pt-20 lg:pt-28 pb-14 lg:pb-24 overflow-hidden bg-paper">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 xl:gap-16 items-center">
           <div className="lg:col-span-7 min-w-0">
@@ -23,7 +23,7 @@ const Hero = () => {
               </span>
               <span className="mask rv-mask">
                 <span className="split block">
-                  <span className="ln italic text-clay">quantique.</span>
+                  <span className="ln italic text-clay text-glow">quantique.</span>
                 </span>
               </span>
             </h1>
@@ -53,6 +53,11 @@ const Hero = () => {
           </div>
 
           <div className="lg:col-span-5 relative rv d2 min-w-0">
+            {/* Background Logo Decoration to fill space */}
+            <div className="absolute -left-24 -top-24 opacity-[0.04] scale-150 pointer-events-none -z-10">
+               <Logo className="w-96 h-96" />
+            </div>
+
             {/* Main Image Frame - Neo Matrix Style */}
             <div className="relative">
               <figure className="curtain rv-mask rounded-[3rem] overflow-hidden border border-white/40 shadow-2xl bg-white/[0.02] backdrop-blur-3xl">
@@ -76,32 +81,18 @@ const Hero = () => {
               </div>
             </figcaption>
 
-            {/* Small Floating Card */}
-            <figure className="curtain rv-mask hidden sm:block absolute -left-12 -bottom-6 w-52 rounded-[2rem] overflow-hidden border border-white/50 shadow-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500 bg-white">
-              <img
-                src="/justin.jpeg"
-                alt="Justin Kombi"
-                className="w-full h-auto object-cover opacity-90"
-              />
-              <div className="p-3 bg-paper/80 backdrop-blur-md">
-                 <p className="text-[8px] font-black uppercase tracking-widest text-ink">Justin Kombi — COO</p>
-              </div>
-            </figure>
-
-            {/* Tech Hexagon Badge */}
-            <div className="absolute -top-10 -right-4 w-32 h-32 pointer-events-none group" aria-hidden="true">
-               <div className="w-full h-full relative animate-[spin_10s_linear_infinite]">
+            {/* Tech Hexagon Badge - IMPROVED SIZE AND CLARITY */}
+            <div className="absolute -top-10 -right-4 w-36 h-36 pointer-events-none group" aria-hidden="true">
+               <div className="w-full h-full relative animate-[spin_12s_linear_infinite]">
                   <svg viewBox="0 0 100 100" className="w-full h-full fill-none stroke-clay/30 stroke-[0.8]">
                     <polygon points="50,1 95,25 95,75 50,99 5,75 5,25" />
                   </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,77,0,0.2)]">
-                      <Logo className="w-10 h-10 drop-shadow-[0_0_8px_rgba(158,122,255,0.6)]" />
-                    </div>
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <Logo className="w-full h-full drop-shadow-[0_0_12px_rgba(158,122,255,0.4)]" />
                   </div>
                </div>
                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                  <div className="w-24 h-24 rounded-full border border-clay/10 animate-ping"></div>
+                  <div className="w-28 h-28 rounded-full border border-clay/10 animate-ping"></div>
                </div>
             </div>
           </div>
