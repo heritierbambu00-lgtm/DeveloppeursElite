@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const apiKey = process.env.VITE_RESEND_API_KEY;
 
   if (!apiKey) {
-    return res.status(500).json({ error: 'Clé API manquante sur le serveur Vercel' });
+    return res.status(500).json({ error: 'Configuration serveur : Clé API manquante sur Vercel' });
   }
 
   const finalSubject = subject || `[MATRICE] Nouveau message de ${contactData?.name || 'Contact'}`;
@@ -21,18 +21,27 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'DEVELITE <onboarding@resend.dev>',
-        to: toEmail,
+        from: 'DEVELITE TECH <onboarding@resend.dev>',
+        to: Array.isArray(toEmail) ? toEmail : [toEmail],
         subject: finalSubject,
         html: finalHtml
       })
     });
 
     const result = await response.json();
-    if (!response.ok) return res.status(response.status).json(result);
+
+    if (!response.ok) {
+      console.error("[Resend Error]", result);
+      // Renvoyer l'erreur spécifique de Resend pour le débogage
+      return res.status(response.status).json({
+        error: result.message || 'Erreur inconnue de Resend',
+        details: result
+      });
+    }
 
     return res.status(200).json(result);
   } catch (error) {
+    console.error("[Server Error]", error);
     return res.status(500).json({ error: error.message });
   }
 }

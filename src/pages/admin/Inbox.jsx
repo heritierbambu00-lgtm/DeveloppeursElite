@@ -56,13 +56,12 @@ const Inbox = () => {
     e.preventDefault();
     setReplyModal(prev => ({ ...prev, sending: true }));
     try {
-      await sendReplyEmail(replyModal.msg.email, replyModal.msg.name, replyModal.text);
+      const res = await sendReplyEmail(replyModal.msg.email, replyModal.msg.name, replyModal.text);
       alert(`Réponse envoyée avec succès à ${replyModal.msg.name}`);
       setReplyModal({ isOpen: false, msg: null, text: '', sending: false });
-      // Mark as read after replying
       markAsRead(replyModal.msg.id);
     } catch (error) {
-      alert(`Erreur d'envoi : ${error.message}`);
+      alert(`Détails technique de l'échec : ${error.message}`);
       setReplyModal(prev => ({ ...prev, sending: false }));
     }
   };
