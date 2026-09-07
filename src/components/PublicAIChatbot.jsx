@@ -11,41 +11,50 @@ const PublicAIChatbot = () => {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [currentTicketId, setCurrentTicketId] = useState(null); // Pour la consolidation (Upsert)
   const endRef = useRef(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const submitLeadToMatrix = async (aiContent) => {
-    // Si l'IA confirme qu'elle transmet, on essaie d'extraire les infos ou de créer un ticket
-    // Logique simplifiée : Toute conversation aboutissant à une promesse de transmission crée un ticket
-    if (aiContent.toLowerCase().includes('transmet') || aiContent.toLowerCase().includes('envoyé')) {
+  const submitLeadToMatrix = async (aiContent, fullHistory) => {
+    // Si l'IA confirme qu'elle transmet ou si le client semble sérieux
+    if (aiContent.toLowerCase().includes('transmet') || aiContent.toLowerCase().includes('noté') || aiContent.toLowerCase().includes('envoyé')) {
       try {
-        const lastUserMsg = messages.filter(m => m.role === 'user').pop()?.content || '';
-
-        // On utilise notre service de classification pour router intelligemment même via le chat
+        const lastUserMsg = fullHistory.filter(m => m.role === 'user').pop()?.content || '';
         const aiRouting = await classifyContactMessage(lastUserMsg);
 
-        await supabase.from('contacts').insert([{
-          name: 'Prospect via Chat',
-          email: 'chat@client.com', // Idéalement, l'IA devrait demander l'email
-          subject: 'Nouveau Lead via AI Chatbot',
-          message: `Détails de la conversation: \n${messages.map(m => `${m.role}: ${m.content}`).join('\n')}`,
-          assigned_to: aiRouting.assigned_to,
-          ai_analysis: "Lead qualifié par l'IA Publique"
-        }]);
+        const conversationLog = fullHistory.map(m => `${m.role === 'user' ? 'Client' : 'AI'}: ${m.content}`).join('\n\n');
 
-        // Notification email au CTO
-        await sendNotificationEmail({
-          name: 'Prospect Chatbot',
-          email: 'ai@develite.tech',
-          subject: 'URGENT: Nouveau Lead IA Chatbot',
-          message: 'Un client potentiel discute actuellement avec l\'IA et demande une mise en relation.'
-        }, 'CTO');
+        const leadData = {
+          name: 'Prospect via Chat',
+          email: 'chat@client.com',
+          subject: 'Session Chat Live (Matrix)',
+          message: conversationLog,
+          assigned_to: aiRouting.assigned_to,
+          ai_analysis: "Lead en cours de qualification via Chatbot Public"
+        };
+
+        if (currentTicketId) {
+          // Mise à jour (Upsert) pour éviter les doublons
+          await supabase.from('contacts').update(leadData).eq('id', currentTicketId);
+        } else {
+          // Création initiale
+          const { data, error } = await supabase.from('contacts').insert([leadData]).select();
+          if (data?.[0]) setCurrentTicketId(data[0].id);
+
+          // Notification email seulement au début ou lors de l'assignation
+          await sendNotificationEmail({
+            name: 'Nouveau Lead Chat',
+            email: 'ia@develite.tech',
+            subject: 'Signal Matrix : Nouveau Prospect sur le Chat',
+            message: 'Un client potentiel a entamé une discussion avec l\'IA publique.'
+          }, aiRouting.assigned_to);
+        }
 
       } catch (err) {
-        console.error("Échec de la transmission Matrix:", err);
+        console.error("Erreur Matrix Sync:", err);
       }
     }
   };
@@ -55,7 +64,8 @@ const PublicAIChatbot = () => {
     if (!input.trim() || loading) return;
 
     const userMsg = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMsg]);
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     setInput('');
     setLoading(true);
 
@@ -65,20 +75,19 @@ const PublicAIChatbot = () => {
         stats: { projects: 12, members: 8 }
       };
 
-      // Prompt spécifique pour que l'IA publique soit une vraie commerciale
       const publicSystemPrompt = {
         role: "system",
-        content: `Tu es la secrétaire commerciale de DEVELITE TECH.
-        Ton but : aider les clients et récolter leurs besoins.
-        Si un client veut parler à la direction (CEO Jospin, CTO Héritier, COO Justin), dis-lui que tu vas TRANSMETTRE sa demande immédiatement.
-        Une fois que tu as dit que tu transmets, le système enregistrera la conversation.`
+        content: `Tu es l'agent d'accueil de DEVELITE TECH.
+        Tes contacts de direction: CEO Jospin (jospinkavulivwadev@gmail.com), CTO Héritier (heritierbambu00@gmail.com), COO Justin (justinkombi017@gmail.com).
+        SI le client veut une mise en relation, dis-lui CLAIREMENT: "Je transmet immédiatement votre demande à la direction."
+        Une fois que tu as dit cela, le système enregistre automatiquement toute la conversation.`
       };
 
-      const response = await chatWithAI([publicSystemPrompt, ...messages, userMsg], context);
-      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+      const response = await chatWithAI([publicSystemPrompt, ...updatedMessages], context);
+      const newHistory = [...updatedMessages, { role: 'assistant', content: response }];
+      setMessages(newHistory);
 
-      // Déclenchement de l'action réelle
-      await submitLeadToMatrix(response);
+      await submitLeadToMatrix(response, newHistory);
 
     } catch (err) {
       setMessages(prev => [...prev, { role: 'assistant', content: "Désolé, je rencontre une petite perturbation. Réessayez ?" }]);
@@ -95,14 +104,14 @@ const PublicAIChatbot = () => {
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="mb-6 w-[350px] h-[500px] bg-white rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-line overflow-hidden flex flex-col"
+            className="mb-6 w-[350px] h-[550px] bg-white rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-line overflow-hidden flex flex-col"
           >
              <div className="p-6 bg-ink text-paper flex items-center justify-between">
                 <div className="flex items-center gap-3">
                    <div className="w-8 h-8 bg-clay rounded-lg flex items-center justify-center shadow-lg shadow-clay/20">
                       <i className="fa-solid fa-wand-magic-sparkles text-xs"></i>
                    </div>
-                   <span className="font-display font-bold text-sm tracking-tight">DEVELITE AI</span>
+                   <span className="font-display font-bold text-sm tracking-tight uppercase">Develite Matrix Bot</span>
                 </div>
                 <button onClick={() => setIsOpen(false)} className="text-paper/40 hover:text-paper transition-colors"><i className="fa-solid fa-xmark"></i></button>
              </div>
@@ -110,27 +119,27 @@ const PublicAIChatbot = () => {
              <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar bg-[#F9F7F2]">
                 {messages.map((m, i) => (
                   <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                     <div className={`max-w-[85%] p-4 rounded-2xl text-[13px] leading-relaxed ${m.role === 'user' ? 'bg-clay text-white rounded-tr-none' : 'bg-white text-ink shadow-sm border border-line rounded-tl-none'}`}>
+                     <div className={`max-w-[85%] p-4 rounded-2xl text-[13px] leading-relaxed ${m.role === 'user' ? 'bg-clay text-white rounded-tr-none shadow-lg shadow-clay/10' : 'bg-white text-ink shadow-sm border border-line rounded-tl-none'}`}>
                         {m.content}
                      </div>
                   </div>
                 ))}
                 {loading && (
-                  <div className="flex gap-1 p-2">
-                     <span className="w-1.5 h-1.5 bg-clay/40 rounded-full animate-bounce"></span>
-                     <span className="w-1.5 h-1.5 bg-clay/40 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                  <div className="flex gap-1.5 p-2">
+                     <span className="w-1.5 h-1.5 bg-clay rounded-full animate-bounce"></span>
+                     <span className="w-1.5 h-1.5 bg-clay/60 rounded-full animate-bounce [animation-delay:0.2s]"></span>
                   </div>
                 )}
                 <div ref={endRef} />
              </div>
 
-             <form onSubmit={handleSend} className="p-4 bg-white border-t border-line flex gap-2">
+             <form onSubmit={handleSend} className="p-5 bg-white border-t border-line flex gap-2">
                 <input
                   type="text" value={input} onChange={e => setInput(e.target.value)}
-                  placeholder="Posez votre question..."
-                  className="flex-1 bg-paper border border-line rounded-xl px-4 py-3 text-xs outline-none focus:border-clay transition-all"
+                  placeholder="Écrivez votre message..."
+                  className="flex-1 bg-paper border border-line rounded-xl px-5 py-4 text-sm outline-none focus:border-clay transition-all"
                 />
-                <button type="submit" className="w-10 h-10 bg-ink text-white rounded-xl flex items-center justify-center hover:bg-clay transition-all">
+                <button type="submit" className="w-12 h-12 bg-ink text-white rounded-xl flex items-center justify-center hover:bg-clay transition-all shadow-lg">
                    <i className="fa-solid fa-paper-plane text-xs"></i>
                 </button>
              </form>
@@ -142,12 +151,12 @@ const PublicAIChatbot = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 bg-ink text-white rounded-2xl shadow-2xl flex items-center justify-center relative overflow-hidden group"
+        className="w-16 h-16 bg-ink text-white rounded-2xl shadow-2xl flex items-center justify-center relative overflow-hidden group border border-white/5"
       >
         <div className="absolute inset-0 bg-clay translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
         <i className="fa-solid fa-comment-dots text-2xl relative z-10"></i>
-        {!isOpen && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-clay rounded-full border-4 border-paper animate-ping"></span>
+        {!isOpen && currentTicketId && (
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-4 border-paper animate-pulse"></span>
         )}
       </motion.button>
     </div>
