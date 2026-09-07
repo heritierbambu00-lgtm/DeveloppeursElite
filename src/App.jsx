@@ -19,6 +19,8 @@ import ProfileSettings from './pages/admin/ProfileSettings';
 import ProjectManager from './pages/admin/ProjectManager';
 import UserManagement from './pages/admin/UserManagement';
 import Inbox from './pages/admin/Inbox';
+import KanbanBoard from './pages/admin/KanbanBoard';
+import Analytics from './pages/admin/Analytics';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // External Refresh Revelations for consistent animation triggering
@@ -104,12 +106,17 @@ function App() {
           <Route path="profile" element={<ProfileSettings />} />
           <Route path="projects" element={
             <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
-              <ProjectManager />
+              <KanbanBoard />
             </ProtectedRoute>
           } />
           <Route path="users" element={
             <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
               <UserManagement />
+            </ProtectedRoute>
+          } />
+          <Route path="analytics" element={
+            <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin']}>
+              <Analytics />
             </ProtectedRoute>
           } />
           <Route path="inbox" element={

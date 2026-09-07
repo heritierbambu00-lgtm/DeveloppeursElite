@@ -37,6 +37,15 @@ const Contact = () => {
         console.error("Erreur d'insertion Supabase:", submitError);
         throw submitError;
       }
+
+      // 2.5 Création d'une notification système
+      await supabase.from('notifications').insert([{
+        type: 'message',
+        title: `Nouveau message: ${form.name}`,
+        content: form.message,
+        assigned_to: aiRouting.assigned_to
+      }]);
+
       console.log("Message enregistré en base de données.");
 
       console.log("Envoi de la notification email...");

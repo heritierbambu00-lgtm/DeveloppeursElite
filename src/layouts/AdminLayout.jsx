@@ -3,6 +3,7 @@ import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import Logo from '../components/Logo';
 import AISidebar from '../components/admin/AISidebar';
+import NotificationBell from '../components/admin/NotificationBell';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ const AdminLayout = () => {
   const menuItems = [
     { label: 'Home', icon: 'fa-house', path: '/admin', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager', 'member'] },
     { label: 'Projets', icon: 'fa-shapes', path: '/admin/projects', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager'] },
+    { label: 'Analytics', icon: 'fa-chart-pie', path: '/admin/analytics', roles: ['CEO', 'CTO', 'COO', 'admin'] },
     { label: 'Messages', icon: 'fa-comment-dots', path: '/admin/inbox', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager'] },
     { label: 'Équipe', icon: 'fa-user-group', path: '/admin/users', roles: ['CEO', 'CTO', 'admin', 'manager'] },
     { label: 'Mon Profil', icon: 'fa-user-gear', path: '/admin/profile', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager', 'member'] },
@@ -144,6 +146,8 @@ const AdminLayout = () => {
           </div>
 
           <div className="flex items-center gap-3 lg:gap-6">
+             <NotificationBell profile={profile} />
+
              <button
                onClick={() => setIsAISidebarOpen(true)}
                className="relative w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-white/40 hover:text-luma-purple hover:bg-white/10 transition-all shadow-lg border border-white/5"
