@@ -1,26 +1,23 @@
 const RESEND_API_KEY = import.meta.env.VITE_RESEND_API_KEY;
 
-/**
- * Envoie un email de notification à un membre de la direction via Resend
- */
 export const sendNotificationEmail = async (contactData, assignedMember) => {
   if (!RESEND_API_KEY) {
-    console.warn("Envoi d'email ignoré : RESEND_API_KEY manquante.");
+    console.error("Envoi d'email impossible : La clé VITE_RESEND_API_KEY n'est pas configurée.");
     return;
   }
 
-  // Emails réels fournis par l'utilisateur
+  // Emails officiels DEVELITE TECH
   const memberEmails = {
     'CEO': 'jospinkavulivwadev@gmail.com',
-    'COE': 'jospinkavulivwadev@gmail.com', // Gestion du typo COE
+    'COE': 'jospinkavulivwadev@gmail.com',
     'CTO': 'heritierbambu00@gmail.com',
     'COO': 'justinkombi017@gmail.com'
   };
 
-  const toEmail = memberEmails[assignedMember] || memberEmails['CTO'];
+  const toEmail = memberEmails[assignedMember] || 'heritierbambu00@gmail.com';
 
   try {
-    console.log(`Tentative d'envoi d'email à ${toEmail} pour le rôle ${assignedMember}...`);
+    console.log(`[Resend] Tentative d'envoi vers : ${toEmail}`);
 
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -29,35 +26,35 @@ export const sendNotificationEmail = async (contactData, assignedMember) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'DEVELITE <onboarding@resend.dev>',
-        to: toEmail,
-        subject: `[MATRICE] Nouveau message assigné : ${contactData.subject}`,
+        from: 'DEVELITE AI <onboarding@resend.dev>',
+        to: [toEmail], // On peut mettre plusieurs destinataires ici si besoin
+        subject: `[MATRICE] Nouveau message de ${contactData.name}`,
         html: `
-          <div style="font-family: sans-serif; padding: 20px; color: #181B20; background-color: #F6F3EC; border-radius: 10px;">
-            <h2 style="color: #BC4B0E; border-bottom: 2px solid #DBD4C4; padding-bottom: 10px;">Alerte Matrice : Nouveau Contact</h2>
-            <p style="margin-top: 20px;"><strong>Expéditeur :</strong> ${contactData.name}</p>
+          <div style="font-family: sans-serif; background-color: #0B0813; padding: 40px; color: white; border-radius: 20px;">
+            <h1 style="color: #9E7AFF; font-size: 24px;">Nouveau Signal Détecté</h1>
+            <p style="color: rgba(255,255,255,0.6);">Un nouveau message vient d'être trié par la matrice.</p>
+            <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;" />
+            <p><strong>Expéditeur :</strong> ${contactData.name}</p>
             <p><strong>Email :</strong> ${contactData.email}</p>
             <p><strong>Sujet :</strong> ${contactData.subject}</p>
-            <div style="margin-top: 20px; padding: 15px; background-color: white; border: 1px solid #E5E0D3; border-radius: 8px;">
-              <p style="margin-top: 0;"><strong>Message :</strong></p>
-              <p style="font-style: italic; color: #2A2E35;">${contactData.message}</p>
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-top: 20px;">
+              <p style="margin: 0; color: rgba(255,255,255,0.8); font-style: italic;">"${contactData.message}"</p>
             </div>
-            <p style="font-size: 11px; color: #6C7280; margin-top: 30px; border-top: 1px solid #E5E0D3; pt: 10px;">
-              Ce message a été trié et vous a été assigné par l'intelligence artificielle <strong>DEVELITE AI</strong>.
+            <p style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 30px; text-transform: uppercase; letter-spacing: 2px;">
+              Assigné à : ${assignedMember} par DEVELITE AI • Aware Matrix
             </p>
           </div>
         `
       })
     });
 
-    const data = await response.json();
-    if (response.ok) {
-      console.log("Email envoyé avec succès via Resend.");
-    } else {
-      console.error("Erreur Resend:", data);
-    }
-    return data;
+    const result = await response.json();
+    if (!response.ok) throw new Error(JSON.stringify(result));
+
+    console.log("[Resend] Succès :", result);
+    return result;
   } catch (error) {
-    console.error("Échec critique de l'envoi d'email:", error);
+    console.error("[Resend] Échec critique :", error.message);
+    throw error;
   }
 };
