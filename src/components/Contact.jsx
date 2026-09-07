@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { classifyContactMessage } from '../lib/aiService';
+import { sendNotificationEmail } from '../lib/emailService';
 
 const Contact = () => {
   const [form, setForm] = useState({
@@ -33,8 +34,8 @@ const Contact = () => {
 
       if (submitError) throw submitError;
 
-      // 3. Préparation pour notification email (À étendre avec l'API Render/Resend)
-      console.log(`Notification pour ${aiRouting.assigned_to}: ${aiRouting.analysis}`);
+      // 3. Notification email automatique
+      await sendNotificationEmail(form, aiRouting.assigned_to);
 
       setSent(true);
       setForm({ name: '', email: '', subject: 'Développement logiciel', message: '' });
