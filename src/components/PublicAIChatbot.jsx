@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { chatWithAI } from '../lib/aiService';
+import { chatWithAI, classifyContactMessage } from '../lib/aiService';
+import { supabase } from '../lib/supabaseClient';
+import { sendNotificationEmail } from '../lib/emailService';
 
 const PublicAIChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +17,39 @@ const PublicAIChatbot = () => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const submitLeadToMatrix = async (aiContent) => {
+    // Si l'IA confirme qu'elle transmet, on essaie d'extraire les infos ou de créer un ticket
+    // Logique simplifiée : Toute conversation aboutissant à une promesse de transmission crée un ticket
+    if (aiContent.toLowerCase().includes('transmet') || aiContent.toLowerCase().includes('envoyé')) {
+      try {
+        const lastUserMsg = messages.filter(m => m.role === 'user').pop()?.content || '';
+
+        // On utilise notre service de classification pour router intelligemment même via le chat
+        const aiRouting = await classifyContactMessage(lastUserMsg);
+
+        await supabase.from('contacts').insert([{
+          name: 'Prospect via Chat',
+          email: 'chat@client.com', // Idéalement, l'IA devrait demander l'email
+          subject: 'Nouveau Lead via AI Chatbot',
+          message: `Détails de la conversation: \n${messages.map(m => `${m.role}: ${m.content}`).join('\n')}`,
+          assigned_to: aiRouting.assigned_to,
+          ai_analysis: "Lead qualifié par l'IA Publique"
+        }]);
+
+        // Notification email au CTO
+        await sendNotificationEmail({
+          name: 'Prospect Chatbot',
+          email: 'ai@develite.tech',
+          subject: 'URGENT: Nouveau Lead IA Chatbot',
+          message: 'Un client potentiel discute actuellement avec l\'IA et demande une mise en relation.'
+        }, 'CTO');
+
+      } catch (err) {
+        console.error("Échec de la transmission Matrix:", err);
+      }
+    }
+  };
+
   const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim() || loading) return;
@@ -25,15 +60,28 @@ const PublicAIChatbot = () => {
     setLoading(true);
 
     try {
-      // Pour le public, on utilise un contexte limité (pas de données privées d'équipe)
       const context = {
         user: { fullName: 'Visiteur', role: 'Prospect' },
-        stats: { projects: 12, members: 8 } // Chiffres publics
+        stats: { projects: 12, members: 8 }
       };
-      const response = await chatWithAI([...messages, userMsg], context);
+
+      // Prompt spécifique pour que l'IA publique soit une vraie commerciale
+      const publicSystemPrompt = {
+        role: "system",
+        content: `Tu es la secrétaire commerciale de DEVELITE TECH.
+        Ton but : aider les clients et récolter leurs besoins.
+        Si un client veut parler à la direction (CEO Jospin, CTO Héritier, COO Justin), dis-lui que tu vas TRANSMETTRE sa demande immédiatement.
+        Une fois que tu as dit que tu transmets, le système enregistrera la conversation.`
+      };
+
+      const response = await chatWithAI([publicSystemPrompt, ...messages, userMsg], context);
       setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+
+      // Déclenchement de l'action réelle
+      await submitLeadToMatrix(response);
+
     } catch (err) {
-      setMessages(prev => [...prev, { role: 'assistant', content: "Désolé, je rencontre une petite perturbation dans ma matrice. Réessayez ?" }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: "Désolé, je rencontre une petite perturbation. Réessayez ?" }]);
     } finally {
       setLoading(false);
     }
