@@ -20,10 +20,11 @@ const Contact = () => {
     setError(null);
 
     try {
-      // 1. Analyse du message par DEVELITE AI
+      console.log("Démarrage de l'analyse IA...");
       const aiRouting = await classifyContactMessage(form.message);
+      console.log("IA a assigné le message à:", aiRouting.assigned_to);
 
-      // 2. Insertion en base de données avec assignation
+      console.log("Insertion en base de données Supabase...");
       const { error: submitError } = await supabase
         .from('contacts')
         .insert([{
@@ -32,16 +33,20 @@ const Contact = () => {
           ai_analysis: aiRouting.analysis
         }]);
 
-      if (submitError) throw submitError;
+      if (submitError) {
+        console.error("Erreur d'insertion Supabase:", submitError);
+        throw submitError;
+      }
+      console.log("Message enregistré en base de données.");
 
-      // 3. Notification email automatique
+      console.log("Envoi de la notification email...");
       await sendNotificationEmail(form, aiRouting.assigned_to);
 
       setSent(true);
       setForm({ name: '', email: '', subject: 'Développement logiciel', message: '' });
     } catch (err) {
-      setError("Impossible d'envoyer le message. Veuillez réessayer plus tard.");
-      console.error('Contact error:', err.message);
+      console.error("Processus de contact échoué:", err.message);
+      setError(`Échec : ${err.message}. Vérifiez la console pour plus de détails.`);
     } finally {
       setSending(false);
     }
