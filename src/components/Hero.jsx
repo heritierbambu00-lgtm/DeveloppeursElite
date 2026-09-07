@@ -91,15 +91,17 @@ const Hero = () => {
             {/* Tech Hexagon Badge */}
             <div className="absolute -top-10 -right-4 w-32 h-32 pointer-events-none group" aria-hidden="true">
                <div className="w-full h-full relative animate-[spin_10s_linear_infinite]">
-                  <svg viewBox="0 0 100 100" className="w-full h-full fill-none stroke-clay/20 stroke-[0.5]">
+                  <svg viewBox="0 0 100 100" className="w-full h-full fill-none stroke-clay/30 stroke-[0.8]">
                     <polygon points="50,1 95,25 95,75 50,99 5,75 5,25" />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Logo className="w-12 h-12" />
+                    <div className="w-16 h-16 bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,77,0,0.2)]">
+                      <Logo className="w-10 h-10 drop-shadow-[0_0_8px_rgba(158,122,255,0.6)]" />
+                    </div>
                   </div>
                </div>
                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                  <div className="w-24 h-24 rounded-full border border-clay/5 animate-ping"></div>
+                  <div className="w-24 h-24 rounded-full border border-clay/10 animate-ping"></div>
                </div>
             </div>
           </div>
