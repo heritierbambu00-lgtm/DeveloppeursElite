@@ -4,51 +4,32 @@ export default async function handler(req, res) {
   }
 
   const { toEmail, subject, html, contactData } = req.body;
-  const RESEND_API_KEY = process.env.VITE_RESEND_API_KEY;
+  const apiKey = process.env.VITE_RESEND_API_KEY;
 
-  if (!RESEND_API_KEY) {
-    return res.status(500).json({ error: 'Configuration serveur incomplète (Clé manquante)' });
+  if (!apiKey) {
+    return res.status(500).json({ error: 'Clé API manquante sur le serveur Vercel' });
   }
 
-  // Use provided subject/html or fallback to default contact notification
-  const finalSubject = subject || `[MATRICE] Nouveau message de ${contactData?.name}`;
-  const finalHtml = html || `
-    <div style="font-family: sans-serif; background-color: #0B0813; padding: 40px; color: white; border-radius: 20px;">
-      <h1 style="color: #9E7AFF; font-size: 24px;">Nouveau Signal Détecté</h1>
-      <p style="color: rgba(255,255,255,0.6);">Un nouveau message vient d'être trié par la matrice.</p>
-      <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;" />
-      <p><strong>Expéditeur :</strong> ${contactData?.name}</p>
-      <p><strong>Email :</strong> ${contactData?.email}</p>
-      <p><strong>Sujet :</strong> ${contactData?.subject}</p>
-      <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-top: 20px;">
-        <p style="margin: 0; color: rgba(255,255,255,0.8); font-style: italic;">"${contactData?.message}"</p>
-      </div>
-      <p style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 30px; text-transform: uppercase; letter-spacing: 2px;">
-        DEVELITE TECH • Aware Matrix System
-      </p>
-    </div>
-  `;
+  const finalSubject = subject || `[MATRICE] Nouveau message de ${contactData?.name || 'Contact'}`;
+  const finalHtml = html || `<h2>Nouveau message reçu. Consultez votre dashboard.</h2>`;
 
   try {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'DEVELITE TECH <onboarding@resend.dev>',
-        to: [toEmail],
+        from: 'DEVELITE <onboarding@resend.dev>',
+        to: toEmail,
         subject: finalSubject,
         html: finalHtml
       })
     });
 
     const result = await response.json();
-
-    if (!response.ok) {
-      return res.status(response.status).json(result);
-    }
+    if (!response.ok) return res.status(response.status).json(result);
 
     return res.status(200).json(result);
   } catch (error) {

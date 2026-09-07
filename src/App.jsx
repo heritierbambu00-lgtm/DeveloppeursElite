@@ -7,10 +7,12 @@ import Services from './components/Services';
 import Team from './components/Team';
 import Projects from './components/Projects';
 import Impact from './components/Impact';
+import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import Loader from './components/Loader';
+import PublicAIChatbot from './components/PublicAIChatbot';
 import LoginPage from './pages/auth/LoginPage';
 import AccessDenied from './pages/auth/AccessDenied';
 import AdminLayout from './layouts/AdminLayout';
@@ -21,6 +23,7 @@ import UserManagement from './pages/admin/UserManagement';
 import Inbox from './pages/admin/Inbox';
 import KanbanBoard from './pages/admin/KanbanBoard';
 import Analytics from './pages/admin/Analytics';
+import TestimonialManager from './pages/admin/TestimonialManager';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // External Refresh Revelations for consistent animation triggering
@@ -82,9 +85,11 @@ const LandingPage = () => {
         <Projects />
         <Team />
         <Impact />
+        <Testimonials />
         <Contact />
       </main>
       <Footer />
+      <PublicAIChatbot />
     </div>
   );
 };
@@ -117,6 +122,11 @@ function App() {
           <Route path="analytics" element={
             <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin']}>
               <Analytics />
+            </ProtectedRoute>
+          } />
+          <Route path="testimonials" element={
+            <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
+              <TestimonialManager />
             </ProtectedRoute>
           } />
           <Route path="inbox" element={
