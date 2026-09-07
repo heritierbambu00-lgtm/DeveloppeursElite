@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
+import QuickInbox from '../../components/admin/QuickInbox';
 
 const COODashboard = ({ profile }) => {
   const [stats, setStats] = useState({ projects: 0, messages: 0, members: 0 });
@@ -203,6 +204,14 @@ const COODashboard = ({ profile }) => {
                <p className="text-4xl lg:text-5xl font-black tracking-tighter opacity-10">0.00 $</p>
                <p className="text-[10px] font-bold text-slate-200 uppercase tracking-[0.2em] mt-2">Bénéfice Net</p>
             </div>
+         </div>
+
+         <div className="bg-white border border-slate-200 p-6 lg:p-8 rounded-[2.5rem] shadow-sm text-[#1A2624] md:col-span-2 lg:col-span-1">
+            <div className="flex justify-between items-center mb-6">
+               <h3 className="font-black">Signaux Récents</h3>
+               <Link to="/admin/inbox" className="text-[9px] lg:text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-luma-purple">Tout voir</Link>
+            </div>
+            <QuickInbox />
          </div>
 
          <div className="bg-white border border-slate-200 p-6 lg:p-8 rounded-[2.5rem] shadow-sm text-[#1A2624] md:col-span-2 lg:col-span-1">

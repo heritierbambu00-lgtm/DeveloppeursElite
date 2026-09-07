@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
+import QuickInbox from '../../components/admin/QuickInbox';
 
 const CTODashboard = ({ profile }) => {
   const [stats, setStats] = useState({ projects: 0, messages: 0, members: 0 });
@@ -78,9 +79,16 @@ const CTODashboard = ({ profile }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="bg-luma-card border border-white/5 p-8 rounded-[2.5rem] lg:col-span-1 shadow-xl">
+             <div className="flex justify-between items-center mb-8">
+                <h3 className="font-black text-sm uppercase tracking-widest text-luma-purple">Communications</h3>
+                <Link to="/admin/inbox" className="text-[10px] font-black text-white/20 hover:text-white uppercase">Inbox</Link>
+             </div>
+             <QuickInbox />
+          </div>
+
           {[
             { label: 'Matrice de Sécurité', status: 'Stable', icon: 'fa-shield-halved', color: 'luma-blue' },
-            { label: 'Node Distribution', status: 'Active', icon: 'fa-network-wired', color: 'luma-purple' },
             { label: 'Quantum Analytics', status: 'Optimal', icon: 'fa-microchip', color: 'luma-pink' }
           ].map((card, i) => (
             <div key={i} className="bg-white/[0.03] border border-white/5 p-6 rounded-[2rem] flex items-center gap-5 hover:bg-white/[0.05] transition-all cursor-pointer group">

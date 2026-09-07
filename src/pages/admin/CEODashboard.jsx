@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
+import QuickInbox from '../../components/admin/QuickInbox';
 
 const CEODashboard = ({ profile }) => {
   const [stats, setStats] = useState({ projects: 0, messages: 0, members: 0 });
@@ -192,17 +193,11 @@ const CEODashboard = ({ profile }) => {
          {/* Upcoming Events */}
          <div className="bg-white border border-slate-200 p-6 lg:p-8 rounded-[2.5rem] shadow-sm md:col-span-2 lg:col-span-1">
             <div className="flex justify-between items-center mb-6">
-               <h3 className="text-lg font-bold">Messages récents</h3>
+               <h3 className="text-lg font-bold">Signaux Récents</h3>
                <Link to="/admin/inbox" className="text-xs font-bold text-luma-purple hover:underline">Boîte mail</Link>
             </div>
-            <div className="space-y-6">
-               <p className="text-xs text-slate-400 italic text-center py-4">Consultez la boîte de réception pour voir les demandes clients.</p>
-               <Link
-                 to="/admin/inbox"
-                 className="flex items-center justify-center gap-3 w-full bg-slate-50 border border-slate-200 py-3.5 rounded-2xl text-xs font-bold hover:bg-slate-100 transition-all shadow-sm"
-               >
-                  <i className="fa-solid fa-envelope"></i> Accéder aux messages
-               </Link>
+            <div className="text-slate-900">
+               <QuickInbox />
             </div>
          </div>
       </div>
