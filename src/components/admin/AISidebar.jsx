@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { chatWithAI } from '../../lib/aiService';
 import { supabase } from '../../lib/supabaseClient';
 
@@ -45,21 +46,26 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
       utterance.lang = 'fr-FR';
       utterance.rate = 1.1;
       utterance.pitch = 1.0;
+
+      // Select a professional voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find(v => v.lang.startsWith('fr') && v.name.includes('Google'));
+      if (preferredVoice) utterance.voice = preferredVoice;
+
       window.speechSynthesis.speak(utterance);
     }
   };
 
   const toggleListening = () => {
+    // Unmute/Unlock audio on user interaction
+    if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+
     if (isListening) {
       recognition?.stop();
       setIsListening(false);
     } else {
       setIsListening(true);
       recognition?.start();
-      // "Wake up" speech synthesis on first interaction
-      if (window.speechSynthesis.paused) {
-        window.speechSynthesis.resume();
-      }
     }
   };
 
@@ -74,7 +80,7 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
   const processMessage = async (text, pureVoice = false) => {
     if (!text.trim()) return;
 
-    // Normal mode: add to history. Pure voice: don't.
+    // Standard mode: add to visual history
     if (!pureVoice) {
       const userMessage = { role: 'user', content: text };
       setMessages(prev => [...prev, userMessage]);
@@ -84,6 +90,7 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
     setIsTyping(true);
 
     try {
+      // Refresh database context for AI omniscience
       const { count: pCount } = await supabase.from('projects').select('*', { count: 'exact', head: true });
       const { count: mCount } = await supabase.from('contacts').select('*', { count: 'exact', head: true });
       const { data: teamData } = await supabase.from('profiles').select('full_name, user_role, role').order('updated_at', { ascending: true });
@@ -94,7 +101,8 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
         team: teamData || []
       };
 
-      const aiResponse = await chatWithAI([...messages, { role: 'user', content: text }], context);
+      // Send visible history + new message to Groq
+      const aiResponse = await chatWithAI([...messages.filter(m => m.role !== 'system'), { role: 'user', content: text }], context);
 
       if (!pureVoice) {
         setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
@@ -103,9 +111,7 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
       speak(aiResponse);
     } catch (err) {
       const errorMsg = "Erreur de communication avec la matrice.";
-      if (!pureVoice) {
-        setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }]);
-      }
+      if (!pureVoice) setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }]);
       speak(errorMsg);
     } finally {
       setIsTyping(false);
@@ -154,7 +160,7 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
                    <div className="w-1.5 h-8 bg-luma-purple rounded-full animate-[bounce_0.6s_infinite_0.3s]"></div>
                    <div className="w-1.5 h-4 bg-luma-purple rounded-full animate-[bounce_0.6s_infinite_0.4s]"></div>
                 </div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-luma-purple">Mode Vocal Pur Actif • Liaison Directe</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-luma-purple">Liaison Vocale Directe Active</p>
               </div>
             )}
 
@@ -201,7 +207,7 @@ const AISidebar = ({ isOpen, onClose, profile }) => {
               )}
             </form>
             <p className="mt-4 text-[9px] text-center text-white/10 font-bold uppercase tracking-widest leading-none">
-              {isPureVoiceMode ? "Liaison Vocale Privée • Zéro Trace Écrite" : "Mode Standard • Historique Activé"}
+              {isPureVoiceMode ? "Mode Vocal Pur • Zéro Trace" : "Mode Standard • Historique Actif"}
             </p>
           </div>
         </div>

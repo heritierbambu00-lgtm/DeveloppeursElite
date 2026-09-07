@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { classifyContactMessage } from '../lib/aiService';
 
 const Contact = () => {
   const [form, setForm] = useState({
@@ -18,11 +19,22 @@ const Contact = () => {
     setError(null);
 
     try {
+      // 1. Analyse du message par DEVELITE AI
+      const aiRouting = await classifyContactMessage(form.message);
+
+      // 2. Insertion en base de données avec assignation
       const { error: submitError } = await supabase
         .from('contacts')
-        .insert([form]);
+        .insert([{
+          ...form,
+          assigned_to: aiRouting.assigned_to,
+          ai_analysis: aiRouting.analysis
+        }]);
 
       if (submitError) throw submitError;
+
+      // 3. Préparation pour notification email (À étendre avec l'API Render/Resend)
+      console.log(`Notification pour ${aiRouting.assigned_to}: ${aiRouting.analysis}`);
 
       setSent(true);
       setForm({ name: '', email: '', subject: 'Développement logiciel', message: '' });
@@ -111,7 +123,7 @@ const Contact = () => {
                 <span className="mx-auto w-14 h-14 rounded-full bg-moss/10 border border-moss/30 grid place-items-center mb-5">
                   <i className="fa-solid fa-check text-moss text-[20px]"></i>
                 </span>
-                <h3 className="font-display font-bold text-2xl tracking-tight">Message bien reçu.</h3>
+                <h3 className="font-display font-bold text-2xl tracking-tight text-slate-900">Message bien reçu.</h3>
                 <p className="mt-3 text-sm text-smoke">Merci pour votre confiance. Notre équipe vous répondra sous 24 heures.</p>
                 <button onClick={() => setSent(false)} className="mt-7 u-link text-sm font-semibold text-clay">Envoyer un autre message</button>
               </div>
