@@ -58,16 +58,10 @@ const Hero = () => {
                <Logo className="w-96 h-96" />
             </div>
 
-            {/* Main Image Frame - Neo Matrix Style */}
+            {/* Main Logo Frame - Filling the entire space */}
             <div className="relative">
-              <figure className="curtain rv-mask rounded-[3rem] overflow-hidden border border-white/40 shadow-2xl bg-white/[0.02] backdrop-blur-3xl">
-                <div className="kenburns aspect-[4/5] overflow-hidden">
-                  <img
-                    src="/Heritier.jpg"
-                    alt="Héritier Bambu"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+              <figure className="curtain rv-mask rounded-[3rem] overflow-hidden border border-white/40 shadow-2xl bg-white/[0.05] backdrop-blur-3xl aspect-[4/5] flex items-center justify-center">
+                <Logo className="w-full h-full scale-110 drop-shadow-[0_0_50px_rgba(158,122,255,0.15)]" />
               </figure>
 
               {/* Decorative Matrix Frame */}
@@ -76,19 +70,19 @@ const Hero = () => {
 
             <figcaption className="mt-6 flex items-center justify-between px-2">
               <div className="flex flex-col">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-clay">Identity Node 01</span>
-                <span className="text-sm font-bold text-ink uppercase tracking-tight">Héritier Bambu — CTO & Founder</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-clay">Matrix Core Node</span>
+                <span className="text-sm font-bold text-ink uppercase tracking-tight">DEVELITE TECH — GLOBAL INFRASTRUCTURE</span>
               </div>
             </figcaption>
 
-            {/* Tech Hexagon Badge - IMPROVED SIZE AND CLARITY */}
+            {/* Tech Hexagon Badge - MAXIMIZED CLARITY */}
             <div className="absolute -top-10 -right-4 w-36 h-36 pointer-events-none group" aria-hidden="true">
                <div className="w-full h-full relative animate-[spin_12s_linear_infinite]">
-                  <svg viewBox="0 0 100 100" className="w-full h-full fill-none stroke-clay/30 stroke-[0.8]">
+                  <svg viewBox="0 0 100 100" className="w-full h-full fill-none stroke-clay/30 stroke-[1]">
                     <polygon points="50,1 95,25 95,75 50,99 5,75 5,25" />
                   </svg>
-                  <div className="absolute inset-0 flex items-center justify-center p-8">
-                    <Logo className="w-full h-full drop-shadow-[0_0_12px_rgba(158,122,255,0.4)]" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Logo className="w-20 h-20 drop-shadow-[0_0_15px_rgba(255,77,0,0.4)]" />
                   </div>
                </div>
                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">

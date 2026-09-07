@@ -3,7 +3,7 @@ import React from 'react';
 const Logo = ({ className = "w-8 h-8" }) => {
   return (
     <svg
-      viewBox="0 0 100 100"
+      viewBox="10 10 85 80" // Tightened viewBox to remove internal empty space
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
@@ -20,7 +20,7 @@ const Logo = ({ className = "w-8 h-8" }) => {
       {/* Logic Processor - Matrix Blue */}
       <rect x="70" y="35" width="10" height="30" rx="2" className="fill-[#53B1FD]" />
 
-      {/* Dynamic Spark - NEW Orange Accent */}
+      {/* Dynamic Spark - Orange Accent */}
       <rect x="25" y="25" width="20" height="20" rx="4" className="fill-[#FF4D00]" />
 
       {/* Internal Glow Effect */}
