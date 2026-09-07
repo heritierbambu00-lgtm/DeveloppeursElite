@@ -46,35 +46,40 @@ const Projects = () => {
               <p className="text-smoke">Aucun projet n'a été publié pour le moment.</p>
            </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
             {projects.map((pj) => (
-              <article key={pj.id} className="rv group rounded-lg border border-line bg-paper overflow-hidden flex flex-col transition-transform duration-500 hover:-translate-y-1.5">
-                <figure className="relative curtain overflow-hidden aspect-[4/3]">
+              <article key={pj.id} className="rv group rounded-[2.5rem] border border-line bg-white overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_80px_-40px_rgba(158,122,255,0.25)]">
+                <figure className="relative overflow-hidden aspect-[1.1/1]">
                   {pj.image_url ? (
                     <img
                       src={pj.image_url}
                       alt={pj.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                     />
                   ) : (
-                    <div className="w-full h-full bg-mist flex items-center justify-center">
-                       <i className="fa-solid fa-code text-4xl text-clay/20"></i>
+                    <div className="w-full h-full bg-slate-50 flex items-center justify-center">
+                       <Logo className="w-16 h-16 opacity-10" />
                     </div>
                   )}
-                  <span className={`absolute top-4 left-4 inline-flex items-center gap-2 bg-paper/90 backdrop-blur-sm border border-line text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full`}>
-                    <span className={`w-1.5 h-1.5 rounded-full bg-${pj.status_color}`}></span>
+                  <span className={`absolute top-6 left-6 inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-line/50 text-[9px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-xl shadow-sm`}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-clay animate-pulse"></span>
                     {pj.status}
                   </span>
                 </figure>
 
-                <div className="p-7 flex-1 flex flex-col">
-                  <p className="text-[10px] uppercase tracking-widest text-smoke mb-2">{pj.category}</p>
-                  <h3 className="font-display font-bold text-2xl tracking-tight mb-3">{pj.title}</h3>
-                  <p className="text-sm leading-relaxed text-smoke flex-1">{pj.description}</p>
+                <div className="p-8 lg:p-10 flex-1 flex flex-col">
+                  <div className="flex justify-between items-start mb-4">
+                     <p className="text-[10px] font-black uppercase tracking-[0.3em] text-smoke">{pj.category}</p>
+                     <i className="fa-solid fa-code text-[10px] text-clay/40"></i>
+                  </div>
+                  <h3 className="font-display font-black text-2xl tracking-tighter text-ink mb-4 group-hover:text-clay transition-colors uppercase italic">{pj.title}</h3>
+                  <p className="text-[14.5px] leading-relaxed text-ink/60 font-medium flex-1">{pj.description}</p>
 
-                  <div className="mt-6 flex items-center justify-between">
-                     <span className="text-[11px] font-bold text-clay uppercase tracking-widest">En savoir plus</span>
-                     <i className="fa-solid fa-arrow-right-long text-clay text-sm group-hover:translate-x-1 transition-transform"></i>
+                  <div className="mt-8 pt-8 border-t border-line/50 flex items-center justify-between">
+                     <span className="text-[11px] font-black text-ink uppercase tracking-[0.1em]">Protocol Details</span>
+                     <div className="w-10 h-10 rounded-full bg-ink/5 flex items-center justify-center group-hover:bg-clay group-hover:text-white transition-all duration-500">
+                        <i className="fa-solid fa-arrow-right-long text-sm transition-transform group-hover:translate-x-0.5"></i>
+                     </div>
                   </div>
                 </div>
               </article>

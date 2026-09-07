@@ -60,26 +60,30 @@ const LandingPage = () => {
       <main id="accueil">
         <Hero />
         <Marquee />
-        <section id="apropos" className="py-24 lg:py-32">
-          <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] grid lg:grid-cols-12 gap-12">
+        <section id="apropos" className="py-24 lg:py-32 bg-paper relative overflow-hidden">
+          <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] grid lg:grid-cols-12 gap-12 relative z-10">
             <div className="lg:col-span-4 min-w-0">
-              <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">(01) — Le labo</p>
-              <h2 className="rv d1 mt-4 font-display font-bold tracking-tight text-4xl lg:text-[2.9rem] leading-[1.06]">
-                Innover pour l'Afrique, depuis Butembo.
+              <p className="rv text-[11px] font-black uppercase tracking-[0.4em] text-clay">(01) — System Node</p>
+              <h2 className="rv d1 mt-6 font-display font-black tracking-tight text-4xl lg:text-[3.2rem] leading-[0.98] uppercase italic">
+                L'excellence <br/> technologique <br/> sans compromis.
               </h2>
             </div>
-            <div className="lg:col-span-8 lg:pl-6 min-w-0">
-              <p className="rv d1 font-display font-medium text-2xl sm:text-[1.75rem] leading-snug tracking-tight text-ink">
-                DEVELITE TECH est un centre d'excellence technologique dédié à la résolution de défis complexes par le biais de l'ingénierie avancée.
+            <div className="lg:col-span-8 lg:pl-10 min-w-0">
+              <p className="rv d1 font-display font-bold text-2xl sm:text-[1.85rem] leading-tight tracking-tight text-ink uppercase">
+                DEVELITE TECH est un hub d'ingénierie avancée, fusionnant code de haute précision et vision stratégique.
               </p>
-              <div className="rv d2 mt-10 bg-white rounded-r-lg p-7 sm:p-8 border border-line border-l-[3px] border-l-clay">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-clay mb-3">Notre mission</p>
-                <p className="text-[15.5px] leading-relaxed text-ink/80">
-                  Bâtir les infrastructures numériques de demain et former une élite technique capable de porter les ambitions du continent avec une vision globale.
+              <div className="rv d2 mt-12 bg-white/[0.4] backdrop-blur-xl rounded-3xl p-8 lg:p-10 border border-white/60 shadow-xl relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-clay"></div>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-clay mb-4">Notre Mission</p>
+                <p className="text-[17px] leading-relaxed text-ink/80 font-medium italic">
+                  "Forger les outils numériques qui propulsent l'Afrique dans l'ère de l'intelligence artificielle et de l'ingénierie globale."
                 </p>
               </div>
             </div>
           </div>
+
+          {/* Background Ambient Glow */}
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-clay/5 blur-[120px] rounded-full"></div>
         </section>
         <Services />
         <Projects />

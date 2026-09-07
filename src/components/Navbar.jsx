@@ -23,129 +23,116 @@ const Navbar = () => {
   }, [open]);
 
   const navLinks = [
-    { num: '01', label: 'Le labo', href: '#apropos' },
+    { num: '01', label: 'Ecosystem', href: '#apropos' },
     { num: '02', label: 'Services', href: '#services' },
-    { num: '03', label: 'Produits', href: '#produits' },
-    { num: '04', label: 'Projets', href: '#projets' },
-    { num: '05', label: 'Partenaires', href: '#partenaires' },
-    { num: '06', label: 'Équipe', href: '#equipe' },
-    { num: '07', label: 'Contact', href: '#contact' },
+    { num: '03', label: 'Solutions', href: '#produits' },
+    { num: '04', label: 'Matrix Log', href: '#projets' },
+    { num: '05', label: 'Partners', href: '#partenaires' },
+    { num: '06', label: 'Nodes', href: '#equipe' },
+    { num: '07', label: 'Liaison', href: '#contact' },
   ];
 
   return (
     <>
       <header
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
           scrolled || open
-            ? 'bg-paper/95 backdrop-blur border-b border-line shadow-[0_1px_0_0_rgba(24,27,32,0.03)]'
-            : 'bg-transparent'
+            ? 'bg-paper/80 backdrop-blur-2xl border-b border-ink/5 py-4'
+            : 'bg-transparent py-6'
         }`}
       >
-        <nav className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] h-[72px] flex items-center justify-between gap-4">
-          <a href="#accueil" className="flex items-center gap-3 group min-w-0" aria-label="DEVELITE TECH — accueil">
-            <Logo className="w-9 h-9 transition-transform duration-300 group-hover:rotate-12 shrink-0" />
-            <span className="leading-none min-w-0">
-              <span className="block font-display font-bold text-[15px] tracking-tight truncate max-w-[11rem] xl:max-w-[16rem]">
+        <nav className="mx-auto w-full max-w-7xl px-6 sm:px-8 xl:px-10 h-[60px] flex items-center justify-between gap-8">
+          <a href="#accueil" className="flex items-center gap-4 group min-w-0" aria-label="DEVELITE TECH">
+            <div className="relative">
+              <Logo className="w-10 h-10 transition-all duration-500 group-hover:scale-110" />
+              <div className="absolute -inset-1 bg-clay/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+            <div className="leading-none min-w-0">
+              <span className="block font-display font-black text-lg tracking-tighter uppercase text-ink group-hover:text-clay transition-colors">
                 DEVELITE
               </span>
-              <span className="block text-[10px] font-semibold tracking-[0.42em] text-clay mt-0.5">TECH</span>
-            </span>
+              <span className="block text-[9px] font-black tracking-[0.6em] text-ink/30 mt-1 uppercase">Tech Matrix</span>
+            </div>
           </a>
 
-          <div className="hidden lg:flex items-center gap-6 xl:gap-8 text-[13.5px] font-medium text-ink/80 min-w-0">
-            {navLinks.slice(0, 7).map((link) => (
-              <a key={link.num} href={link.href} className="u-link hover:text-ink">
+          {/* Desktop Links */}
+          <div className="hidden lg:flex items-center gap-8 xl:gap-10 text-[11px] font-black uppercase tracking-[0.2em] text-ink/40">
+            {navLinks.map((link) => (
+              <a key={link.num} href={link.href} className="hover:text-clay transition-colors relative group py-2">
                 {link.label}
+                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-clay transition-all duration-500 group-hover:w-full"></span>
               </a>
             ))}
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-4 shrink-0">
             <Link
               to="/login"
-              className="w-10 h-10 hidden sm:grid place-items-center rounded-md border border-line text-ink hover:text-clay hover:border-clay transition-all duration-300"
-              aria-label="Accès membre"
+              className="w-12 h-12 hidden sm:flex items-center justify-center rounded-2xl bg-ink/5 text-ink hover:bg-clay hover:text-white transition-all duration-500 shadow-sm"
+              title="Matrix Access"
             >
-              <i className="fa-solid fa-user-shield text-[15px]"></i>
+              <i className="fa-solid fa-terminal text-sm"></i>
             </Link>
 
             <a
               href="#contact"
-              className="group hidden sm:inline-flex items-center gap-2.5 bg-ink text-paper text-[13px] font-semibold px-5 py-2.5 rounded-md hover:bg-clay transition-colors duration-300"
+              className="hidden md:flex items-center gap-3 bg-ink text-white text-[10px] font-black uppercase tracking-[0.2em] px-8 py-4 rounded-2xl hover:bg-clay hover:shadow-[0_0_20px_rgba(158,122,255,0.4)] transition-all duration-500"
             >
-              Nous contacter
-              <i className="fa-solid fa-arrow-right text-[11px] transition-transform duration-300 group-hover:translate-x-1"></i>
+              Contact
             </a>
 
             <button
-              className="lg:hidden w-11 h-11 grid place-items-center rounded-md border border-line bg-white/70"
+              className="lg:hidden w-12 h-12 grid place-items-center rounded-2xl bg-white border border-ink/5 shadow-sm"
               onClick={() => setOpen(!open)}
               aria-expanded={open}
-              aria-label="Ouvrir le menu"
             >
-              <span className="relative w-5 h-5 grid place-items-center">
-                <i
-                  className={`fa-solid fa-bars absolute text-[17px] transition-all duration-300 ${
-                    open ? 'opacity-0 rotate-90' : 'opacity-100 rotate-0'
-                  }`}
-                ></i>
-                <i
-                  className={`fa-solid fa-xmark absolute text-[20px] transition-all duration-300 ${
-                    open ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-90'
-                  }`}
-                ></i>
-              </span>
+              <div className="w-5 flex flex-col gap-1.5">
+                <span className={`h-0.5 bg-ink transition-all duration-300 ${open ? 'rotate-45 translate-y-2 w-5' : 'w-5'}`}></span>
+                <span className={`h-0.5 bg-ink transition-all duration-300 ${open ? 'opacity-0' : 'w-3'}`}></span>
+                <span className={`h-0.5 bg-ink transition-all duration-300 ${open ? '-rotate-45 -translate-y-2 w-5' : 'w-5'}`}></span>
+              </div>
             </button>
           </div>
         </nav>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Neo Matrix Style */}
       <div
-        className={`lg:hidden fixed inset-x-0 top-[72px] bottom-0 bg-paper z-40 overflow-y-auto overscroll-contain transition-all duration-500 ${
-          open ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        className={`lg:hidden fixed inset-0 bg-[#0B0813] z-40 transition-all duration-700 ${
+          open ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
-        aria-hidden={!open}
       >
-        <div className="px-6 pt-8 pb-24 flex flex-col min-h-full">
-          {navLinks.map((link, i) => (
-            <a
-              key={link.num}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className={`flex items-baseline gap-5 py-4 border-b border-line font-display font-bold text-[26px] tracking-tight transition-all duration-500`}
-              style={{
-                transitionDelay: `${i * 70}ms`,
-                opacity: open ? 1 : 0,
-                transform: open ? 'translateY(0)' : 'translateY(16px)',
-              }}
-            >
-              <span className="text-xs font-body font-semibold text-clay">{link.num}</span>
-              <span>{link.label}</span>
-            </a>
-          ))}
+        <div className="px-10 pt-32 pb-24 flex flex-col h-full justify-center">
+          <div className="space-y-8">
+            {navLinks.map((link, i) => (
+              <a
+                key={link.num}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="block group"
+                style={{
+                  transitionDelay: `${i * 50}ms`,
+                  opacity: open ? 1 : 0,
+                  transform: open ? 'translateX(0)' : 'translateX(-20px)',
+                  transition: 'all 0.5s cubic-bezier(0.23, 1, 0.32, 1)'
+                }}
+              >
+                <div className="flex items-center gap-6">
+                   <span className="text-xs font-black text-clay/40 font-display">0{i+1}</span>
+                   <span className="font-display font-black text-4xl uppercase tracking-tighter text-white group-hover:text-clay transition-colors italic">
+                     {link.label}
+                   </span>
+                </div>
+              </a>
+            ))}
+          </div>
 
-          <a
-            href="#contact"
-            onClick={() => setOpen(false)}
-            className={`mt-8 inline-flex items-center justify-center gap-3 bg-ink text-paper font-semibold text-sm px-6 py-4 rounded-md transition-opacity duration-500 ${
-              open ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            Nous contacter <i className="fa-solid fa-arrow-right text-[12px]"></i>
-          </a>
-
-          <Link
-            to="/login"
-            onClick={() => setOpen(false)}
-            className={`mt-4 inline-flex items-center justify-center gap-3 border border-line text-ink font-semibold text-xs px-6 py-3 rounded-md transition-opacity duration-500 ${
-              open ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <i className="fa-solid fa-user-lock"></i> Espace Membre
-          </Link>
-
-          <p className="mt-6 text-xs uppercase tracking-[0.3em] text-smoke">Butembo, RDC - Depuis 2025</p>
+          <div className="mt-20 pt-10 border-t border-white/5 space-y-8" style={{ opacity: open ? 1 : 0, transitionDelay: '400ms' }}>
+             <Link to="/login" onClick={() => setOpen(false)} className="flex items-center gap-4 text-white/40 font-black uppercase text-xs tracking-widest hover:text-clay transition-colors">
+                <i className="fa-solid fa-lock text-clay"></i> Protocol Access
+             </Link>
+             <p className="text-[10px] font-bold text-white/20 uppercase tracking-[0.4em]">Matrix Version 2.0.4 • 2025</p>
+          </div>
         </div>
       </div>
     </>

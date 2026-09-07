@@ -237,28 +237,43 @@ html.has-cursor * {
     position: fixed;
     top: 0;
     left: 0;
-    width: 10px;
-    height: 10px;
-    background: #BC4B0E;
+    width: 8px;
+    height: 8px;
+    background: #9E7AFF;
     z-index: 200;
     pointer-events: none;
-    transform: translate(-50%, -50%);
-    transition: width .25s, height .25s, background-color .25s, opacity .3s;
-    opacity: 0;
+    border-radius: 50%;
+    transition: transform 0.1s ease-out, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
 }
 
-#afr-cursor.on {
-    opacity: 1;
+#afr-cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(158, 122, 255, 0.3);
+    border-radius: 50%;
+    z-index: 199;
+    pointer-events: none;
+    transition: transform 0.15s ease-out, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
 }
 
 #afr-cursor.grow {
-    width: 34px;
-    height: 34px;
-    background: rgba(24, 27, 32, .12);
+    width: 12px;
+    height: 12px;
+    background: #53B1FD;
+}
+
+#afr-cursor-ring.grow {
+    width: 60px;
+    height: 60px;
+    border-color: rgba(83, 177, 253, 0.5);
+    background: rgba(158, 122, 255, 0.05);
 }
 
 @media (pointer: coarse) {
-    #afr-cursor {
+    #afr-cursor, #afr-cursor-ring {
         display: none;
     }
 }

@@ -7,15 +7,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        paper: '#F6F3EC',
+        paper: '#F9FAFB', // Neo-Matrix Background
         ink:   '#181B20',
         inkr:  '#2A2E35',
         smoke: '#6C7280',
         mist:  '#E5E0D3',
-        line:  '#DBD4C4',
-        clay:  '#BC4B0E',
-        clayd: '#97390A',
-        moss:  '#1F6B4A',
+        line:  '#E2E8F0',
+        clay:  '#9E7AFF', // Neo-Matrix Purple
+        clayd: '#7C3AED',
+        moss:  '#53B1FD', // Matrix Blue
         // Lumaora Inspired Colors
         'luma-dark': '#0B0813',
         'luma-card': 'rgba(25, 20, 38, 0.6)',

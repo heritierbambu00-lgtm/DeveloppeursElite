@@ -1,63 +1,76 @@
 import React, { useEffect, useRef } from 'react';
 
 const CustomCursor = () => {
-  const cursorRef = useRef(null);
+  const dotRef = useRef(null);
+  const ringRef = useRef(null);
 
   useEffect(() => {
-    const cursor = cursorRef.current;
-    if (!cursor) return;
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    if (!dot || !ring) return;
 
-    let mx = window.innerWidth / 2;
-    let my = window.innerHeight / 2;
-    let cx = mx;
-    let cy = my;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
 
     const handleMouseMove = (e) => {
-      mx = e.clientX;
-      my = e.clientY;
-      cursor.classList.add('on');
-    };
-
-    const handleMouseLeave = () => {
-      cursor.classList.remove('on');
+      mouseX = e.clientX;
+      mouseY = e.clientY;
     };
 
     const handleMouseOver = (e) => {
       const target = e.target;
-      if (target.closest('a, button, [role="button"], select, input, textarea')) {
-        cursor.classList.add('grow');
+      if (target.closest('a, button, [role="button"], select, input, textarea, .clickable')) {
+        dot.classList.add('grow');
+        ring.classList.add('grow');
       } else {
-        cursor.classList.remove('grow');
+        dot.classList.remove('grow');
+        ring.classList.remove('grow');
       }
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseleave', handleMouseLeave);
-    document.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseover', handleMouseOver);
 
-    const render = () => {
-      cx += (mx - cx) * 0.2;
-      cy += (my - cy) * 0.2;
+    let dotX = mouseX;
+    let dotY = mouseY;
+    let ringX = mouseX;
+    let ringY = mouseY;
 
-      if (cursor) {
-        cursor.style.transform = `translate(${cx - cursor.offsetWidth / 2}px, ${cy - cursor.offsetHeight / 2}px)`;
+    const animate = () => {
+      // Smooth interpolation
+      dotX += (mouseX - dotX) * 0.2;
+      dotY += (mouseY - dotY) * 0.2;
+
+      ringX += (mouseX - ringX) * 0.1;
+      ringY += (mouseY - ringY) * 0.1;
+
+      if (dot) {
+        dot.style.transform = `translate(${dotX - dot.offsetWidth / 2}px, ${dotY - dot.offsetHeight / 2}px)`;
       }
-      requestAnimationFrame(render);
+      if (ring) {
+        ring.style.transform = `translate(${ringX - ring.offsetWidth / 2}px, ${ringY - ring.offsetHeight / 2}px)`;
+      }
+
+      requestAnimationFrame(animate);
     };
 
-    const animId = requestAnimationFrame(render);
+    const animId = requestAnimationFrame(animate);
     document.documentElement.classList.add('has-cursor');
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      document.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseover', handleMouseOver);
       cancelAnimationFrame(animId);
       document.documentElement.classList.remove('has-cursor');
     };
   }, []);
 
-  return <div id="afr-cursor" ref={cursorRef} aria-hidden="true"></div>;
+  return (
+    <>
+      <div id="afr-cursor" ref={dotRef} aria-hidden="true"></div>
+      <div id="afr-cursor-ring" ref={ringRef} aria-hidden="true"></div>
+    </>
+  );
 };
 
 export default CustomCursor;

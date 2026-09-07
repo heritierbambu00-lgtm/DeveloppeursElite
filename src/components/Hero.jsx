@@ -3,104 +3,117 @@ import Logo from './Logo';
 
 const Hero = () => {
   const stats = [
-    { number: '25+', label: 'Projets livrés' },
-    { number: '12', label: 'Experts Tech' },
-    { number: '05', label: 'Produits R&D' },
-    { number: '2025', label: 'Fondation' },
+    { number: '25+', label: 'Matrice de Projets' },
+    { number: '12', label: 'Nodes d\'Ingénierie' },
+    { number: '05', label: 'Protocoles R&D' },
+    { number: '2025', label: 'Initialisation' },
   ];
 
   return (
-    <section className="relative pt-[110px] lg:pt-[140px] pb-14 lg:pb-24 overflow-hidden">
+    <section className="relative pt-[110px] lg:pt-[140px] pb-14 lg:pb-24 overflow-hidden bg-paper">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 xl:gap-16 items-center">
           <div className="lg:col-span-7 min-w-0">
-            <h1 className="font-display font-bold tracking-tight leading-[1.04] text-[clamp(2.5rem,6.3vw,4.9rem)]">
+            <h1 className="font-display font-black tracking-tighter leading-[1.02] text-[clamp(2.5rem,6.8vw,5.5rem)] text-ink">
               <span className="mask rv-mask">
-                <span className="split block"><span className="ln">Des solutions</span></span>
+                <span className="split block"><span className="ln uppercase">Bâtir l'avenir</span></span>
               </span>
               <span className="mask rv-mask">
-                <span className="split block"><span className="ln">numériques qui font</span></span>
+                <span className="split block"><span className="ln">par l'ingénierie</span></span>
               </span>
               <span className="mask rv-mask">
                 <span className="split block">
-                  <span className="ln"><em className="not-italic text-clay">avancer</em> l'Afrique.</span>
+                  <span className="ln italic text-clay">quantique.</span>
                 </span>
               </span>
             </h1>
 
-            <p className="rv d2 mt-7 max-w-xl text-[15.5px] sm:text-base leading-relaxed text-ink/70 break-words">
-              DEVELITE TECH conçoit des logiciels, entraîne des modèles d'IA, forme la nouvelle génération d'ingénieurs et bâtit les infrastructures numériques de la RDC et du monde.
+            <p className="rv d2 mt-8 max-w-xl text-[16px] sm:text-lg leading-relaxed text-ink/60 font-medium">
+              DEVELITE TECH est un centre d'excellence dédié à l'ingénierie logicielle avancée et à l'intelligence artificielle appliquée. Nous forgeons les infrastructures de demain.
             </p>
 
-            <div className="rv d3 mt-9 flex flex-wrap items-center gap-5">
+            <div className="rv d3 mt-10 flex flex-wrap items-center gap-6">
               <a
                 href="#produits"
-                className="group inline-flex items-center gap-3 bg-ink text-paper font-semibold text-sm px-7 py-4 rounded-md hover:bg-clay transition-colors duration-300"
+                className="group relative inline-flex items-center gap-3 bg-ink text-white font-black text-xs uppercase tracking-[0.2em] px-8 py-5 rounded-2xl overflow-hidden transition-all hover:shadow-[0_0_30px_rgba(158,122,255,0.3)] active:scale-95"
               >
-                <span>Découvrir nos produits</span>
-                <i className="fa-solid fa-arrow-right text-[12px] transition-transform duration-300 group-hover:translate-x-1"></i>
+                <div className="absolute inset-0 bg-clay translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                <span className="relative z-10">Accéder aux solutions</span>
+                <i className="fa-solid fa-bolt-lightning relative z-10 text-[10px] transition-transform duration-500 group-hover:rotate-12"></i>
               </a>
 
               <a
                 href="#contact"
-                className="group inline-flex items-center gap-2.5 border border-ink/30 text-ink font-semibold text-sm px-6 py-3.5 rounded-md hover:border-clay hover:text-clay hover:bg-clay/5 transition-all duration-300"
+                className="group inline-flex items-center gap-3 border border-ink/10 text-ink font-black text-xs uppercase tracking-[0.2em] px-8 py-5 rounded-2xl hover:border-clay hover:text-clay transition-all active:scale-95"
               >
-                <span>Discuter d'un projet</span>
-                <i className="fa-solid fa-arrow-up-right text-[11px] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
+                <span>Initialiser un projet</span>
+                <i className="fa-solid fa-arrow-right text-[10px] transition-transform duration-500 group-hover:translate-x-1"></i>
               </a>
             </div>
           </div>
 
           <div className="lg:col-span-5 relative rv d2 min-w-0">
-            <figure className="curtain rv-mask rounded-lg overflow-hidden border border-line shadow-[0_24px_60px_-30px_rgba(24,27,32,0.35)]">
-              <div className="kenburns aspect-[3/4] overflow-hidden">
-                <img
-                  src="/Heritier.jpg"
-                  alt="Héritier Bambu"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </figure>
+            {/* Main Image Frame - Neo Matrix Style */}
+            <div className="relative">
+              <figure className="curtain rv-mask rounded-[3rem] overflow-hidden border border-white/40 shadow-2xl bg-white/[0.02] backdrop-blur-3xl">
+                <div className="kenburns aspect-[4/5] overflow-hidden">
+                  <img
+                    src="/Heritier.jpg"
+                    alt="Héritier Bambu"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </figure>
 
-            <figcaption className="mt-3 flex items-center justify-between text-[11px] uppercase tracking-[0.22em] text-smoke">
-              <span>Héritier Bambu — CEO & Lead Dev</span>
+              {/* Decorative Matrix Frame */}
+              <div className="absolute -inset-4 border border-clay/10 rounded-[3.5rem] pointer-events-none -z-10 animate-pulse"></div>
+            </div>
+
+            <figcaption className="mt-6 flex items-center justify-between px-2">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-clay">Identity Node 01</span>
+                <span className="text-sm font-bold text-ink uppercase tracking-tight">Héritier Bambu — CTO & Founder</span>
+              </div>
             </figcaption>
 
-            <figure className="curtain rv-mask hidden sm:block absolute -left-8 xl:-left-12 2xl:-left-14 -bottom-10 w-48 lg:w-56 rounded-lg overflow-hidden border-4 border-paper shadow-[0_18px_40px_-20px_rgba(24,27,32,0.4)]">
+            {/* Small Floating Card */}
+            <figure className="curtain rv-mask hidden sm:block absolute -left-12 -bottom-6 w-52 rounded-[2rem] overflow-hidden border border-white/50 shadow-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500 bg-white">
               <img
                 src="/justin.jpeg"
                 alt="Justin Kombi"
-                className="w-full h-auto object-cover"
+                className="w-full h-auto object-cover opacity-90"
               />
+              <div className="p-3 bg-paper/80 backdrop-blur-md">
+                 <p className="text-[8px] font-black uppercase tracking-widest text-ink">Justin Kombi — COO</p>
+              </div>
             </figure>
 
-            <div className="absolute -top-8 -right-3 sm:-right-5 xl:-right-8 w-28 h-28 sm:w-32 sm:h-32 pointer-events-none" aria-hidden="true">
-              <svg className="spin-badge w-full h-full" viewBox="0 0 120 120">
-                <defs>
-                  <path id="circ" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0" />
-                </defs>
-                <circle cx="60" cy="60" r="59" fill="#F6F3EC" stroke="#DBD4C4" />
-                <text fill="#181B20" fontSize="10" fontWeight="700" letterSpacing="2.6" fontFamily="Public Sans, sans-serif">
-                  <textPath href="#circ">DEVELITE TECH • SOLUTIONS </textPath>
-                </text>
-              </svg>
-
-              <span className="absolute inset-0 grid place-items-center p-6">
-                <Logo className="w-full h-full" />
-              </span>
+            {/* Tech Hexagon Badge */}
+            <div className="absolute -top-10 -right-4 w-32 h-32 pointer-events-none group" aria-hidden="true">
+               <div className="w-full h-full relative animate-[spin_10s_linear_infinite]">
+                  <svg viewBox="0 0 100 100" className="w-full h-full fill-none stroke-clay/20 stroke-[0.5]">
+                    <polygon points="50,1 95,25 95,75 50,99 5,75 5,25" />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Logo className="w-12 h-12" />
+                  </div>
+               </div>
+               <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                  <div className="w-24 h-24 rounded-full border border-clay/5 animate-ping"></div>
+               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] mt-16 lg:mt-20">
-        <div className="rv d1 border-t border-line pt-8 grid grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] mt-20 lg:mt-24">
+        <div className="rv d1 border-t border-ink/5 pt-12 grid grid-cols-2 lg:grid-cols-4 gap-12">
           {stats.map((st, i) => (
             <div key={i} className="min-w-0">
-              <p className="font-display font-bold text-4xl sm:text-5xl tracking-tight">
-                <span>{st.number}</span>
+              <p className="font-display font-black text-5xl sm:text-6xl tracking-tighter text-ink">
+                <span className="bg-gradient-to-r from-ink to-clay bg-clip-text text-transparent">{st.number}</span>
               </p>
-              <p className="mt-2 text-[11px] uppercase tracking-[0.22em] text-smoke">{st.label}</p>
+              <p className="mt-3 text-[10px] font-black uppercase tracking-[0.4em] text-ink/30">{st.label}</p>
             </div>
           ))}
         </div>
