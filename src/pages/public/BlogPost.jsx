@@ -78,7 +78,7 @@ const BlogPost = () => {
                  <div className="flex items-center space-x-6 border-t border-white/5 pt-10">
                     <div className="flex items-center space-x-4">
                        <div className="w-14 h-14 bg-luma-purple rounded-full flex items-center justify-center text-white font-black text-xl shadow-lg shadow-luma-purple/20">
-                          {profile?.full_name?.charAt(0) || 'D'}
+                          D
                        </div>
                        <div>
                           <div className="text-white font-black text-xs uppercase tracking-[0.2em]">DEVELITE INTELLIGENCE</div>
