@@ -125,50 +125,53 @@ const LandingPage = () => {
         <Team />
         <Impact />
 
-        {/* LATEST NEWS SECTION */}
-        {latestPosts.length > 0 && (
-          <section className="py-24 lg:py-32 bg-white">
-             <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                   <div className="max-w-2xl">
-                      <p className="rv text-[11px] font-black uppercase tracking-[0.4em] text-clay mb-4">Latest Insights</p>
-                      <h2 className="rv d1 font-display font-black text-4xl lg:text-6xl tracking-tighter uppercase italic leading-none">
-                         Journal de la <br/> <span className="text-clay">Matrice.</span>
-                      </h2>
-                   </div>
-                   <Link to="/blog" className="rv d2 font-black text-xs uppercase tracking-widest text-ink hover:text-clay transition-colors border-b-2 border-clay/10 pb-1">
-                      Consulter tout le log
-                   </Link>
-                </div>
+        {/* BLOG SUMMARY SECTION - Exactly like DevElite */}
+        <section className="py-32 bg-white text-left">
+           <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
+              <div className="flex justify-between items-end mb-16 gap-6">
+                 <div>
+                    <div className="text-clay font-black text-[10px] uppercase tracking-[0.4em] mb-4">Latest Insights</div>
+                    <h2 className="text-4xl md:text-6xl font-black text-ink tracking-tighter uppercase leading-none">Journal de la <br/> <span className="text-clay">Matrice.</span></h2>
+                 </div>
+                 <Link to="/blog" className="font-black text-xs uppercase tracking-widest text-ink hover:text-clay transition-colors border-b-2 border-clay/10 pb-1">
+                    Voir Tout
+                 </Link>
+              </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                   {latestPosts.map((post, i) => (
-                     <Link to={`/blog/${post.slug}`} key={post.id} className="group rv" style={{ transitionDelay: `${i * 100}ms` }}>
+              {latestPosts.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 text-left">
+                   {latestPosts.map((post) => (
+                     <Link to={`/blog/${post.slug}`} key={post.id} className="group flex flex-col">
                         <div className="aspect-[16/10] bg-paper rounded-[2.5rem] overflow-hidden mb-8 relative border border-line">
                            {post.image_url ? (
-                             <img src={post.image_url} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                             <img src={post.image_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                            ) : (
-                             <div className="w-full h-full bg-mist flex items-center justify-center">
-                                <i className="fa-solid fa-newspaper text-clay/20 text-5xl"></i>
-                             </div>
+                             <div className="w-full h-full bg-mist" />
                            )}
-                           <span className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-line">
+                           <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-line shadow-sm">
                               {post.category}
-                           </span>
+                           </div>
                         </div>
-                        <h3 className="font-display font-black text-2xl tracking-tighter text-ink mb-4 group-hover:text-clay transition-colors uppercase italic line-clamp-2 leading-none">{post.title}</h3>
-                        <p className="text-sm text-ink/60 leading-relaxed line-clamp-2 font-medium mb-6">{post.excerpt}</p>
+                        <h3 className="text-2xl font-black text-ink mb-4 group-hover:text-clay transition-colors uppercase leading-tight line-clamp-2 italic">{post.title}</h3>
+                        <p className="text-ink/60 text-[14.5px] font-medium line-clamp-2 leading-relaxed mb-6">
+                           {post.excerpt}
+                        </p>
                         <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-smoke">
                            <span>{new Date(post.created_at).toLocaleDateString()}</span>
                            <div className="mx-3 w-1 h-1 bg-line rounded-full" />
-                           <span className="text-clay group-hover:translate-x-1 transition-transform inline-flex items-center">Lire le signal <i className="fa-solid fa-arrow-right ml-2 text-[8px]"></i></span>
+                           <span className="text-clay">Lire la suite</span>
                         </div>
                      </Link>
                    ))}
                 </div>
-             </div>
-          </section>
-        )}
+              ) : (
+                <div className="py-24 text-center border-2 border-dashed border-line rounded-[3rem] opacity-30">
+                   <h4 className="text-xl font-black text-ink uppercase tracking-widest italic leading-none mb-2">Initialisation R&D...</h4>
+                   <p className="text-sm font-bold text-smoke uppercase tracking-widest">En attente de publication de signaux.</p>
+                </div>
+              )}
+           </div>
+        </section>
 
         <Testimonials />
         <Contact />

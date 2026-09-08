@@ -25,8 +25,8 @@ const Navbar = () => {
   const navLinks = [
     { num: '01', label: 'Ecosystem', href: '#apropos' },
     { num: '02', label: 'Services', href: '#services' },
-    { num: '03', label: 'Solutions', href: '#produits' },
-    { num: '04', label: 'Matrix Log', href: '#projets' },
+    { num: '03', label: 'Portfolio', href: '#produits' },
+    { num: '04', label: 'Journal', href: '/blog' },
     { num: '05', label: 'Partners', href: '#partenaires' },
     { num: '06', label: 'Nodes', href: '#equipe' },
     { num: '07', label: 'Liaison', href: '#contact' },
