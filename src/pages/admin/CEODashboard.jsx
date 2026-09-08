@@ -211,5 +211,3 @@ const CEODashboard = ({ profile }) => {
 };
 
 export default CEODashboard;
-
-export default CEODashboard;
