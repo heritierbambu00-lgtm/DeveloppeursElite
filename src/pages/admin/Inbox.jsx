@@ -54,18 +54,22 @@ const Inbox = () => {
     }
   }
 
-  const handleReply = async (e) => {
-    e.preventDefault();
-    setReplyModal(prev => ({ ...prev, sending: true }));
-    try {
-      await sendReplyEmail(replyModal.msg.email, replyModal.msg.name, replyModal.text);
-      alert(`Réponse envoyée avec succès à ${replyModal.msg.name}`);
-      setReplyModal({ isOpen: false, msg: null, text: '', sending: false });
-      markAsRead(replyModal.msg.id);
-    } catch (error) {
-      alert(`Détails technique de l'échec : ${error.message}. Note: Vérifiez votre domaine Resend.`);
-      setReplyModal(prev => ({ ...prev, sending: false }));
-    }
+  async function updateStatus(id, newStatus) {
+    await supabase.from('contacts').update({ status: newStatus }).eq('id', id);
+    fetchMessages();
+  }
+
+  async function updateValue(id, value) {
+    await supabase.from('contacts').update({ estimated_value: value }).eq('id', id);
+    fetchMessages();
+  }
+
+  const STATUS_COLORS = {
+    'new': 'bg-luma-blue/10 text-luma-blue',
+    'warm': 'bg-amber-500/10 text-amber-500',
+    'hot': 'bg-red-500/10 text-red-500',
+    'signed': 'bg-moss/10 text-moss',
+    'rejected': 'bg-white/5 text-white/20'
   };
 
   return (
@@ -86,9 +90,9 @@ const Inbox = () => {
             <thead className="bg-white/[0.02] border-b border-white/5">
               <tr className="text-[10px] font-black uppercase tracking-widest text-white/30">
                 <th className="px-8 py-5">Statut</th>
-                <th className="px-8 py-5">Expéditeur</th>
-                <th className="px-8 py-5">Sujet</th>
-                <th className="px-8 py-5">Aperçu</th>
+                <th className="px-8 py-5">Prospect</th>
+                <th className="px-8 py-5">Pipeline CRM</th>
+                <th className="px-8 py-5">Valeur Est.</th>
                 <th className="px-8 py-5 text-right">Actions</th>
               </tr>
             </thead>
@@ -99,19 +103,38 @@ const Inbox = () => {
                 <tr><td colSpan="5" className="px-8 py-20 text-center text-white/20 italic">Silence radio. Aucun message.</td></tr>
               ) : (
                 messages.map((msg) => (
-                  <tr key={msg.id} className={`${msg.is_read ? 'opacity-40' : 'bg-luma-purple/5'} hover:bg-white/[0.02] transition-colors group cursor-pointer`} onClick={() => setDetailsModal({isOpen: true, msg})}>
+                  <tr key={msg.id} className={`${msg.is_read ? 'opacity-60' : 'bg-luma-purple/5'} hover:bg-white/[0.02] transition-colors group cursor-pointer`} onClick={() => setDetailsModal({isOpen: true, msg})}>
                     <td className="px-8 py-6">
                       {!msg.is_read && <div className="w-2 h-2 rounded-full bg-luma-purple shadow-[0_0_8px_#9E7AFF]"></div>}
                     </td>
                     <td className="px-8 py-6">
                       <p className="font-black text-sm text-white uppercase tracking-tight">{msg.name}</p>
-                      <p className="text-[10px] text-white/30 font-bold tracking-widest uppercase">{msg.assigned_to || 'À trier'}</p>
+                      <p className="text-[10px] text-white/30 font-bold tracking-widest uppercase">{msg.email}</p>
                     </td>
                     <td className="px-8 py-6">
-                       <span className="text-[10px] font-black text-luma-blue uppercase tracking-tighter bg-luma-blue/10 px-2 py-1 rounded border border-luma-blue/20">{msg.subject}</span>
+                       <select
+                         onClick={(e) => e.stopPropagation()}
+                         value={msg.status || 'new'}
+                         onChange={(e) => updateStatus(msg.id, e.target.value)}
+                         className={`text-[9px] font-black uppercase px-3 py-1.5 rounded-full border border-white/5 outline-none cursor-pointer ${STATUS_COLORS[msg.status || 'new']}`}
+                       >
+                         <option value="new">Nouveau</option>
+                         <option value="warm">Intéressé</option>
+                         <option value="hot">Urgent / Chaud</option>
+                         <option value="signed">Contrat Signé</option>
+                         <option value="rejected">Classé</option>
+                       </select>
                     </td>
-                    <td className="px-8 py-6 text-sm text-white/60 max-w-xs truncate font-medium italic">
-                       {msg.message}
+                    <td className="px-8 py-6">
+                       <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                          <span className="text-[10px] font-bold text-white/40">$</span>
+                          <input
+                            type="number"
+                            defaultValue={msg.estimated_value}
+                            onBlur={(e) => updateValue(msg.id, e.target.value)}
+                            className="bg-transparent border-b border-white/5 w-20 text-xs font-black text-white outline-none focus:border-luma-purple transition-all"
+                          />
+                       </div>
                     </td>
                     <td className="px-8 py-6 text-right space-x-2" onClick={(e) => e.stopPropagation()}>
                        {!msg.is_read && (

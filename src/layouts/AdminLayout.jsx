@@ -41,6 +41,8 @@ const AdminLayout = () => {
   const menuItems = [
     { label: 'Home', icon: 'fa-house', path: '/admin', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager', 'member'] },
     { label: 'Projets', icon: 'fa-shapes', path: '/admin/projects', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager'] },
+    { label: 'Blog Matrix', icon: 'fa-pen-nib', path: '/admin/blog', roles: ['CEO', 'CTO', 'admin'] },
+    { label: 'Skills', icon: 'fa-microchip', path: '/admin/skills', roles: ['CEO', 'CTO', 'COO', 'admin'] },
     { label: 'Analytics', icon: 'fa-chart-pie', path: '/admin/analytics', roles: ['CEO', 'CTO', 'COO', 'admin'] },
     { label: 'Témoignages', icon: 'fa-comment-quote', path: '/admin/testimonials', roles: ['CEO', 'CTO', 'admin'] },
     { label: 'Messages', icon: 'fa-comment-dots', path: '/admin/inbox', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager'] },

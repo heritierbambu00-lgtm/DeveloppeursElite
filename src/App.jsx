@@ -6,6 +6,7 @@ import Marquee from './components/Marquee';
 import Services from './components/Services';
 import Team from './components/Team';
 import Projects from './components/Projects';
+import SkillsMatrix from './components/SkillsMatrix';
 import Impact from './components/Impact';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
@@ -13,6 +14,7 @@ import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import Loader from './components/Loader';
 import PublicAIChatbot from './components/PublicAIChatbot';
+import Blog from './pages/public/Blog';
 import LoginPage from './pages/auth/LoginPage';
 import AccessDenied from './pages/auth/AccessDenied';
 import AdminLayout from './layouts/AdminLayout';
@@ -25,6 +27,8 @@ import KanbanBoard from './pages/admin/KanbanBoard';
 import NewProject from './pages/admin/NewProject';
 import Analytics from './pages/admin/Analytics';
 import TestimonialManager from './pages/admin/TestimonialManager';
+import BlogManager from './pages/admin/BlogManager';
+import SkillsManager from './pages/admin/SkillsManager';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // External Refresh Revelations for consistent animation triggering
@@ -88,6 +92,7 @@ const LandingPage = () => {
         </section>
         <Services />
         <Projects />
+        <SkillsMatrix />
         <Team />
         <Impact />
         <Testimonials />
@@ -104,6 +109,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/blog" element={<Blog />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/denied" element={<AccessDenied />} />
 
@@ -137,6 +143,16 @@ function App() {
           <Route path="testimonials" element={
             <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
               <TestimonialManager />
+            </ProtectedRoute>
+          } />
+          <Route path="blog" element={
+            <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
+              <BlogManager />
+            </ProtectedRoute>
+          } />
+          <Route path="skills" element={
+            <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin']}>
+              <SkillsManager />
             </ProtectedRoute>
           } />
           <Route path="inbox" element={
