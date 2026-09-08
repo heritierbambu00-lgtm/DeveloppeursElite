@@ -79,7 +79,7 @@ const COODashboard = ({ profile }) => {
          {[
            { label: 'Créer Campagne', icon: 'fa-plus', path: '#' },
            { label: 'Gestion Contacts', icon: 'fa-user-plus', path: '/admin/inbox' },
-           { label: 'Nouveau Projet', icon: 'fa-folder', path: '/admin/projects' },
+           { label: 'Nouveau Projet', icon: 'fa-folder', path: '/admin/projects/new' },
            { label: 'Facturation', icon: 'fa-file-invoice-dollar', path: '#' },
            { label: 'Rapport Global', icon: 'fa-chart-pie', path: '#' }
          ].map((action, i) => (

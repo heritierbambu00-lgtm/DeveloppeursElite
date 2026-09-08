@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -39,9 +40,17 @@ const KanbanBoard = () => {
 
   return (
     <div className="animate-in fade-in duration-700">
-      <div className="mb-10">
-        <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-luma-purple mb-2">Workspace</h2>
-        <h1 className="font-display font-black text-3xl lg:text-4xl text-white tracking-tight italic">Pipeline Opérationnelle</h1>
+      <div className="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+        <div>
+          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-luma-purple mb-2">Workspace</h2>
+          <h1 className="font-display font-black text-3xl lg:text-4xl text-white tracking-tight italic">Pipeline Opérationnelle</h1>
+        </div>
+        <Link
+          to="/admin/projects/new"
+          className="bg-white text-luma-dark px-8 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-luma-purple hover:text-white transition-all shadow-xl shadow-white/5 active:scale-95 flex items-center gap-3"
+        >
+          <i className="fa-solid fa-plus"></i> Graver un Projet
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">

@@ -22,6 +22,7 @@ import ProjectManager from './pages/admin/ProjectManager';
 import UserManagement from './pages/admin/UserManagement';
 import Inbox from './pages/admin/Inbox';
 import KanbanBoard from './pages/admin/KanbanBoard';
+import NewProject from './pages/admin/NewProject';
 import Analytics from './pages/admin/Analytics';
 import TestimonialManager from './pages/admin/TestimonialManager';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -116,6 +117,11 @@ function App() {
           <Route path="projects" element={
             <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
               <KanbanBoard />
+            </ProtectedRoute>
+          } />
+          <Route path="projects/new" element={
+            <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
+              <NewProject />
             </ProtectedRoute>
           } />
           <Route path="users" element={

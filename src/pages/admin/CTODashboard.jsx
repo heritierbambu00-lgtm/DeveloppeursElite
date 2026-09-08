@@ -62,8 +62,8 @@ const CTODashboard = ({ profile }) => {
                   Centralisez vos opérations technologiques et pilotez votre croissance avec DEVELITE AI.
                </p>
                <div className="flex flex-wrap gap-4 lg:gap-5">
-                  <Link to="/admin/projects" className="bg-white text-luma-dark px-8 lg:px-10 py-3 lg:py-4 rounded-xl lg:rounded-2xl text-xs lg:text-sm font-black hover:bg-luma-purple hover:text-white transition-all shadow-xl shadow-white/5 active:scale-95">View Projects →</Link>
-                  <Link to="/admin/users" className="bg-white/5 text-white px-8 lg:px-10 py-3 lg:py-4 rounded-xl lg:rounded-2xl text-xs lg:text-sm font-black border border-white/10 hover:bg-white/10 transition-all active:scale-95">Manage Team</Link>
+                  <Link to="/admin/projects/new" className="bg-white text-luma-dark px-8 lg:px-10 py-3 lg:py-4 rounded-xl lg:rounded-2xl text-xs lg:text-sm font-black hover:bg-luma-purple hover:text-white transition-all shadow-xl shadow-white/5 active:scale-95">Nouveau Projet →</Link>
+                  <Link to="/admin/projects" className="bg-white/5 text-white px-8 lg:px-10 py-3 lg:py-4 rounded-xl lg:rounded-2xl text-xs lg:text-sm font-black border border-white/10 hover:bg-white/10 transition-all active:scale-95">Voir Pipeline</Link>
                </div>
             </div>
             <div className="flex-1 min-h-[300px] lg:min-h-[400px] relative overflow-hidden">

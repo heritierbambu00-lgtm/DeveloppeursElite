@@ -31,9 +31,9 @@ const MemberDashboard = ({ profile }) => {
               <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
               <input type="text" placeholder="Rechercher..." className="bg-white border border-slate-100 rounded-2xl py-2.5 pl-12 pr-4 text-sm outline-none w-full sm:w-64 shadow-sm" />
            </div>
-           <button className="bg-indigo-600 text-white px-6 py-3 rounded-2xl text-xs font-black shadow-xl shadow-indigo-100 flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all w-full sm:w-auto shrink-0">
+           <Link to="/admin/projects/new" className="bg-indigo-600 text-white px-6 py-3 rounded-2xl text-xs font-black shadow-xl shadow-indigo-100 flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all w-full sm:w-auto shrink-0">
               <i className="fa-solid fa-plus"></i> Nouveau Projet
-           </button>
+           </Link>
         </div>
       </div>
 
@@ -99,17 +99,17 @@ const MemberDashboard = ({ profile }) => {
                <p className="text-[10px] lg:text-[11px] font-black uppercase tracking-[0.2em] text-slate-300 mb-6 pl-2">Quick Actions</p>
                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 lg:gap-6">
                   {[
-                    { label: 'Create Project', icon: 'fa-plus', color: 'text-indigo-600', bg: 'bg-indigo-50' },
-                    { label: 'Upload File', icon: 'fa-arrow-up-from-bracket', color: 'text-emerald-500', bg: 'bg-emerald-50' },
-                    { label: 'Start Timer', icon: 'fa-clock', color: 'text-amber-500', bg: 'bg-amber-50' },
-                    { label: 'New Note', icon: 'fa-file-lines', color: 'text-blue-500', bg: 'bg-blue-50' }
+                    { label: 'Create Project', icon: 'fa-plus', color: 'text-indigo-600', bg: 'bg-indigo-50', path: '/admin/projects/new' },
+                    { label: 'Upload File', icon: 'fa-arrow-up-from-bracket', color: 'text-emerald-500', bg: 'bg-emerald-50', path: '#' },
+                    { label: 'Start Timer', icon: 'fa-clock', color: 'text-amber-500', bg: 'bg-amber-50', path: '#' },
+                    { label: 'New Note', icon: 'fa-file-lines', color: 'text-blue-500', bg: 'bg-blue-50', path: '#' }
                   ].map((action, i) => (
-                    <button key={i} className="bg-white p-5 lg:p-6 rounded-[2rem] shadow-sm border border-slate-50 flex flex-col items-center hover:shadow-md transition-all group">
+                    <Link key={i} to={action.path} className="bg-white p-5 lg:p-6 rounded-[2rem] shadow-sm border border-slate-50 flex flex-col items-center hover:shadow-md transition-all group">
                        <div className={`w-10 lg:w-12 h-10 lg:h-12 ${action.bg} ${action.color} rounded-2xl flex items-center justify-center mb-3 lg:mb-4 group-hover:scale-110 transition-transform`}>
                           <i className={`fa-solid ${action.icon} text-base lg:text-lg`}></i>
                        </div>
                        <p className="text-[9px] lg:text-[10px] font-black uppercase tracking-tighter text-slate-600 text-center">{action.label}</p>
-                    </button>
+                    </Link>
                   ))}
                </div>
             </div>
