@@ -221,6 +221,10 @@ body.loading {
 }
 
 /* Mobile Adjustments */
+.text-glow {
+    text-shadow: 0 0 20px rgba(158, 122, 255, 0.4);
+}
+
 @media (max-width: 1024px) {
     #admin-main-area {
         padding: 1.5rem !important;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import Logo from './Logo';
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);

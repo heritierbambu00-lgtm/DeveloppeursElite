@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Marquee from './components/Marquee';
@@ -58,14 +58,24 @@ const LandingPage = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const { data } = await supabase
-        .from('posts')
-        .select('*')
-        .eq('status', 'published')
-        .order('created_at', { ascending: false })
-        .limit(3);
-      if (data) setLatestPosts(data);
-      setLoading(false);
+      try {
+        const { data, error } = await supabase
+          .from('posts')
+          .select('*')
+          .eq('status', 'published')
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (error) {
+          console.warn("Table 'posts' non trouvée ou vide. Ignoré.");
+        } else if (data) {
+          setLatestPosts(data);
+        }
+      } catch (err) {
+        console.error("Erreur Matrix Data:", err);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);
