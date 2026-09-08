@@ -3,8 +3,10 @@ import { supabase } from '../../lib/supabaseClient';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Edit3, Eye, FileText, CheckCircle, XCircle, Image as ImageIcon, X, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
 
 const BlogManager = () => {
+  const { t } = useLanguage();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -112,7 +114,7 @@ const BlogManager = () => {
       <div className="flex justify-between items-center mb-10">
         <div>
           <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-luma-blue mb-2">R&D Publication</h2>
-          <h1 className="font-display font-black text-3xl lg:text-4xl text-white tracking-tight italic">Journal de la Matrice</h1>
+          <h1 className="font-display font-black text-3xl lg:text-4xl text-white tracking-tight italic uppercase">Journal de la Matrice</h1>
         </div>
         <button
           onClick={() => setIsEditing(!isEditing)}

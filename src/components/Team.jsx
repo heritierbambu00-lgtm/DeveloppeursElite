@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { useLanguage } from '../context/LanguageContext';
 
 const Team = () => {
+  const { t } = useLanguage();
   const [teamMembers, setTeamMembers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,53 +28,54 @@ const Team = () => {
   }
 
   return (
-    <section id="equipe" className="py-24 lg:py-32 bg-white border-y border-line">
+    <section id="equipe" className="py-24 lg:py-32 bg-white dark:bg-luma-dark border-y border-line dark:border-white/5 transition-colors duration-500">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
         <div className="max-w-2xl mb-14">
-          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">(06) — L'équipe</p>
-          <h2 className="rv d1 mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05]">
-            Des passionnés aux commandes.
+          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">(06) — Matrix Nodes</p>
+          <h2 className="rv d1 mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05] dark:text-white uppercase italic">
+            {t('nav.about')}
           </h2>
-          <p className="rv mt-5 text-[15px] leading-relaxed text-smoke">
-            Une équipe engagée qui fait avancer chaque projet — et qui bâtit les infrastructures de demain.
+          <p className="rv mt-5 text-[15px] leading-relaxed text-smoke dark:text-white/40 font-medium italic">
+             Une équipe engagée qui fait avancer chaque projet — et qui bâtit les infrastructures de demain.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 lg:gap-x-12">
           {loading ? (
-            <p className="text-smoke italic">Chargement de l'équipe...</p>
+            <p className="text-smoke dark:text-white/20 italic tracking-widest uppercase text-xs">Extraction des nodes...</p>
           ) : teamMembers.length === 0 ? (
-            <p className="text-smoke italic">Aucun membre profilé pour le moment.</p>
+            <p className="text-smoke dark:text-white/20 italic">Aucun membre profilé pour le moment.</p>
           ) : (
             teamMembers.map((tm, i) => (
               <article key={tm.id} className="rv group min-w-0" style={{ transitionDelay: `${i * 0.1}s` }}>
-                <figure className="relative rounded-lg overflow-hidden border border-line">
+                <figure className="relative rounded-[2.5rem] overflow-hidden border border-line dark:border-white/5 shadow-lg">
                   <img
                     src={tm.avatar_url || '/Heritier.jpg'}
                     alt={tm.full_name}
-                    className="w-full aspect-[4/5] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-[1.03]"
+                    className="w-full aspect-[4/5] object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-[1.05]"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </figure>
 
-                <div className="mt-4">
-                  <h3 className="font-display font-bold text-lg tracking-tight">{tm.full_name}</h3>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-clay mt-1">
-                    <i className={`fa-solid ${tm.icon || 'fa-code'} mr-1.5`}></i>
+                <div className="mt-6 px-2">
+                  <h3 className="font-display font-black text-xl tracking-tight dark:text-white uppercase italic">{tm.full_name}</h3>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-clay mt-2 flex items-center gap-2">
+                    <i className={`fa-solid ${tm.icon || 'fa-code'} text-[8px]`}></i>
                     <span>{tm.role}</span>
                   </p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-smoke">{tm.bio}</p>
+                  <p className="mt-4 text-sm leading-relaxed text-smoke dark:text-white/40 font-medium line-clamp-2">{tm.bio}</p>
                 </div>
               </article>
             ))
           )}
 
-          <article className="rv rounded-lg bg-paper border border-line border-dashed p-8 flex flex-col justify-center items-center text-center">
-             <div className="w-16 h-16 rounded-full bg-mist grid place-items-center mb-4">
+          <article className="rv rounded-[2.5rem] bg-paper dark:bg-white/[0.03] border border-line dark:border-white/10 border-dashed p-10 flex flex-col justify-center items-center text-center group hover:bg-clay/5 transition-all">
+             <div className="w-16 h-16 rounded-full bg-mist dark:bg-white/5 grid place-items-center mb-6 group-hover:scale-110 transition-transform">
                 <i className="fa-solid fa-plus text-clay text-xl"></i>
              </div>
-             <h3 className="font-display font-bold text-lg">Rejoindre l'aventure ?</h3>
-             <p className="mt-2 text-xs text-smoke">Nous sommes toujours à la recherche de talents.</p>
-             <a href="#contact" className="mt-4 u-link text-xs font-bold text-clay uppercase tracking-widest">Postuler</a>
+             <h3 className="font-display font-black text-lg dark:text-white uppercase">Rejoindre ?</h3>
+             <p className="mt-2 text-xs text-smoke dark:text-white/30 font-medium">Nous sommes à la recherche de talents.</p>
+             <a href="#contact" className="mt-6 u-link text-xs font-black text-clay uppercase tracking-[0.2em]">Initialiser Liaison</a>
           </article>
         </div>
       </div>

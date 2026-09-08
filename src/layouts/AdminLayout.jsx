@@ -4,10 +4,14 @@ import { supabase } from '../lib/supabaseClient';
 import Logo from '../components/Logo';
 import AISidebar from '../components/admin/AISidebar';
 import NotificationBell from '../components/admin/NotificationBell';
+import ThemeToggle from '../components/ThemeToggle';
+import LanguageSwitcher from '../components/LanguageSwitcher';
+import { useLanguage } from '../context/LanguageContext';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLanguage();
   const [profile, setProfile] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -39,9 +43,9 @@ const AdminLayout = () => {
   };
 
   const menuItems = [
-    { label: 'Home', icon: 'fa-house', path: '/admin', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager', 'member'] },
-    { label: 'Projets', icon: 'fa-shapes', path: '/admin/projects', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager'] },
-    { label: 'Blog Matrix', icon: 'fa-pen-nib', path: '/admin/blog', roles: ['CEO', 'CTO', 'admin'] },
+    { label: t('nav.home'), icon: 'fa-house', path: '/admin', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager', 'member'] },
+    { label: t('nav.projects'), icon: 'fa-shapes', path: '/admin/projects', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager'] },
+    { label: t('nav.blog'), icon: 'fa-pen-nib', path: '/admin/blog', roles: ['CEO', 'CTO', 'admin'] },
     { label: 'Skills', icon: 'fa-microchip', path: '/admin/skills', roles: ['CEO', 'CTO', 'COO', 'admin'] },
     { label: 'Analytics', icon: 'fa-chart-pie', path: '/admin/analytics', roles: ['CEO', 'CTO', 'COO', 'admin'] },
     { label: 'Témoignages', icon: 'fa-comment-quote', path: '/admin/testimonials', roles: ['CEO', 'CTO', 'admin'] },
@@ -111,7 +115,7 @@ const AdminLayout = () => {
             className="hidden lg:flex w-full items-center gap-4 px-4 py-3 rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-all"
           >
             <i className={`fa-solid ${isSidebarOpen ? 'fa-angles-left' : 'fa-angles-right'} w-6 text-center`}></i>
-            {isSidebarOpen && <span className="text-sm font-bold animate-in fade-in duration-500">Réduire</span>}
+            {isSidebarOpen && <span className="text-sm font-bold animate-in fade-in duration-500">{t('dash.reduce')}</span>}
           </button>
 
           <button
@@ -119,7 +123,7 @@ const AdminLayout = () => {
             className="mt-2 w-full flex items-center gap-4 px-4 py-3 rounded-xl text-white/40 hover:text-red-400 hover:bg-red-400/5 transition-all"
           >
             <i className="fa-solid fa-arrow-right-from-bracket w-6 text-center"></i>
-            {(isSidebarOpen || isMobileMenuOpen) && <span className="text-sm font-bold animate-in fade-in duration-500">Déconnexion</span>}
+            {(isSidebarOpen || isMobileMenuOpen) && <span className="text-sm font-bold animate-in fade-in duration-500">{t('dash.logout')}</span>}
           </button>
         </div>
       </aside>
@@ -149,6 +153,10 @@ const AdminLayout = () => {
           </div>
 
           <div className="flex items-center gap-3 lg:gap-6">
+             <div className="hidden sm:flex items-center gap-4">
+                <ThemeToggle />
+                <LanguageSwitcher />
+             </div>
              <NotificationBell profile={profile} />
 
              <button

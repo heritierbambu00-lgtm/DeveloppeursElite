@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import QuickInbox from '../../components/admin/QuickInbox';
+import { useLanguage } from '../../context/LanguageContext';
 
 const COODashboard = ({ profile }) => {
+  const { t } = useLanguage();
   const [stats, setStats] = useState({ projects: 0, messages: 0, members: 0 });
   const [teamMembers, setTeamMembers] = useState([]);
   const [recentProjects, setRecentProjects] = useState([]);
@@ -55,17 +57,17 @@ const COODashboard = ({ profile }) => {
   };
 
   return (
-    <div className="bg-[#1A2624] min-h-full -m-6 lg:-m-10 p-6 lg:p-10 text-white font-sans animate-in fade-in duration-700">
+    <div className="bg-[#1A2624] dark:bg-luma-dark min-h-full -m-6 lg:-m-10 p-6 lg:p-10 text-white font-sans animate-in fade-in duration-700 transition-colors">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6 mb-10">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">Bonjour, {profile?.full_name?.split(' ')[0]}! 👋</h1>
-          <p className="text-white/40 text-sm mt-1">Voici l'état opérationnel de la matrice aujourd'hui.</p>
+          <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">{t('dash.welcome')}, {profile?.full_name?.split(' ')[0]}! 👋</h1>
+          <p className="text-white/40 text-sm mt-1">{t('dash.matrix_state')}</p>
         </div>
         <div className="flex items-center gap-4 lg:gap-6">
            <div className="hidden sm:block relative group flex-1 md:flex-none">
               <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/20"></i>
-              <input type="text" placeholder="Rechercher..." className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-12 pr-4 text-sm outline-none w-full md:w-64 focus:border-[#F8B3B3]/40 transition-all" />
+              <input type="text" placeholder={t('dash.search')} className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-12 pr-4 text-sm outline-none w-full md:w-64 focus:border-[#F8B3B3]/40 transition-all" />
            </div>
            <div className="flex items-center gap-4 text-white/40">
               <i className="fa-solid fa-bell text-xl hover:text-white cursor-pointer transition-colors"></i>
@@ -100,7 +102,7 @@ const COODashboard = ({ profile }) => {
               <div className="w-10 lg:w-12 h-10 lg:h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white/40 border border-white/10">
                  <i className="fa-solid fa-chart-line text-lg"></i>
               </div>
-              <div className="text-[10px] font-black text-white/20 uppercase border border-white/10 px-3 py-1.5 rounded-xl tracking-widest">Période : {currentMonth}</div>
+              <div className="text-[10px] font-black text-white/20 uppercase border border-white/10 px-3 py-1.5 rounded-xl tracking-widest uppercase">Période : {currentMonth}</div>
            </div>
            <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-2">Chiffre d'Affaires</p>
            <p className="text-4xl lg:text-5xl font-black mb-6 tracking-tighter">0.00 $</p>
@@ -196,18 +198,6 @@ const COODashboard = ({ profile }) => {
 
          <div className="bg-white border border-slate-200 p-6 lg:p-8 rounded-[2.5rem] shadow-sm text-[#1A2624]">
             <div className="flex justify-between items-center mb-8">
-               <h3 className="font-black">Finance</h3>
-               <button className="text-[10px] font-black text-slate-400 uppercase tracking-widest cursor-not-allowed">Détails</button>
-            </div>
-            <div className="text-center py-4 lg:py-6">
-               <div className="inline-flex items-center gap-2 bg-slate-50 text-slate-300 px-4 py-1.5 rounded-full text-[9px] lg:text-[10px] font-black mb-6 uppercase border border-slate-100">Synchronisation...</div>
-               <p className="text-4xl lg:text-5xl font-black tracking-tighter opacity-10">0.00 $</p>
-               <p className="text-[10px] font-bold text-slate-200 uppercase tracking-[0.2em] mt-2">Bénéfice Net</p>
-            </div>
-         </div>
-
-         <div className="bg-white border border-slate-200 p-6 lg:p-8 rounded-[2.5rem] shadow-sm text-[#1A2624] md:col-span-2 lg:col-span-1">
-            <div className="flex justify-between items-center mb-6">
                <h3 className="font-black">Signaux Récents</h3>
                <Link to="/admin/inbox" className="text-[9px] lg:text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-luma-purple">Tout voir</Link>
             </div>

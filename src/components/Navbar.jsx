@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
+import ThemeToggle from './ThemeToggle';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useLanguage } from '../context/LanguageContext';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,13 +27,13 @@ const Navbar = () => {
   }, [open]);
 
   const navLinks = [
-    { num: '01', label: 'Ecosystem', href: '#apropos' },
-    { num: '02', label: 'Services', href: '#services' },
-    { num: '03', label: 'Portfolio', href: '#produits' },
-    { num: '04', label: 'Journal', href: '/blog' },
-    { num: '05', label: 'Partners', href: '#partenaires' },
-    { num: '06', label: 'Nodes', href: '#equipe' },
-    { num: '07', label: 'Liaison', href: '#contact' },
+    { num: '01', label: t('nav.about'), href: '#apropos' },
+    { num: '02', label: t('nav.services'), href: '#services' },
+    { num: '03', label: t('nav.projects'), href: '#produits' },
+    { num: '04', label: t('nav.blog'), href: '/blog' },
+    { num: '05', label: t('nav.about'), href: '#partenaires' },
+    { num: '06', label: t('nav.about'), href: '#equipe' },
+    { num: '07', label: t('nav.contact'), href: '#contact' },
   ];
 
   return (
@@ -37,7 +41,7 @@ const Navbar = () => {
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
           scrolled || open
-            ? 'bg-paper/80 backdrop-blur-2xl border-b border-ink/5 py-4'
+            ? 'bg-paper/80 dark:bg-luma-dark/80 backdrop-blur-2xl border-b border-ink/5 dark:border-white/5 py-4'
             : 'bg-transparent py-6'
         }`}
       >
@@ -48,17 +52,17 @@ const Navbar = () => {
               <div className="absolute -inset-1 bg-clay/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
             <div className="leading-none min-w-0">
-              <span className="block font-display font-black text-lg tracking-tighter uppercase text-ink group-hover:text-clay transition-colors">
+              <span className="block font-display font-black text-lg tracking-tighter uppercase text-ink dark:text-white group-hover:text-clay transition-colors">
                 DEVELITE
               </span>
-              <span className="block text-[9px] font-black tracking-[0.6em] text-ink/30 mt-1 uppercase">Tech Matrix</span>
+              <span className="block text-[9px] font-black tracking-[0.6em] text-ink/30 dark:text-white/20 mt-1 uppercase">Tech Matrix</span>
             </div>
           </a>
 
           {/* Desktop Links */}
-          <div className="hidden lg:flex items-center gap-8 xl:gap-10 text-[11px] font-black uppercase tracking-[0.2em] text-ink/40">
+          <div className="hidden lg:flex items-center gap-8 xl:gap-10 text-[11px] font-black uppercase tracking-[0.2em] text-ink/40 dark:text-white/40">
             {navLinks.map((link) => (
-              <a key={link.num} href={link.href} className="hover:text-clay transition-colors relative group py-2">
+              <a key={link.num} href={link.href} className="hover:text-clay dark:hover:text-clay transition-colors relative group py-2">
                 {link.label}
                 <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-clay transition-all duration-500 group-hover:w-full"></span>
               </a>
@@ -66,9 +70,14 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-4 shrink-0">
+            <div className="hidden lg:flex items-center gap-4">
+              <ThemeToggle />
+              <LanguageSwitcher />
+            </div>
+
             <Link
               to="/login"
-              className="w-12 h-12 hidden sm:flex items-center justify-center rounded-2xl bg-ink/5 text-ink hover:bg-clay hover:text-white transition-all duration-500 shadow-sm"
+              className="w-12 h-12 hidden sm:flex items-center justify-center rounded-2xl bg-ink/5 dark:bg-white/5 text-ink dark:text-white hover:bg-clay hover:text-white transition-all duration-500 shadow-sm"
               title="Matrix Access"
             >
               <i className="fa-solid fa-terminal text-sm"></i>
@@ -76,20 +85,20 @@ const Navbar = () => {
 
             <a
               href="#contact"
-              className="hidden md:flex items-center gap-3 bg-ink text-white text-[10px] font-black uppercase tracking-[0.2em] px-8 py-4 rounded-2xl hover:bg-clay hover:shadow-[0_0_20px_rgba(158,122,255,0.4)] transition-all duration-500"
+              className="hidden md:flex items-center gap-3 bg-ink dark:bg-clay text-white text-[10px] font-black uppercase tracking-[0.2em] px-8 py-4 rounded-2xl hover:bg-clayd hover:shadow-[0_0_20px_rgba(158,122,255,0.4)] transition-all duration-500"
             >
-              Contact
+              {t('nav.contact')}
             </a>
 
             <button
-              className="lg:hidden w-12 h-12 grid place-items-center rounded-2xl bg-white border border-ink/5 shadow-sm"
+              className="lg:hidden w-12 h-12 grid place-items-center rounded-2xl bg-white dark:bg-white/5 border border-ink/5 dark:border-white/10 shadow-sm"
               onClick={() => setOpen(!open)}
               aria-expanded={open}
             >
               <div className="w-5 flex flex-col gap-1.5">
-                <span className={`h-0.5 bg-ink transition-all duration-300 ${open ? 'rotate-45 translate-y-2 w-5' : 'w-5'}`}></span>
-                <span className={`h-0.5 bg-ink transition-all duration-300 ${open ? 'opacity-0' : 'w-3'}`}></span>
-                <span className={`h-0.5 bg-ink transition-all duration-300 ${open ? '-rotate-45 -translate-y-2 w-5' : 'w-5'}`}></span>
+                <span className={`h-0.5 bg-ink dark:bg-white transition-all duration-300 ${open ? 'rotate-45 translate-y-2 w-5' : 'w-5'}`}></span>
+                <span className={`h-0.5 bg-ink dark:bg-white transition-all duration-300 ${open ? 'opacity-0' : 'w-3'}`}></span>
+                <span className={`h-0.5 bg-ink dark:bg-white transition-all duration-300 ${open ? '-rotate-45 -translate-y-2 w-5' : 'w-5'}`}></span>
               </div>
             </button>
           </div>
@@ -128,6 +137,10 @@ const Navbar = () => {
           </div>
 
           <div className="mt-20 pt-10 border-t border-white/5 space-y-8" style={{ opacity: open ? 1 : 0, transitionDelay: '400ms' }}>
+             <div className="flex items-center gap-6">
+                <ThemeToggle />
+                <LanguageSwitcher />
+             </div>
              <Link to="/login" onClick={() => setOpen(false)} className="flex items-center gap-4 text-white/40 font-black uppercase text-xs tracking-widest hover:text-clay transition-colors">
                 <i className="fa-solid fa-lock text-clay"></i> Protocol Access
              </Link>

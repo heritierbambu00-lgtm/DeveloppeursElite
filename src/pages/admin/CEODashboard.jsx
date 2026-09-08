@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import QuickInbox from '../../components/admin/QuickInbox';
+import { useLanguage } from '../../context/LanguageContext';
 
 const CEODashboard = ({ profile }) => {
+  const { t } = useLanguage();
   const [stats, setStats] = useState({ projects: 0, messages: 0, members: 0 });
   const [teamMembers, setTeamMembers] = useState([]);
   const [recentProjects, setRecentProjects] = useState([]);
@@ -43,14 +45,14 @@ const CEODashboard = ({ profile }) => {
   };
 
   return (
-    <div className="bg-[#F3F4F6] min-h-full -m-6 lg:-m-10 p-6 lg:p-10 text-slate-900 font-sans animate-in fade-in duration-700">
+    <div className="bg-[#F3F4F6] dark:bg-luma-dark min-h-full -m-6 lg:-m-10 p-6 lg:p-10 text-slate-900 dark:text-white font-sans animate-in fade-in duration-700 transition-colors">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6 mb-8 lg:mb-10">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-slate-900">Good morning, {profile?.full_name?.split(' ')[0]} 👋</h1>
-          <p className="text-slate-500 text-sm mt-1">L'état actuel de votre espace de travail DEVELITE.</p>
+          <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{t('dash.welcome')}, {profile?.full_name?.split(' ')[0]} 👋</h1>
+          <p className="text-slate-500 dark:text-white/40 text-sm mt-1">{t('dash.matrix_state')}</p>
         </div>
-        <div className="flex items-center gap-3 bg-white border border-slate-200 px-4 py-2.5 rounded-xl shadow-sm cursor-pointer hover:bg-slate-50 transition-all w-fit">
+        <div className="flex items-center gap-3 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 px-4 py-2.5 rounded-xl shadow-sm cursor-pointer hover:bg-slate-50 transition-all w-fit">
           <i className="fa-solid fa-calendar-days text-luma-purple"></i>
           <span className="text-sm font-semibold">{new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
           <i className="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
@@ -65,7 +67,7 @@ const CEODashboard = ({ profile }) => {
           { label: 'Effectif Équipe', value: stats.members, trend: 'Stable', icon: 'fa-users', color: 'bg-amber-500' },
           { label: 'Croissance', value: '+12%', trend: 'Global', icon: 'fa-chart-line', color: 'bg-pink-500' }
         ].map((card, i) => (
-          <div key={i} className="bg-white border border-slate-200 p-6 rounded-[2rem] shadow-sm hover:shadow-md transition-all">
+          <div key={i} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-6 rounded-[2rem] shadow-sm hover:shadow-md transition-all">
             <div className="flex justify-between items-start mb-4">
               <div className={`w-10 h-10 lg:w-12 lg:h-12 ${card.color} rounded-2xl flex items-center justify-center text-white shadow-lg shadow-current/20`}>
                 <i className={`fa-solid ${card.icon} text-base lg:text-lg`}></i>
@@ -87,10 +89,10 @@ const CEODashboard = ({ profile }) => {
 
       {/* Middle Row - Overview & Chart */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-8 lg:mb-10">
-         <div className="lg:col-span-2 bg-white border border-slate-200 p-6 lg:p-8 rounded-[2.5rem] shadow-sm relative overflow-hidden">
+         <div className="lg:col-span-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-6 lg:p-8 rounded-[2.5rem] shadow-sm relative overflow-hidden">
             <div className="flex justify-between items-center mb-8 relative z-10">
                <h3 className="text-lg font-bold">Aperçu de l'Activité</h3>
-               <div className="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 text-[11px] font-bold">
+               <div className="flex items-center gap-3 bg-slate-50 dark:bg-white/5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 text-[11px] font-bold">
                   <span>Cette Semaine</span>
                   <i className="fa-solid fa-chevron-down text-slate-400"></i>
                </div>
@@ -110,13 +112,13 @@ const CEODashboard = ({ profile }) => {
             </div>
          </div>
 
-         <div className="bg-white border border-slate-200 p-6 lg:p-8 rounded-[2.5rem] shadow-sm">
+         <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-6 lg:p-8 rounded-[2.5rem] shadow-sm">
             <div className="flex justify-between items-center mb-8">
                <h3 className="text-lg font-bold">Status des Projets</h3>
                <i className="fa-solid fa-ellipsis text-slate-300"></i>
             </div>
             <div className="flex justify-center mb-8">
-               <div className="w-32 lg:w-40 h-32 lg:h-40 rounded-full border-[10px] lg:border-[12px] border-slate-50 relative flex items-center justify-center">
+               <div className="w-32 lg:w-40 h-32 lg:h-40 rounded-full border-[10px] lg:border-[12px] border-slate-50 dark:border-white/5 relative flex items-center justify-center">
                   <div className="text-center">
                      <p className="text-2xl lg:text-3xl font-bold">{stats.projects}</p>
                      <p className="text-[9px] lg:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Projets</p>
@@ -133,7 +135,7 @@ const CEODashboard = ({ profile }) => {
                  <div key={i} className="flex justify-between items-center text-[11px] lg:text-xs font-semibold">
                     <div className="flex items-center gap-2">
                        <div className={`w-2 h-2 rounded-full ${item.color}`}></div>
-                       <span className="text-slate-500">{item.label}</span>
+                       <span className="text-slate-500 dark:text-white/40">{item.label}</span>
                     </div>
                     <span>{item.val}</span>
                  </div>
@@ -145,7 +147,7 @@ const CEODashboard = ({ profile }) => {
       {/* Bottom Row - Lists */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
          {/* Recent Projects */}
-         <div className="bg-white border border-slate-200 p-6 lg:p-8 rounded-[2.5rem] shadow-sm">
+         <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-6 lg:p-8 rounded-[2.5rem] shadow-sm">
             <div className="flex justify-between items-center mb-6">
                <h3 className="text-lg font-bold">Projets Récents</h3>
                <div className="flex gap-4 items-center">
@@ -156,14 +158,14 @@ const CEODashboard = ({ profile }) => {
             <div className="space-y-5">
                {recentProjects.length > 0 ? recentProjects.map((pj) => (
                  <div key={pj.id} className="flex items-center gap-4 group">
-                    <div className={`w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-luma-purple border border-slate-100 group-hover:bg-luma-purple group-hover:text-white transition-all`}>
+                    <div className={`w-10 h-10 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-center text-luma-purple border border-slate-100 dark:border-white/10 group-hover:bg-luma-purple group-hover:text-white transition-all`}>
                        <i className="fa-solid fa-shapes text-sm"></i>
                     </div>
                     <div className="flex-1 min-w-0">
                        <p className="text-sm font-bold truncate">{pj.title}</p>
                        <p className="text-[10px] font-bold text-slate-400 uppercase">{pj.category}</p>
                     </div>
-                    <div className="w-16 lg:w-20 bg-slate-100 h-1 rounded-full overflow-hidden">
+                    <div className="w-16 lg:w-20 bg-slate-100 dark:bg-white/10 h-1 rounded-full overflow-hidden">
                        <div className="bg-luma-purple h-full w-[100%]" />
                     </div>
                  </div>
@@ -172,7 +174,7 @@ const CEODashboard = ({ profile }) => {
          </div>
 
          {/* Team Activity */}
-         <div className="bg-white border border-slate-200 p-6 lg:p-8 rounded-[2.5rem] shadow-sm">
+         <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-6 lg:p-8 rounded-[2.5rem] shadow-sm">
             <div className="flex justify-between items-center mb-6">
                <h3 className="text-lg font-bold">Activité Équipe</h3>
                <Link to="/admin/users" className="text-xs font-bold text-luma-purple hover:underline">Membres</Link>
@@ -180,7 +182,7 @@ const CEODashboard = ({ profile }) => {
             <div className="space-y-5">
                {teamMembers.length > 0 ? teamMembers.map((tm) => (
                  <div key={tm.id} className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-white/10 shadow-sm">
                        <img src={tm.avatar_url || '/Heritier.jpg'} className="w-full h-full object-cover" alt="" />
                     </div>
                     <div className="flex-1">
@@ -194,12 +196,12 @@ const CEODashboard = ({ profile }) => {
          </div>
 
          {/* Upcoming Events */}
-         <div className="bg-white border border-slate-200 p-6 lg:p-8 rounded-[2.5rem] shadow-sm md:col-span-2 lg:col-span-1">
+         <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 p-6 lg:p-8 rounded-[2.5rem] shadow-sm md:col-span-2 lg:col-span-1">
             <div className="flex justify-between items-center mb-6">
                <h3 className="text-lg font-bold">Signaux Récents</h3>
                <Link to="/admin/inbox" className="text-xs font-bold text-luma-purple hover:underline">Boîte mail</Link>
             </div>
-            <div className="text-slate-900">
+            <div className="text-slate-900 dark:text-white">
                <QuickInbox />
             </div>
          </div>
@@ -207,5 +209,7 @@ const CEODashboard = ({ profile }) => {
     </div>
   );
 };
+
+export default CEODashboard;
 
 export default CEODashboard;

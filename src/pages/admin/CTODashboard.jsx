@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import QuickInbox from '../../components/admin/QuickInbox';
+import { useLanguage } from '../../context/LanguageContext';
 
 const CTODashboard = ({ profile }) => {
+  const { t } = useLanguage();
   const [stats, setStats] = useState({ projects: 0, messages: 0, members: 0 });
 
   useEffect(() => {
@@ -29,9 +31,9 @@ const CTODashboard = ({ profile }) => {
       {/* Welcome Heading */}
       <section>
         <h1 className="text-3xl lg:text-4xl font-display font-black tracking-tight text-white mb-2">
-          Good morning, {profile?.full_name?.split(' ')[0] || 'Héritier'}! ✨
+          {t('dash.welcome')}, {profile?.full_name?.split(' ')[0] || 'Héritier'}! ✨
         </h1>
-        <p className="text-white/40 font-medium text-sm lg:text-base">Votre console de gestion est prête pour une nouvelle journée d'innovation.</p>
+        <p className="text-white/40 font-medium text-sm lg:text-base">{t('dash.matrix_state')}</p>
       </section>
 
       {/* Glass Cards Stats */}

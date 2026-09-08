@@ -4,11 +4,13 @@ import { chatWithAI, classifyContactMessage } from '../lib/aiService';
 import { supabase } from '../lib/supabaseClient';
 import { sendNotificationEmail } from '../lib/emailService';
 import { formatMessageWithLinks } from '../lib/textUtils';
+import { useLanguage } from '../context/LanguageContext';
 
 const PublicAIChatbot = () => {
+  const { t, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'Bonjour ! Je suis DEVELITE AI. Comment puis-je vous aider dans votre projet technologique ?' }
+    { role: 'assistant', content: language === 'fr' ? 'Bonjour ! Je suis DEVELITE AI. Comment puis-je vous aider dans votre projet technologique ?' : 'Hello! I am DEVELITE AI. How can I help you with your technological project?' }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,8 +22,7 @@ const PublicAIChatbot = () => {
   }, [messages]);
 
   const submitLeadToMatrix = async (aiContent, fullHistory) => {
-    // On transmet si l'IA montre une intention d'enregistrement ou de transmission
-    const triggerWords = ['transmet', 'noté', 'envoyé', 'contact', 'dossier'];
+    const triggerWords = ['transmet', 'noté', 'envoyé', 'contact', 'dossier', 'forwarded', 'recorded', 'sent'];
     const hasIntent = triggerWords.some(word => aiContent.toLowerCase().includes(word));
 
     if (hasIntent) {
@@ -75,7 +76,6 @@ const PublicAIChatbot = () => {
         stats: { projects: 12, members: 8 }
       };
 
-      // Appel avec le flag isPublic = true
       const response = await chatWithAI(updatedMessages, context, true);
       const newHistory = [...updatedMessages, { role: 'assistant', content: response }];
       setMessages(newHistory);
@@ -97,22 +97,22 @@ const PublicAIChatbot = () => {
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="mb-6 w-[350px] h-[550px] bg-white rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-line overflow-hidden flex flex-col"
+            className="mb-6 w-[350px] h-[550px] bg-white dark:bg-luma-dark rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-line dark:border-white/10 overflow-hidden flex flex-col transition-colors duration-500"
           >
              <div className="p-6 bg-ink text-paper flex items-center justify-between">
                 <div className="flex items-center gap-3">
                    <div className="w-8 h-8 bg-clay rounded-lg flex items-center justify-center shadow-lg shadow-clay/20">
                       <i className="fa-solid fa-wand-magic-sparkles text-xs"></i>
                    </div>
-                   <span className="font-display font-bold text-sm tracking-tight uppercase">Develite AI</span>
+                   <span className="font-display font-bold text-sm tracking-tight uppercase">Develite AI Bot</span>
                 </div>
                 <button onClick={() => setIsOpen(false)} className="text-paper/40 hover:text-paper transition-colors"><i className="fa-solid fa-xmark"></i></button>
              </div>
 
-             <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar bg-[#F9F7F2]">
+             <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar bg-[#F9F7F2] dark:bg-luma-dark/50">
                 {messages.map((m, i) => (
                   <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                     <div className={`max-w-[85%] p-4 rounded-2xl text-[13px] leading-relaxed ${m.role === 'user' ? 'bg-clay text-white rounded-tr-none shadow-lg shadow-clay/10' : 'bg-white text-ink shadow-sm border border-line rounded-tl-none'}`}>
+                     <div className={`max-w-[85%] p-4 rounded-2xl text-[13px] leading-relaxed ${m.role === 'user' ? 'bg-clay text-white rounded-tr-none shadow-lg shadow-clay/10' : 'bg-white dark:bg-white/5 text-ink dark:text-white shadow-sm border border-line dark:border-white/10 rounded-tl-none'}`}>
                         {formatMessageWithLinks(m.content)}
                      </div>
                   </div>
@@ -126,13 +126,13 @@ const PublicAIChatbot = () => {
                 <div ref={endRef} />
              </div>
 
-             <form onSubmit={handleSend} className="p-5 bg-white border-t border-line flex gap-2">
+             <form onSubmit={handleSend} className="p-5 bg-white dark:bg-luma-dark border-t border-line dark:border-white/10 flex gap-2">
                 <input
                   type="text" value={input} onChange={e => setInput(e.target.value)}
-                  placeholder="Écrivez votre message..."
-                  className="flex-1 bg-paper border border-line rounded-xl px-5 py-4 text-sm outline-none focus:border-clay transition-all"
+                  placeholder={language === 'fr' ? "Écrivez votre message..." : "Type your message..."}
+                  className="flex-1 bg-paper dark:bg-white/5 border border-line dark:border-white/10 rounded-xl px-5 py-4 text-sm outline-none focus:border-clay transition-all dark:text-white"
                 />
-                <button type="submit" className="w-12 h-12 bg-ink text-white rounded-xl flex items-center justify-center hover:bg-clay transition-all shadow-lg">
+                <button type="submit" className="w-12 h-12 bg-ink dark:bg-clay text-white rounded-xl flex items-center justify-center hover:bg-clay transition-all shadow-lg">
                    <i className="fa-solid fa-paper-plane text-xs"></i>
                 </button>
              </form>
