@@ -31,20 +31,20 @@ const Team = () => {
     <section id="equipe" className="py-24 lg:py-32 bg-white dark:bg-luma-dark border-y border-line dark:border-white/5 transition-colors duration-500">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
         <div className="max-w-2xl mb-14">
-          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">(06) — Matrix Nodes</p>
+          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">{t('section.team.badge')}</p>
           <h2 className="rv d1 mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05] dark:text-white uppercase italic">
-            {t('nav.about')}
+            {t('section.team.title')}
           </h2>
           <p className="rv mt-5 text-[15px] leading-relaxed text-smoke dark:text-white/40 font-medium italic">
-             Une équipe engagée qui fait avancer chaque projet — et qui bâtit les infrastructures de demain.
+             {t('section.team.desc')}
           </p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 lg:gap-x-12">
           {loading ? (
-            <p className="text-smoke dark:text-white/20 italic tracking-widest uppercase text-xs">Extraction des nodes...</p>
+            <p className="text-smoke dark:text-white/20 italic tracking-widest uppercase text-xs">{t('team.loading')}</p>
           ) : teamMembers.length === 0 ? (
-            <p className="text-smoke dark:text-white/20 italic">Aucun membre profilé pour le moment.</p>
+            <p className="text-smoke dark:text-white/20 italic">{t('team.empty')}</p>
           ) : (
             teamMembers.map((tm, i) => (
               <article key={tm.id} className="rv group min-w-0" style={{ transitionDelay: `${i * 0.1}s` }}>
@@ -73,9 +73,9 @@ const Team = () => {
              <div className="w-16 h-16 rounded-full bg-mist dark:bg-white/5 grid place-items-center mb-6 group-hover:scale-110 transition-transform">
                 <i className="fa-solid fa-plus text-clay text-xl"></i>
              </div>
-             <h3 className="font-display font-black text-lg dark:text-white uppercase">Rejoindre ?</h3>
-             <p className="mt-2 text-xs text-smoke dark:text-white/30 font-medium">Nous sommes à la recherche de talents.</p>
-             <a href="#contact" className="mt-6 u-link text-xs font-black text-clay uppercase tracking-[0.2em]">Initialiser Liaison</a>
+             <h3 className="font-display font-black text-lg dark:text-white uppercase">{t('team.join')}</h3>
+             <p className="mt-2 text-xs text-smoke dark:text-white/30 font-medium">{t('team.hiring')}</p>
+             <a href="#contact" className="mt-6 u-link text-xs font-black text-clay uppercase tracking-[0.2em]">{t('team.cta')}</a>
           </article>
         </div>
       </div>

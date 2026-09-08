@@ -8,36 +8,36 @@ const Services = () => {
   const services = [
     {
       num_str: '01',
-      title: t('services.desktop.title'),
-      description: t('services.desktop.desc'),
+      title: t('services.engineering'),
+      description: "Conception et développement d'applications sur mesure, architectures cloud et solutions scalables.",
       tags: [{ icon: 'fa-code', text: 'React / Node' }, { icon: 'fa-mobile-screen', text: 'Mobile' }],
       image_url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'
     },
     {
       num_str: '02',
-      title: t('services.mobile.title'),
-      description: t('services.mobile.desc'),
+      title: t('services.ai'),
+      description: "Entraînement de modèles LLM, computer vision et analyse prédictive pour vos données.",
       tags: [{ icon: 'fa-brain', text: 'Deep Learning' }, { icon: 'fa-robot', text: 'Automation' }],
       image_url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=600&q=80'
     },
     {
       num_str: '03',
-      title: t('services.web.title'),
-      description: t('services.web.desc'),
+      title: t('services.infra'),
+      description: "Déploiement de réseaux locaux, sécurisation des données et maintenance critique.",
       tags: [{ icon: 'fa-server', text: 'Cisco / Azure' }, { icon: 'fa-shield-halved', text: 'Cybersecurity' }],
       image_url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80'
     },
     {
       num_str: '04',
-      title: t('services.step3.title'),
-      description: t('services.step3.desc'),
+      title: t('services.rd'),
+      description: "Exploration de solutions innovantes pour les problématiques locales africaines.",
       tags: [{ icon: 'fa-microscope', text: 'Prototypes' }, { icon: 'fa-lightbulb', text: 'Innovation' }],
       image_url: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=600&q=80'
     },
     {
       num_str: '05',
-      title: t('services.step4.title'),
-      description: t('services.step4.desc'),
+      title: t('services.training'),
+      description: "Mentorat et bootcamps intensifs pour la nouvelle génération d'ingénieurs.",
       tags: [{ icon: 'fa-graduation-cap', text: 'Mentoring' }, { icon: 'fa-users', text: 'Bootcamps' }],
       image_url: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=80'
     }
@@ -47,12 +47,12 @@ const Services = () => {
     <section id="services" className="py-24 lg:py-32 bg-white dark:bg-luma-dark border-y border-line dark:border-white/5 transition-colors duration-500">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
         <div className="max-w-2xl mb-14">
-          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">(02) — {t('nav.services')}</p>
-          <h2 className="rv d1 mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05] dark:text-white">
-            {t('services.hero.title')}
+          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">{t('section.services.badge')}</p>
+          <h2 className="rv d1 mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05] dark:text-white uppercase italic">
+            {t('section.services.title')}
           </h2>
-          <p className="rv d2 mt-5 text-[15px] leading-relaxed text-smoke dark:text-white/40">
-            {t('services.hero.desc')}
+          <p className="rv d2 mt-5 text-[15px] leading-relaxed text-smoke dark:text-white/40 font-medium italic">
+            {t('section.services.desc')}
           </p>
         </div>
 
@@ -93,7 +93,7 @@ const Services = () => {
                         ))}
                       </div>
                     </div>
-                    <figure className="curtain rv-mask md:col-span-5 rounded-3xl overflow-hidden border border-line dark:border-white/10 min-w-0 shadow-lg">
+                    <figure className="curtain rv-mask md:col-span-5 rounded-[2.5rem] overflow-hidden border border-line dark:border-white/10 min-w-0 shadow-lg">
                       <img src={s.image_url} alt={s.title} className="w-full h-44 object-cover" />
                     </figure>
                   </div>

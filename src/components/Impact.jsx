@@ -1,13 +1,15 @@
 import React from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
 const Impact = () => {
+  const { t } = useLanguage();
   return (
     <section className="bg-ink text-paper py-24 lg:py-32 overflow-hidden">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
         <div className="max-w-3xl">
-          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">Notre cap</p>
+          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">{t('section.impact.badge')}</p>
           <h2 className="rv d1 mt-4 font-display font-bold tracking-tight text-[clamp(2.2rem,5vw,3.9rem)] leading-[1.06]">
-            Bâtir ici pour impacter <br /> <em className="not-italic text-clay">le monde entier.</em>
+            {t('section.impact.title')}
           </h2>
         </div>
 
@@ -15,30 +17,30 @@ const Impact = () => {
           <div className="rv d1 min-w-0">
             <p className="font-display font-bold text-clay text-sm tracking-[0.2em]">
               <i className="fa-solid fa-location-dot mr-2"></i>
-              ICI — RDC
+              {t('section.impact.ici')}
             </p>
             <p className="mt-4 text-[14.5px] leading-relaxed text-paper/70">
-              Notre point d'ancrage. Nous développons des solutions souveraines pour digitaliser l'économie et l'administration congolaise.
+              {t('section.impact.ici_text')}
             </p>
           </div>
 
           <div className="rv d2 md:border-l md:border-paper/15 md:pl-8 min-w-0">
             <p className="font-display font-bold text-clay text-sm tracking-[0.2em]">
               <i className="fa-solid fa-earth-africa mr-2"></i>
-              ENSUITE — AFRIQUE
+              {t('section.impact.ensuite')}
             </p>
             <p className="mt-4 text-[14.5px] leading-relaxed text-paper/70">
-              Exporter notre savoir-faire pour répondre aux défis communs du continent : fintech, énergie et éducation.
+              {t('section.impact.ensuite_text')}
             </p>
           </div>
 
           <div className="rv d3 md:border-l md:border-paper/15 md:pl-8 min-w-0">
             <p className="font-display font-bold text-clay text-sm tracking-[0.2em]">
               <i className="fa-solid fa-earth-americas mr-2"></i>
-              ENFIN — LE MONDE
+              {t('section.impact.enfin')}
             </p>
             <p className="mt-4 text-[14.5px] leading-relaxed text-paper/70">
-              Prouver que l'excellence technique n'a pas de frontières en proposant des produits compétitifs sur le marché global.
+              {t('section.impact.enfin_text')}
             </p>
           </div>
         </div>
@@ -52,7 +54,7 @@ const Impact = () => {
         </figure>
 
         <p className="rv mt-3 text-[11px] uppercase tracking-[0.22em] text-paper/40">
-          DEVELITE TECH — Butembo, notre point de départ.
+          {t('section.impact.footer')}
         </p>
       </div>
     </section>

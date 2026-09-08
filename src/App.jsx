@@ -34,7 +34,8 @@ import SkillsManager from './pages/admin/SkillsManager';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 import { ThemeProvider } from './context/ThemeContext';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import { useTheme } from './context/ThemeContext';
 
 import { supabase } from './lib/supabaseClient';
 
@@ -138,7 +139,7 @@ const LandingPage = () => {
                     <h2 className="text-4xl md:text-6xl font-black text-ink dark:text-white tracking-tighter uppercase leading-none">{t('section.blog.title')} <br/> <span className="text-clay">{t('section.blog.matrix')}</span></h2>
                  </div>
                  <Link to="/blog" className="font-black text-xs uppercase tracking-widest text-ink dark:text-white hover:text-clay transition-colors border-b-2 border-clay/10 pb-1">
-                    {t('nav.blog')}
+                    {t('section.blog.btn')}
                  </Link>
               </div>
 
@@ -163,7 +164,7 @@ const LandingPage = () => {
                         <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-smoke dark:text-white/20">
                            <span>{new Date(post.created_at).toLocaleDateString()}</span>
                            <div className="mx-3 w-1 h-1 bg-line dark:bg-white/10 rounded-full" />
-                           <span className="text-clay">{t('section.blog.read')}</span>
+                           <span className="text-clay">{t('section.blog.read_more')}</span>
                         </div>
                      </Link>
                    ))}

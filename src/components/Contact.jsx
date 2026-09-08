@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { classifyContactMessage } from '../lib/aiService';
 import { sendNotificationEmail } from '../lib/emailService';
+import { useLanguage } from '../context/LanguageContext';
 
 const Contact = () => {
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -62,85 +64,89 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 lg:py-32">
+    <section id="contact" className="py-24 lg:py-32 bg-paper dark:bg-luma-dark transition-colors duration-500">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] grid lg:grid-cols-12 gap-12">
         <div className="lg:col-span-5 min-w-0">
-          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">(07) — Contact</p>
-          <h2 className="rv mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05]">
-            Parlons de votre projet.
+          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">{t('section.contact.badge')}</p>
+          <h2 className="rv mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05] dark:text-white">
+            {t('section.contact.title')}
           </h2>
-          <p className="rv mt-5 text-[15px] leading-relaxed text-smoke max-w-md">
-            Un logiciel à concevoir, un réseau à installer, une formation à organiser — ou simplement une idée à éprouver ? Écrivez-nous.
+          <p className="rv mt-5 text-[15px] leading-relaxed text-smoke dark:text-white/40 max-w-md font-medium italic">
+            {t('section.contact.desc')}
           </p>
 
           <div className="rv mt-10 space-y-6">
             <div className="flex items-start gap-4">
-              <span className="w-10 h-10 rounded-md bg-white border border-line grid place-items-center shrink-0">
+              <span className="w-10 h-10 rounded-xl bg-white dark:bg-white/5 border border-line dark:border-white/10 grid place-items-center shrink-0 shadow-sm">
                 <i className="fa-solid fa-location-dot text-clay"></i>
               </span>
               <div className="min-w-0">
-                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-smoke">Adresse</p>
-                <p className="mt-1 text-[14.5px] font-medium">Butembo, Nord-Kivu, RDC</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-smoke dark:text-white/20">{t('contact.address')}</p>
+                <p className="mt-1 text-[14.5px] font-bold dark:text-white/80">Butembo, Nord-Kivu, RDC</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
-              <span className="w-10 h-10 rounded-md bg-white border border-line grid place-items-center shrink-0">
+              <span className="w-10 h-10 rounded-xl bg-white dark:bg-white/5 border border-line dark:border-white/10 grid place-items-center shrink-0 shadow-sm">
                 <i className="fa-solid fa-envelope text-clay"></i>
               </span>
               <div className="min-w-0">
-                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-smoke">Email</p>
-                <p className="mt-1 text-[14.5px] font-medium">contact@deve-lite.tech</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-smoke dark:text-white/20">{t('contact.email')}</p>
+                <p className="mt-1 text-[14.5px] font-bold dark:text-white/80">contact@deve-lite.tech</p>
               </div>
             </div>
           </div>
         </div>
 
         <div className="lg:col-span-7 min-w-0">
-          <div className="rv bg-white rounded-lg border border-line p-7 sm:p-10 shadow-[0_24px_60px_-40px_rgba(24,27,32,0.35)]">
+          <div className="rv bg-white dark:bg-white/[0.02] rounded-[2.5rem] border border-line dark:border-white/5 p-7 sm:p-10 shadow-2xl">
             {!sent ? (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid sm:grid-cols-2 gap-5">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-[12px] font-bold uppercase tracking-[0.14em] text-smoke mb-2" htmlFor="f-nom">Nom complet</label>
-                    <input id="f-nom" required type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Votre nom"
-                           className="w-full rounded-md border border-line bg-paper px-4 py-3 text-[14.5px] focus:border-clay focus:ring-2 focus:ring-clay/20 outline-none transition" />
+                    <label className="block text-[10px] font-black uppercase tracking-[0.14em] text-smoke dark:text-white/20 mb-3 ml-1" htmlFor="f-nom">{t('contact.form.name')}</label>
+                    <input id="f-nom" required type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Ex: Héritier Junior"
+                           className="w-full rounded-2xl border border-line dark:border-white/10 bg-paper dark:bg-white/5 px-5 py-4 text-[14.5px] focus:border-clay outline-none transition dark:text-white font-bold" />
                   </div>
                   <div>
-                    <label className="block text-[12px] font-bold uppercase tracking-[0.14em] text-smoke mb-2" htmlFor="f-mail">Adresse email</label>
+                    <label className="block text-[10px] font-black uppercase tracking-[0.14em] text-smoke dark:text-white/20 mb-3 ml-1" htmlFor="f-mail">{t('contact.form.mail')}</label>
                     <input id="f-mail" required type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} placeholder="vous@exemple.com"
-                           className="w-full rounded-md border border-line bg-paper px-4 py-3 text-[14.5px] focus:border-clay focus:ring-2 focus:ring-clay/20 outline-none transition" />
+                           className="w-full rounded-2xl border border-line dark:border-white/10 bg-paper dark:bg-white/5 px-5 py-4 text-[14.5px] focus:border-clay outline-none transition dark:text-white font-bold" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[12px] font-bold uppercase tracking-[0.14em] text-smoke mb-2" htmlFor="f-sujet">Sujet</label>
+                  <label className="block text-[10px] font-black uppercase tracking-[0.14em] text-smoke dark:text-white/20 mb-3 ml-1" htmlFor="f-sujet">{t('contact.form.subject')}</label>
                   <select id="f-sujet" value={form.subject} onChange={e => setForm({...form, subject: e.target.value})}
-                          className="w-full rounded-md border border-line bg-paper px-4 py-3 text-[14.5px] focus:border-clay focus:ring-2 focus:ring-clay/20 outline-none transition">
-                    <option>Développement logiciel</option>
-                    <option>Intelligence artificielle</option>
-                    <option>Formation en informatique</option>
-                    <option>Autre</option>
+                          className="w-full rounded-2xl border border-line dark:border-white/10 bg-paper dark:bg-white/5 px-5 py-4 text-[14.5px] focus:border-clay outline-none transition dark:text-white font-bold appearance-none cursor-pointer">
+                    <option className="dark:bg-luma-dark">Développement logiciel</option>
+                    <option className="dark:bg-luma-dark">Intelligence artificielle</option>
+                    <option className="dark:bg-luma-dark">Formation en informatique</option>
+                    <option className="dark:bg-luma-dark">Autre</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[12px] font-bold uppercase tracking-[0.14em] text-smoke mb-2" htmlFor="f-msg">Votre message</label>
-                  <textarea id="f-msg" required value={form.message} onChange={e => setForm({...form, message: e.target.value})} rows="5" placeholder="Décrivez votre besoin..."
-                            className="w-full rounded-md border border-line bg-paper px-4 py-3 text-[14.5px] focus:border-clay focus:ring-2 focus:ring-clay/20 outline-none transition resize-none"></textarea>
+                  <label className="block text-[10px] font-black uppercase tracking-[0.14em] text-smoke dark:text-white/20 mb-3 ml-1" htmlFor="f-msg">{t('contact.form.message')}</label>
+                  <textarea id="f-msg" required value={form.message} onChange={e => setForm({...form, message: e.target.value})} rows="5" placeholder="..."
+                            className="w-full rounded-2xl border border-line dark:border-white/10 bg-paper dark:bg-white/5 px-5 py-4 text-[14.5px] focus:border-clay outline-none transition resize-none dark:text-white font-medium" />
                 </div>
-                {error && <p className="text-red-600 text-xs font-semibold">{error}</p>}
+                {error && <p className="text-red-500 text-[10px] font-black uppercase tracking-widest bg-red-500/5 p-4 rounded-xl border border-red-500/10">{error}</p>}
                 <button type="submit" disabled={sending}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-ink text-paper font-semibold text-sm px-8 py-4 rounded-md hover:bg-clay transition-colors duration-300 disabled:opacity-70">
-                  {sending ? <i className="fa-solid fa-circle-notch fa-spin"></i> : <span>Envoyer le message <i className="fa-solid fa-paper-plane text-[12px] ml-2"></i></span>}
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-4 bg-ink dark:bg-clay text-white font-black text-xs uppercase tracking-[0.2em] px-10 py-5 rounded-2xl hover:bg-clayd transition-all duration-300 disabled:opacity-70 shadow-xl active:scale-95">
+                  {sending ? (
+                    <><i className="fa-solid fa-circle-notch fa-spin"></i> {t('contact.btn.sending')}</>
+                  ) : (
+                    <>{t('contact.btn.send')} <i className="fa-solid fa-paper-plane text-[11px]"></i></>
+                  )}
                 </button>
               </form>
             ) : (
               <div className="text-center py-14">
-                <span className="mx-auto w-14 h-14 rounded-full bg-moss/10 border border-moss/30 grid place-items-center mb-5">
-                  <i className="fa-solid fa-check text-moss text-[20px]"></i>
+                <span className="mx-auto w-16 h-16 rounded-[2rem] bg-moss/10 border border-moss/30 grid place-items-center mb-8 animate-in zoom-in-50 duration-500 shadow-lg shadow-moss/10">
+                  <i className="fa-solid fa-check text-moss text-[24px]"></i>
                 </span>
-                <h3 className="font-display font-bold text-2xl tracking-tight text-slate-900">Message bien reçu.</h3>
-                <p className="mt-3 text-sm text-smoke">Merci pour votre confiance. Notre équipe vous répondra sous 24 heures.</p>
-                <button onClick={() => setSent(false)} className="mt-7 u-link text-sm font-semibold text-clay">Envoyer un autre message</button>
+                <h3 className="font-display font-black text-3xl tracking-tight text-ink dark:text-white uppercase italic">{t('contact.success')}</h3>
+                <p className="mt-4 text-sm text-smoke dark:text-white/40 font-medium leading-relaxed max-w-sm mx-auto">{t('contact.success_desc')}</p>
+                <button onClick={() => setSent(false)} className="mt-10 text-clay font-black uppercase text-[10px] tracking-[0.3em] hover:text-ink dark:hover:text-white transition-colors">{t('contact.btn.again')}</button>
               </div>
             )}
           </div>

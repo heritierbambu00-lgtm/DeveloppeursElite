@@ -8,7 +8,7 @@ import Footer from '../../components/Footer';
 import { useLanguage } from '../../context/LanguageContext';
 
 const Blog = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);

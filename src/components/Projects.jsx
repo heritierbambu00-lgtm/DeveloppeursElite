@@ -32,17 +32,17 @@ const Projects = () => {
     <section id="produits" className="py-24 lg:py-32 bg-paper dark:bg-luma-dark transition-colors duration-500">
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
         <div className="max-w-2xl mb-16">
-          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">(03) — {t('nav.projects')}</p>
-          <h2 className="rv d1 mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05] dark:text-white">
-            {t('projects.hero.title')}
+          <p className="rv text-[11px] font-semibold uppercase tracking-[0.3em] text-clay">{t('section.projects.badge')}</p>
+          <h2 className="rv d1 mt-4 font-display font-bold tracking-tight text-4xl lg:text-5xl leading-[1.05] dark:text-white uppercase italic">
+            {t('section.projects.title')}
           </h2>
-          <p className="rv d2 mt-5 text-[15px] leading-relaxed text-smoke dark:text-white/40">
-            {t('projects.hero.desc')}
+          <p className="rv d2 mt-5 text-[15px] leading-relaxed text-smoke dark:text-white/40 font-medium italic">
+            {t('section.projects.desc')}
           </p>
         </div>
 
         {loading ? (
-           <p className="text-smoke italic">{t('projects.empty')}</p>
+           <p className="text-smoke italic dark:text-white/20 uppercase tracking-widest text-xs">{t('projects.empty')}</p>
         ) : projects.length === 0 ? (
            <div className="bg-paper dark:bg-white/5 border border-line dark:border-white/10 border-dashed p-12 rounded-[2.5rem] text-center">
               <i className="fa-solid fa-folder-open text-4xl text-line dark:text-white/10 mb-4 block"></i>
@@ -76,7 +76,7 @@ const Projects = () => {
                      <i className="fa-solid fa-code text-[10px] text-clay/40"></i>
                   </div>
                   <h3 className="font-display font-black text-2xl tracking-tighter text-ink dark:text-white mb-4 group-hover:text-clay transition-colors uppercase leading-tight line-clamp-2 italic">{pj.title}</h3>
-                  <p className="text-[14.5px] leading-relaxed text-ink/60 dark:text-white/60 font-medium flex-1">{pj.description}</p>
+                  <p className="text-[14.5px] leading-relaxed text-ink/60 dark:text-white/60 font-medium flex-1 line-clamp-3">{pj.description}</p>
 
                   <div className="mt-8 pt-8 border-t border-line/50 dark:border-white/10 flex items-center justify-between group">
                      <span className="text-[11px] font-black text-ink dark:text-white uppercase tracking-[0.1em]">{t('projects.casestudy')}</span>
