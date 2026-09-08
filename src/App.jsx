@@ -29,6 +29,7 @@ import NewProject from './pages/admin/NewProject';
 import Analytics from './pages/admin/Analytics';
 import TestimonialManager from './pages/admin/TestimonialManager';
 import BlogManager from './pages/admin/BlogManager';
+import AdminBlogPreview from './pages/admin/AdminBlogPreview';
 import SkillsManager from './pages/admin/SkillsManager';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -213,6 +214,11 @@ function App() {
           <Route path="blog" element={
             <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
               <BlogManager />
+            </ProtectedRoute>
+          } />
+          <Route path="blog/:slug" element={
+            <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin']}>
+              <AdminBlogPreview />
             </ProtectedRoute>
           } />
           <Route path="skills" element={

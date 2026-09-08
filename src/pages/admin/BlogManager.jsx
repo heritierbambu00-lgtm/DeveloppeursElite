@@ -214,7 +214,9 @@ const BlogManager = () => {
                 <button onClick={() => toggleStatus(post.id, post.status)} className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${post.status === 'published' ? 'bg-moss/10 text-moss hover:bg-moss hover:text-white' : 'bg-white/5 text-white/20 hover:bg-white/10'}`}>
                    {post.status === 'published' ? <CheckCircle size={16}/> : <XCircle size={16}/>}
                 </button>
-                <Link to={`/blog/${post.slug}`} className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/20 hover:text-white transition-all"><Eye size={16}/></Link>
+                <Link to={`/admin/blog/${post.slug}`} className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/20 hover:text-white transition-all">
+                   <Eye size={16}/>
+                </Link>
                 <button onClick={() => deletePost(post.id)} className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/20 hover:text-red-400 transition-all"><Trash2 size={16}/></button>
              </div>
           </div>
