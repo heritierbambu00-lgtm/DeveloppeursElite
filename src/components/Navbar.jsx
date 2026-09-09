@@ -45,7 +45,7 @@ const Navbar = () => {
             : 'bg-transparent py-6'
         }`}
       >
-        <nav className="mx-auto w-full max-w-7xl px-6 sm:px-8 xl:px-10 h-[60px] flex items-center justify-between gap-8">
+        <nav className="mx-auto w-full max-w-[90rem] px-6 sm:px-8 xl:px-10 h-[60px] flex items-center justify-between gap-8">
           <a href="#accueil" className="flex items-center gap-4 group min-w-0" aria-label="DEVELITE TECH">
             <div className="relative">
               <Logo className="w-10 h-10 transition-all duration-500 group-hover:scale-110" />

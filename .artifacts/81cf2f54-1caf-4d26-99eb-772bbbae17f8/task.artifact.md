@@ -1,4 +1,3 @@
-- `[ ]` Fix missing translation keys in `LanguageContext.jsx`
-- `[ ]` Implement `handleReply` in `Inbox.jsx`
-- `[ ]` Fix navigation link labels in `Navbar.jsx`
-- `[ ]` Verify build and functionality
+- `[x]` Optimize `vite.config.js` with manual chunks
+- `[x]` Implement route-based code splitting in `App.jsx`
+- `[x]` Verify build optimization
