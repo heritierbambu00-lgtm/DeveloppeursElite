@@ -9,35 +9,35 @@ const Services = () => {
     {
       num_str: '01',
       title: t('services.engineering'),
-      description: "Conception et développement d'applications sur mesure, architectures cloud et solutions scalables.",
+      description: t('services.engineering.desc'),
       tags: [{ icon: 'fa-code', text: 'React / Node' }, { icon: 'fa-mobile-screen', text: 'Mobile' }],
       image_url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'
     },
     {
       num_str: '02',
       title: t('services.ai'),
-      description: "Entraînement de modèles LLM, computer vision et analyse prédictive pour vos données.",
+      description: t('services.ai.desc'),
       tags: [{ icon: 'fa-brain', text: 'Deep Learning' }, { icon: 'fa-robot', text: 'Automation' }],
       image_url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=600&q=80'
     },
     {
       num_str: '03',
       title: t('services.infra'),
-      description: "Déploiement de réseaux locaux, sécurisation des données et maintenance critique.",
+      description: t('services.infra.desc'),
       tags: [{ icon: 'fa-server', text: 'Cisco / Azure' }, { icon: 'fa-shield-halved', text: 'Cybersecurity' }],
       image_url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80'
     },
     {
       num_str: '04',
       title: t('services.rd'),
-      description: "Exploration de solutions innovantes pour les problématiques locales africaines.",
+      description: t('services.rd.desc'),
       tags: [{ icon: 'fa-microscope', text: 'Prototypes' }, { icon: 'fa-lightbulb', text: 'Innovation' }],
       image_url: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=600&q=80'
     },
     {
       num_str: '05',
       title: t('services.training'),
-      description: "Mentorat et bootcamps intensifs pour la nouvelle génération d'ingénieurs.",
+      description: t('services.training.desc'),
       tags: [{ icon: 'fa-graduation-cap', text: 'Mentoring' }, { icon: 'fa-users', text: 'Bootcamps' }],
       image_url: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=80'
     }

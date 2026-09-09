@@ -1,33 +1,27 @@
-# Walkthrough - Optimisation du Build (Code Splitting)
+# Walkthrough - Support Multi-langue Dynamique
 
-J'ai optimisé la structure de votre application pour résoudre les avertissements de taille de fichier et garantir un déploiement stable sur Vercel.
+J'ai implémenté le support complet de l'anglais pour tout le contenu dynamique (Équipe et Blog) géré via Supabase.
 
-## Changements Appliqués
+## Changements Majeurs
 
-### 1. Configuration Vite (`vite.config.js`)
-- **Isolation des bibliothèques** : J'ai créé des "chunks" manuels pour séparer les grosses dépendances :
-    - `vendor-react` : React, Router.
-    - `vendor-ui` : Framer Motion, Lucide icons.
-    - `vendor-utils` : Supabase, Recharts.
-- Cela permet au navigateur de ne télécharger que ce qui est nécessaire et d'utiliser le cache plus efficacement.
+### 1. Synchronisation avec le Sélecteur de Langue
+- Les composants **Team**, **Blog** (liste) et **BlogPost** (détail) détectent désormais la langue sélectionnée (FR/EN).
+- **Logique de Fallback** : Si le contenu en anglais n'est pas encore saisi dans la base de données, le système affiche automatiquement la version française par défaut pour éviter les zones vides.
 
-### 2. Chargement à la demande (`App.jsx`)
-- **Route-based Splitting** : Toutes les pages lourdes (Admin, Blog, Login) sont maintenant importées via `React.lazy()`.
-- **Suspense** : Ajout d'un écran de chargement fluide pendant que les modules de pages sont récupérés.
+### 2. Mise à jour de la Console Admin
+- **Gestion de l'Équipe** : Ajout de nouveaux champs pour saisir le titre du poste et la biographie technique en anglais.
+- **Journal (Blog)** : Ajout de champs pour le titre, le résumé (excerpt) et le contenu complet en anglais.
 
-## Résultats du Build
+## Instructions pour la Base de Données
 
-Avant l'optimisation, vous aviez un seul fichier de **1 134 kB**.
-Après optimisation, le fichier principal ne fait plus que **80 kB**, et les autres composants sont divisés en petits fichiers gérables par Vercel.
+> [!IMPORTANT]
+> Pour que le contenu en anglais s'affiche réellement, vous devez ajouter ces colonnes dans votre interface Supabase :
+> - Table **`profiles`** : `role_en`, `bio_en`
+> - Table **`posts`** : `title_en`, `excerpt_en`, `content_en`
 
-| Fichier | Taille (Gzip) | État |
-| :--- | :--- | :--- |
-| `index.js` (Principal) | 20 kB | ✅ Optimal |
-| `vendor-utils.js` | 164 kB | ✅ Stable |
-| Pages individuelles | < 5 kB chacune | ✅ Ultra-rapide |
+## État de la Synchronisation
+Toutes les modifications ont été envoyées sur le dépôt GitHub.
 
-> [!TIP]
-> Votre projet est maintenant parfaitement configuré pour passer les étapes de "Collection" sur Vercel sans risque de timeout ou d'erreur de poids.
-
-render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/vite.config.js)
-render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/App.jsx)
+render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/components/Team.jsx)
+render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/pages/admin/UserManagement.jsx)
+render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/pages/admin/BlogManager.jsx)

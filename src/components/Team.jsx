@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useLanguage } from '../context/LanguageContext';
 
 const Team = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [teamMembers, setTeamMembers] = useState([]);
   const [loading, setLoading] = useState(true);
 
