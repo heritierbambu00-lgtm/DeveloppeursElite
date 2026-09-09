@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -14,23 +14,26 @@ import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import Loader from './components/Loader';
 import PublicAIChatbot from './components/PublicAIChatbot';
-import Blog from './pages/public/Blog';
-import BlogPost from './pages/public/BlogPost';
-import LoginPage from './pages/auth/LoginPage';
-import AccessDenied from './pages/auth/AccessDenied';
-import AdminLayout from './layouts/AdminLayout';
-import MainDashboard from './pages/admin/MainDashboard';
-import ProfileSettings from './pages/admin/ProfileSettings';
-import ProjectManager from './pages/admin/ProjectManager';
-import UserManagement from './pages/admin/UserManagement';
-import Inbox from './pages/admin/Inbox';
-import KanbanBoard from './pages/admin/KanbanBoard';
-import NewProject from './pages/admin/NewProject';
-import Analytics from './pages/admin/Analytics';
-import TestimonialManager from './pages/admin/TestimonialManager';
-import BlogManager from './pages/admin/BlogManager';
-import AdminBlogPreview from './pages/admin/AdminBlogPreview';
-import SkillsManager from './pages/admin/SkillsManager';
+
+// Lazy load heavy pages
+const Blog = lazy(() => import('./pages/public/Blog'));
+const BlogPost = lazy(() => import('./pages/public/BlogPost'));
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
+const AccessDenied = lazy(() => import('./pages/auth/AccessDenied'));
+const AdminLayout = lazy(() => import('./layouts/AdminLayout'));
+const MainDashboard = lazy(() => import('./pages/admin/MainDashboard'));
+const ProfileSettings = lazy(() => import('./pages/admin/ProfileSettings'));
+const ProjectManager = lazy(() => import('./pages/admin/ProjectManager'));
+const UserManagement = lazy(() => import('./pages/admin/UserManagement'));
+const Inbox = lazy(() => import('./pages/admin/Inbox'));
+const KanbanBoard = lazy(() => import('./pages/admin/KanbanBoard'));
+const NewProject = lazy(() => import('./pages/admin/NewProject'));
+const Analytics = lazy(() => import('./pages/admin/Analytics'));
+const TestimonialManager = lazy(() => import('./pages/admin/TestimonialManager'));
+const BlogManager = lazy(() => import('./pages/admin/BlogManager'));
+const AdminBlogPreview = lazy(() => import('./pages/admin/AdminBlogPreview'));
+const SkillsManager = lazy(() => import('./pages/admin/SkillsManager'));
+
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 import { ThemeProvider } from './context/ThemeContext';
@@ -192,67 +195,73 @@ function App() {
     <ThemeProvider>
       <LanguageProvider>
         <Router>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/denied" element={<AccessDenied />} />
+          <Suspense fallback={
+            <div className="min-h-screen bg-luma-dark flex items-center justify-center">
+              <div className="w-10 h-10 border-4 border-luma-purple border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          }>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/denied" element={<AccessDenied />} />
 
-            <Route path="/admin" element={
-              <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager', 'member']}>
-                <AdminLayout />
-              </ProtectedRoute>
-            }>
-              <Route index element={<MainDashboard />} />
-              <Route path="profile" element={<ProfileSettings />} />
-              <Route path="projects" element={
-                <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
-                  <KanbanBoard />
+              <Route path="/admin" element={
+                <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager', 'member']}>
+                  <AdminLayout />
                 </ProtectedRoute>
-              } />
-              <Route path="projects/new" element={
-                <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
-                  <NewProject />
-                </ProtectedRoute>
-              } />
-              <Route path="users" element={
-                <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
-                  <UserManagement />
-                </ProtectedRoute>
-              } />
-              <Route path="analytics" element={
-                <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin']}>
-                  <Analytics />
-                </ProtectedRoute>
-              } />
-              <Route path="testimonials" element={
-                <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
-                  <TestimonialManager />
-                </ProtectedRoute>
-              } />
-              <Route path="blog" element={
-                <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
-                  <BlogManager />
-                </ProtectedRoute>
-              } />
-              <Route path="blog/:slug" element={
-                <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin']}>
-                  <AdminBlogPreview />
-                </ProtectedRoute>
-              } />
-              <Route path="skills" element={
-                <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin']}>
-                  <SkillsManager />
-                </ProtectedRoute>
-              } />
-              <Route path="inbox" element={
-                <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
-                  <Inbox />
-                </ProtectedRoute>
-              } />
-            </Route>
-          </Routes>
+              }>
+                <Route index element={<MainDashboard />} />
+                <Route path="profile" element={<ProfileSettings />} />
+                <Route path="projects" element={
+                  <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
+                    <KanbanBoard />
+                  </ProtectedRoute>
+                } />
+                <Route path="projects/new" element={
+                  <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
+                    <NewProject />
+                  </ProtectedRoute>
+                } />
+                <Route path="users" element={
+                  <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
+                    <UserManagement />
+                  </ProtectedRoute>
+                } />
+                <Route path="analytics" element={
+                  <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin']}>
+                    <Analytics />
+                  </ProtectedRoute>
+                } />
+                <Route path="testimonials" element={
+                  <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
+                    <TestimonialManager />
+                  </ProtectedRoute>
+                } />
+                <Route path="blog" element={
+                  <ProtectedRoute allowedRoles={['CEO', 'CTO', 'admin']}>
+                    <BlogManager />
+                  </ProtectedRoute>
+                } />
+                <Route path="blog/:slug" element={
+                  <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin']}>
+                    <AdminBlogPreview />
+                  </ProtectedRoute>
+                } />
+                <Route path="skills" element={
+                  <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin']}>
+                    <SkillsManager />
+                  </ProtectedRoute>
+                } />
+                <Route path="inbox" element={
+                  <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
+                    <Inbox />
+                  </ProtectedRoute>
+                } />
+              </Route>
+            </Routes>
+          </Suspense>
         </Router>
       </LanguageProvider>
     </ThemeProvider>

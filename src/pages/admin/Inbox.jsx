@@ -64,6 +64,26 @@ const Inbox = () => {
     fetchMessages();
   }
 
+  const handleReply = async (e) => {
+    e.preventDefault();
+    setReplyModal(prev => ({ ...prev, sending: true }));
+    try {
+      await sendReplyEmail(replyModal.msg.email, replyModal.msg.name, replyModal.text);
+      alert(`Réponse transmise avec succès.`);
+
+      // Optionnel: marquer comme lu après réponse
+      if (!replyModal.msg.is_read) {
+        await markAsRead(replyModal.msg.id);
+      }
+
+      setReplyModal({ isOpen: false, msg: null, text: '', sending: false });
+      fetchMessages();
+    } catch (err) {
+      alert(`ERREUR TRANSMISSION : ${err.message}. \nNote : Vérifiez la configuration de votre proxy API (/api/send-email) sur Vercel.`);
+      setReplyModal(prev => ({ ...prev, sending: false }));
+    }
+  };
+
   const STATUS_COLORS = {
     'new': 'bg-luma-blue/10 text-luma-blue',
     'warm': 'bg-amber-500/10 text-amber-500',

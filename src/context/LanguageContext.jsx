@@ -14,6 +14,8 @@ export const translations = {
     "nav.cta": "Lancer un Projet",
     "nav.start": "Démarrer un projet",
     "nav.portfolio": "Portfolio",
+    "nav.partners": "Partenaires",
+    "nav.team": "Équipe",
     "menu.title": "MENU",
     "nav.admin": "Console",
 
@@ -107,6 +109,9 @@ export const translations = {
     "contact.success_desc": "Merci pour votre confiance. Notre équipe vous répondra sous 24 heures.",
     "contact.btn.again": "Envoyer un autre message",
 
+    // General Buttons
+    "btn.send": "Envoyer",
+
     // Dashboard General
     "dash.welcome": "Bonjour",
     "dash.matrix_state": "Voici l'état opérationnel de la matrice aujourd'hui.",
@@ -144,6 +149,8 @@ export const translations = {
     "nav.cta": "Launch Project",
     "nav.start": "Start a project",
     "nav.portfolio": "Portfolio",
+    "nav.partners": "Partners",
+    "nav.team": "Team",
     "menu.title": "MENU",
     "nav.admin": "Console",
 
@@ -237,6 +244,9 @@ export const translations = {
     "contact.success": "Message received.",
     "contact.success_desc": "Thank you for your trust. Our team will reply within 24 hours.",
     "contact.btn.again": "Send another message",
+
+    // General Buttons
+    "btn.send": "Send",
 
     // Dashboard General
     "dash.welcome": "Welcome",
