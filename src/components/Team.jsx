@@ -61,9 +61,11 @@ const Team = () => {
                   <h3 className="font-display font-black text-xl tracking-tight dark:text-white uppercase italic">{tm.full_name}</h3>
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-clay mt-2 flex items-center gap-2">
                     <i className={`fa-solid ${tm.icon || 'fa-code'} text-[8px]`}></i>
-                    <span>{tm.role}</span>
+                    <span>{language === 'en' ? (tm.role_en || tm.role) : tm.role}</span>
                   </p>
-                  <p className="mt-4 text-sm leading-relaxed text-smoke dark:text-white/40 font-medium line-clamp-2">{tm.bio}</p>
+                  <p className="mt-4 text-sm leading-relaxed text-smoke dark:text-white/40 font-medium line-clamp-2">
+                    {language === 'en' ? (tm.bio_en || tm.bio) : tm.bio}
+                  </p>
                 </div>
               </article>
             ))

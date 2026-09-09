@@ -18,8 +18,11 @@ const BlogManager = () => {
 
   const [formData, setFormData] = useState({
     title: '',
+    titleEn: '',
     content: '',
+    contentEn: '',
     excerpt: '',
+    excerptEn: '',
     category: 'Tech',
     status: 'published'
   });
@@ -91,7 +94,19 @@ const BlogManager = () => {
       }
 
       const slug = formData.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-      const postData = { ...formData, author_id: user.id, slug, image_url };
+      const postData = {
+        title: formData.title,
+        title_en: formData.titleEn,
+        content: formData.content,
+        content_en: formData.contentEn,
+        excerpt: formData.excerpt,
+        excerpt_en: formData.excerptEn,
+        category: formData.category,
+        status: formData.status,
+        author_id: user.id,
+        slug,
+        image_url
+      };
 
       const { error } = await supabase.from('posts').insert([postData]);
 
@@ -100,7 +115,7 @@ const BlogManager = () => {
       setIsEditing(false);
       setFile(null);
       setPreview(null);
-      setFormData({ title: '', content: '', excerpt: '', category: 'Tech', status: 'published' });
+      setFormData({ title: '', titleEn: '', content: '', contentEn: '', excerpt: '', excerptEn: '', category: 'Tech', status: 'published' });
       fetchPosts();
     } catch (err) {
       alert(`Erreur Matrix : ${err.message}`);
@@ -130,11 +145,16 @@ const BlogManager = () => {
           initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
           onSubmit={handleSubmit} className="bg-luma-card border border-white/10 p-8 lg:p-12 rounded-[2.5rem] mb-10 space-y-8 lg:space-y-10 shadow-2xl"
         >
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="space-y-2">
-                 <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-2">Titre du signal</label>
+                 <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-2">Titre du signal (FR)</label>
                  <input required className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold"
                         value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+              </div>
+              <div className="space-y-2">
+                 <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-2">Titre du signal (EN)</label>
+                 <input required className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold"
+                        value={formData.titleEn} onChange={e => setFormData({...formData, titleEn: e.target.value})} />
               </div>
               <div className="space-y-2">
                  <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-2">Catégorie Matrix</label>
@@ -143,11 +163,16 @@ const BlogManager = () => {
               </div>
            </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="space-y-2">
-                <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-2">Résumé (Excerpt)</label>
+                <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-2">Résumé (FR)</label>
                 <input className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-medium"
                        value={formData.excerpt} onChange={e => setFormData({...formData, excerpt: e.target.value})} />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-2">Résumé (EN)</label>
+                <input className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-medium"
+                       value={formData.excerptEn} onChange={e => setFormData({...formData, excerptEn: e.target.value})} />
               </div>
               <div className="space-y-2">
                 <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-2">Image de couverture</label>
@@ -168,10 +193,17 @@ const BlogManager = () => {
               </div>
            )}
 
-           <div className="space-y-2">
-              <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-2">Flux de Données (Contenu complet)</label>
-              <textarea required rows="8" className="w-full bg-white/5 border border-white/10 p-6 rounded-3xl outline-none focus:border-luma-blue/40 text-white resize-none font-medium text-sm leading-relaxed"
-                        value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} />
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-2">
+                 <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-2">Contenu (FR)</label>
+                 <textarea required rows="8" className="w-full bg-white/5 border border-white/10 p-6 rounded-3xl outline-none focus:border-luma-blue/40 text-white resize-none font-medium text-sm leading-relaxed"
+                           value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} />
+              </div>
+              <div className="space-y-2">
+                 <label className="text-[9px] font-black uppercase tracking-widest text-white/30 ml-2">Contenu (EN)</label>
+                 <textarea required rows="8" className="w-full bg-white/5 border border-white/10 p-6 rounded-3xl outline-none focus:border-luma-blue/40 text-white resize-none font-medium text-sm leading-relaxed"
+                           value={formData.contentEn} onChange={e => setFormData({...formData, contentEn: e.target.value})} />
+              </div>
            </div>
 
            <div className="flex justify-between items-center bg-white/5 p-6 rounded-2xl border border-white/5">

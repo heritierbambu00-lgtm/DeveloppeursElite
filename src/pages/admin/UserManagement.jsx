@@ -19,7 +19,9 @@ const UserManagement = () => {
     password: '',
     fullName: '',
     jobTitle: '',
+    jobTitleEn: '',
     bio: '',
+    bioEn: '',
     icon: 'fa-code',
     systemRole: 'member',
     avatarUrl: ''
@@ -49,7 +51,7 @@ const UserManagement = () => {
   const openAddModal = () => {
     setIsEditMode(false);
     setEditingUserId(null);
-    setFormData({ email: '', password: '', fullName: '', jobTitle: '', bio: '', icon: 'fa-code', systemRole: 'member', avatarUrl: '' });
+    setFormData({ email: '', password: '', fullName: '', jobTitle: '', jobTitleEn: '', bio: '', bioEn: '', icon: 'fa-code', systemRole: 'member', avatarUrl: '' });
     setIsModalOpen(true);
   };
 
@@ -61,7 +63,9 @@ const UserManagement = () => {
       password: '',
       fullName: user.full_name || '',
       jobTitle: user.role || '',
+      jobTitleEn: user.role_en || '',
       bio: user.bio || '',
+      bioEn: user.bio_en || '',
       icon: user.icon || 'fa-code',
       systemRole: user.user_role || 'member',
       avatarUrl: user.avatar_url || ''
@@ -105,7 +109,9 @@ const UserManagement = () => {
           .update({
             full_name: formData.fullName,
             role: formData.jobTitle,
+            role_en: formData.jobTitleEn,
             bio: formData.bio,
+            bio_en: formData.bioEn,
             icon: formData.icon,
             user_role: formData.systemRole,
             avatar_url: formData.avatarUrl
@@ -139,7 +145,9 @@ const UserManagement = () => {
               id: authData.user.id,
               full_name: formData.fullName,
               role: formData.jobTitle,
+              role_en: formData.jobTitleEn,
               bio: formData.bio,
+              bio_en: formData.bioEn,
               icon: formData.icon,
               user_role: formData.systemRole,
               avatar_url: formData.avatarUrl
@@ -314,8 +322,13 @@ const UserManagement = () => {
                          className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold" placeholder="Nom du membre" />
                     </div>
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Titre du Poste</label>
+                       <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Titre du Poste (FR)</label>
                        <input required type="text" value={formData.jobTitle} onChange={e => setFormData({...formData, jobTitle: e.target.value})}
+                         className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold" placeholder="ex: CTO, Dev, Designer" />
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Titre du Poste (EN)</label>
+                       <input required type="text" value={formData.jobTitleEn} onChange={e => setFormData({...formData, jobTitleEn: e.target.value})}
                          className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold" placeholder="ex: CTO, Dev, Designer" />
                     </div>
                     <div className="space-y-2">
@@ -335,10 +348,17 @@ const UserManagement = () => {
                          className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-blue/40 text-white font-bold" placeholder="fa-code" />
                     </div>
                  </div>
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Biographie Technique</label>
-                    <textarea rows="4" value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})}
-                      className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-purple/40 text-white font-medium resize-none" placeholder="Expertise et vision de l'unité..."></textarea>
+                 <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Biographie Technique (FR)</label>
+                       <textarea rows="4" value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})}
+                         className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-purple/40 text-white font-medium resize-none" placeholder="Expertise et vision de l'unité..."></textarea>
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Biographie Technique (EN)</label>
+                       <textarea rows="4" value={formData.bioEn} onChange={e => setFormData({...formData, bioEn: e.target.value})}
+                         className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-luma-purple/40 text-white font-medium resize-none" placeholder="Technical bio in English..."></textarea>
+                    </div>
                  </div>
                  <button type="submit" disabled={isCreating || uploading}
                     className="w-full bg-neon-purple text-white p-5 rounded-[1.5rem] font-black text-sm uppercase tracking-[0.2em] shadow-2xl shadow-luma-purple/30 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-4">

@@ -134,9 +134,11 @@ const Blog = () => {
                   </div>
 
                   <div className="px-4 flex-1 flex flex-col">
-                     <h3 className="text-2xl font-display font-black text-ink dark:text-white mb-4 group-hover:text-clay transition-colors uppercase leading-tight line-clamp-2 italic">{post.title}</h3>
+                     <h3 className="text-2xl font-display font-black text-ink dark:text-white mb-4 group-hover:text-clay transition-colors uppercase leading-tight line-clamp-2 italic">
+                        {language === 'en' ? (post.title_en || post.title) : post.title}
+                     </h3>
                      <p className="text-smoke dark:text-white/40 text-[14.5px] font-medium line-clamp-3 leading-relaxed mb-10 flex-1">
-                        {post.excerpt}
+                        {language === 'en' ? (post.excerpt_en || post.excerpt) : post.excerpt}
                      </p>
 
                      <div className="flex items-center justify-between border-t border-line dark:border-white/10 pt-8 text-[10px] font-black uppercase tracking-widest text-smoke dark:text-white/20">

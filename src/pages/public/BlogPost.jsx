@@ -74,7 +74,7 @@ const BlogPost = () => {
                  </div>
 
                  <h1 className="text-4xl md:text-6xl lg:text-8xl font-display font-black text-white tracking-tighter uppercase leading-[0.95] mb-12 italic">
-                   {post.title}
+                   {language === 'en' ? (post.title_en || post.title) : post.title}
                  </h1>
 
                  <div className="flex items-center space-x-6 border-t border-white/5 pt-10">
@@ -110,11 +110,11 @@ const BlogPost = () => {
            <div className="max-w-3xl mx-auto text-left">
               <div className="prose prose-xl prose-slate dark:prose-invert max-w-none">
                  <p className="text-2xl lg:text-4xl font-bold text-ink/40 dark:text-white/40 italic leading-relaxed mb-16 border-l-4 border-luma-purple pl-8">
-                   {post.excerpt}
+                   {language === 'en' ? (post.excerpt_en || post.excerpt) : post.excerpt}
                  </p>
 
                  <div className="text-lg lg:text-2xl text-ink dark:text-white/80 leading-relaxed space-y-10 font-medium whitespace-pre-wrap">
-                   {post.content}
+                   {language === 'en' ? (post.content_en || post.content) : post.content}
                  </div>
               </div>
 
