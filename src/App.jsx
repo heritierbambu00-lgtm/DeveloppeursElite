@@ -43,7 +43,7 @@ import { useTheme } from './context/ThemeContext';
 import { supabase } from './lib/supabaseClient';
 
 // External Refresh Revelations for consistent animation triggering
-const refreshReveals = () => {
+window.refreshReveals = () => {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -78,6 +78,8 @@ const LandingPage = () => {
           console.warn("Table 'posts' non trouvée ou vide. Ignoré.");
         } else if (data) {
           setLatestPosts(data);
+          // Trigger animations for new blog elements
+          setTimeout(() => window.refreshReveals?.(), 100);
         }
       } catch (err) {
         console.error("Erreur Matrix Data:", err);
@@ -90,7 +92,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (!loading) {
-      setTimeout(refreshReveals, 150);
+      setTimeout(() => window.refreshReveals?.(), 150);
     }
   }, [loading]);
 

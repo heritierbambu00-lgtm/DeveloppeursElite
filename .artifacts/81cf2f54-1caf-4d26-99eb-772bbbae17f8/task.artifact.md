@@ -1,5 +1,6 @@
-- `[/]` Fix white screen and complete multi-language support
-    - `[ ]` Fix `Team.jsx` ReferenceError (CRITICAL)
-    - `[ ]` Update `LandingPage` in `App.jsx` with blog translations
-    - `[ ]` Move `Services` descriptions to `LanguageContext.jsx`
+- `[x]` Fix visibility issues for dynamic content (Team & Blog)
+    - `[x]` Make `refreshReveals` global in `App.jsx`
+    - `[x]` Call `refreshReveals` in `Team.jsx` after fetch
+    - `[x]` Call `refreshReveals` in `App.jsx` after fetching latest posts
+    - `[x]` Verify content visibility on the website
 - `[ ]` Push changes to GitHub

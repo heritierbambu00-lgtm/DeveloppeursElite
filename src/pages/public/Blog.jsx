@@ -30,6 +30,11 @@ const Blog = () => {
     setPosts(data || []);
     setFilteredPosts(data || []);
     setLoading(false);
+
+    // Trigger animations for blog list
+    setTimeout(() => {
+      if (window.refreshReveals) window.refreshReveals();
+    }, 200);
   }
 
   useEffect(() => {

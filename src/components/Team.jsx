@@ -20,6 +20,11 @@ const Team = () => {
 
       if (error) throw error;
       setTeamMembers(data || []);
+
+      // Trigger animations for newly rendered team nodes
+      setTimeout(() => {
+        if (window.refreshReveals) window.refreshReveals();
+      }, 200);
     } catch (error) {
       console.error('Error fetching team:', error.message);
     } finally {
