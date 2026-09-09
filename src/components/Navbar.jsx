@@ -27,13 +27,13 @@ const Navbar = () => {
   }, [open]);
 
   const navLinks = [
-    { num: '01', label: t('nav.about'), href: '#apropos' },
-    { num: '02', label: t('nav.services'), href: '#services' },
-    { num: '03', label: t('nav.projects'), href: '#produits' },
+    { num: '01', label: t('nav.about'), href: '/#apropos' },
+    { num: '02', label: t('nav.services'), href: '/#services' },
+    { num: '03', label: t('nav.projects'), href: '/#produits' },
     { num: '04', label: t('nav.blog'), href: '/blog' },
-    { num: '05', label: t('nav.partners'), href: '#partenaires' },
-    { num: '06', label: t('nav.team'), href: '#equipe' },
-    { num: '07', label: t('nav.contact'), href: '#contact' },
+    { num: '05', label: t('nav.partners'), href: '/#partenaires' },
+    { num: '06', label: t('nav.team'), href: '/#equipe' },
+    { num: '07', label: t('nav.contact'), href: '/#contact' },
   ];
 
   return (
@@ -46,7 +46,7 @@ const Navbar = () => {
         }`}
       >
         <nav className="mx-auto w-full max-w-[90rem] px-6 sm:px-8 xl:px-10 h-[60px] flex items-center justify-between gap-8">
-          <a href="#accueil" className="flex items-center gap-4 group min-w-0" aria-label="DEVELITE TECH">
+          <a href="/#accueil" className="flex items-center gap-4 group min-w-0" aria-label="DEVELITE TECH">
             <div className="relative">
               <Logo className="w-10 h-10 transition-all duration-500 group-hover:scale-110" />
               <div className="absolute -inset-1 bg-clay/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -84,7 +84,7 @@ const Navbar = () => {
             </Link>
 
             <a
-              href="#contact"
+              href="/#contact"
               className="hidden md:flex items-center gap-3 bg-ink dark:bg-clay text-white text-[10px] font-black uppercase tracking-[0.2em] px-8 py-4 rounded-2xl hover:bg-clayd hover:shadow-[0_0_20px_rgba(158,122,255,0.4)] transition-all duration-500"
             >
               {t('nav.contact')}
