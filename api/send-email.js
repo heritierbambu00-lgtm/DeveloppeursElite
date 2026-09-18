@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     secure: process.env.SMTP_SECURE === 'true', // true pour le port 465, false pour les autres
     auth: {
       user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      pass: process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s+/g, '') : '', // Nettoie les espaces du mot de passe
     },
   });
 
