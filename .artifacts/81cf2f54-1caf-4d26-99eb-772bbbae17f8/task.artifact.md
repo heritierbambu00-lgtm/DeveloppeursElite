@@ -1,5 +1,5 @@
 - `[x]` Install `nodemailer` dependency
 - `[x]` Update `api/send-email.js` to use SMTP (Nodemailer)
 - `[x]` Delete obsolete PHP files
-- `[ ]` Verify build and deployment readiness
-- `[ ]` Push changes to GitHub
+- `[x]` Verify build and deployment readiness
+- `[x]` Push changes to GitHub

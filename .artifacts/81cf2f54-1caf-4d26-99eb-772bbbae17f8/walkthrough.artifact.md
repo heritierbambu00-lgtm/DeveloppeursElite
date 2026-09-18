@@ -1,26 +1,38 @@
-# Walkthrough - Correction de l'affichage dynamique
+# Walkthrough - Migration SMTP vers Nodemailer (Multi-destinataires)
 
-J'ai résolu le problème où les membres de l'équipe et les articles de blog restaient invisibles sur le site.
+J'ai remplacé l'implémentation PHP (obsolète pour ce projet) par une solution native Node.js utilisant **Nodemailer**, ce qui permet d'envoyer des emails groupés de manière fiable sur Vercel.
 
-## Cause du problème
-Le site utilise un système d'animation "Reveal" qui rend les éléments visibles lorsqu'ils entrent dans l'écran. Cependant, ce système se lançait **avant** que les données de Supabase ne soient arrivées. Les nouveaux éléments (membres, articles) n'étaient donc pas pris en compte et restaient à 0% d'opacité.
+## Changements Effectués
 
-## Corrections apportées
+### 1. Backend & API
+- **Nouveau Script d'envoi** : Le fichier [send-email.js](file:///C:/Users/HERITIER/Desktop/JHJ/api/send-email.js) utilise désormais `nodemailer` avec un transporteur SMTP.
+- **Support Multi-destinataires** : Le script accepte maintenant un tableau d'adresses email, permettant d'envoyer un signal à toute la direction ou à plusieurs clients simultanément.
+- **Sécurité** : Utilisation stricte des variables d'environnement pour ne pas exposer vos mots de passe.
 
-### 1. Globalisation du moteur d'animation
-- La fonction `refreshReveals` est désormais accessible globalement via `window.refreshReveals`. Cela permet à n'importe quel composant de signaler qu'il vient de charger de nouveaux éléments.
+### 2. Dépendances
+- Ajout de `nodemailer` au [package.json](file:///C:/Users/HERITIER/Desktop/JHJ/package.json).
 
-### 2. Synchronisation des données et animations
-- **Composant Team** : Une fois que les membres sont chargés, le composant appelle `window.refreshReveals()` pour déclencher leur apparition.
-- **Page d'accueil (App.jsx)** : Même logique pour les 3 derniers articles affichés en bas de page.
-- **Page Blog** : La liste complète des articles appelle également cette fonction après le chargement.
+### 3. Nettoyage
+- Suppression des fichiers PHP inutilisables dans un environnement Node.js (`PHPMailer.php`, `SMTP.php`, `Exception.php`).
 
-## État actuel
-Le site est maintenant totalement dynamique. Chaque fois que des données arrivent de la base de données, l'interface se met à jour et les éléments apparaissent avec l'animation fluide prévue.
+---
+
+## Configuration Vercel Requise (IMPORTANT)
+
+Pour que l'envoi fonctionne, vous devez ajouter ces **Variables d'Environnement** dans votre projet sur le tableau de bord Vercel :
+
+| Nom de la variable | Valeur (Exemple) | Description |
+| :--- | :--- | :--- |
+| `SMTP_HOST` | `smtp.gmail.com` | Votre serveur mail sortant |
+| `SMTP_PORT` | `465` | Port SSL (recommandé) ou 587 |
+| `SMTP_USER` | `votre-email@gmail.com` | Identifiant de connexion |
+| `SMTP_PASS` | `votre-mot-de-passe-app` | Mot de passe (ou mdp d'application) |
+| `SMTP_SECURE` | `true` | Mettre à `true` si le port est 465, sinon `false` |
 
 > [!TIP]
-> Les modifications ont été envoyées sur GitHub. Le site en ligne sera mis à jour automatiquement par Vercel dans quelques instants.
+> Si vous utilisez **Gmail**, vous devez créer un "Mot de passe d'application" dans les paramètres de sécurité de votre compte Google pour que la connexion soit autorisée.
 
-render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/App.jsx)
-render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/components/Team.jsx)
-render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/pages/public/Blog.jsx)
+---
+
+## Vérification du Déploiement
+Le projet a été testé localement via `npm run build` et les modifications ont été envoyées sur GitHub. Le déploiement Vercel se mettra à jour automatiquement.
