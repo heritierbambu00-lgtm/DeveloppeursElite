@@ -1,27 +1,26 @@
-# Walkthrough - Support Multi-langue Dynamique
+# Walkthrough - Correction de l'affichage dynamique
 
-J'ai implémenté le support complet de l'anglais pour tout le contenu dynamique (Équipe et Blog) géré via Supabase.
+J'ai résolu le problème où les membres de l'équipe et les articles de blog restaient invisibles sur le site.
 
-## Changements Majeurs
+## Cause du problème
+Le site utilise un système d'animation "Reveal" qui rend les éléments visibles lorsqu'ils entrent dans l'écran. Cependant, ce système se lançait **avant** que les données de Supabase ne soient arrivées. Les nouveaux éléments (membres, articles) n'étaient donc pas pris en compte et restaient à 0% d'opacité.
 
-### 1. Synchronisation avec le Sélecteur de Langue
-- Les composants **Team**, **Blog** (liste) et **BlogPost** (détail) détectent désormais la langue sélectionnée (FR/EN).
-- **Logique de Fallback** : Si le contenu en anglais n'est pas encore saisi dans la base de données, le système affiche automatiquement la version française par défaut pour éviter les zones vides.
+## Corrections apportées
 
-### 2. Mise à jour de la Console Admin
-- **Gestion de l'Équipe** : Ajout de nouveaux champs pour saisir le titre du poste et la biographie technique en anglais.
-- **Journal (Blog)** : Ajout de champs pour le titre, le résumé (excerpt) et le contenu complet en anglais.
+### 1. Globalisation du moteur d'animation
+- La fonction `refreshReveals` est désormais accessible globalement via `window.refreshReveals`. Cela permet à n'importe quel composant de signaler qu'il vient de charger de nouveaux éléments.
 
-## Instructions pour la Base de Données
+### 2. Synchronisation des données et animations
+- **Composant Team** : Une fois que les membres sont chargés, le composant appelle `window.refreshReveals()` pour déclencher leur apparition.
+- **Page d'accueil (App.jsx)** : Même logique pour les 3 derniers articles affichés en bas de page.
+- **Page Blog** : La liste complète des articles appelle également cette fonction après le chargement.
 
-> [!IMPORTANT]
-> Pour que le contenu en anglais s'affiche réellement, vous devez ajouter ces colonnes dans votre interface Supabase :
-> - Table **`profiles`** : `role_en`, `bio_en`
-> - Table **`posts`** : `title_en`, `excerpt_en`, `content_en`
+## État actuel
+Le site est maintenant totalement dynamique. Chaque fois que des données arrivent de la base de données, l'interface se met à jour et les éléments apparaissent avec l'animation fluide prévue.
 
-## État de la Synchronisation
-Toutes les modifications ont été envoyées sur le dépôt GitHub.
+> [!TIP]
+> Les modifications ont été envoyées sur GitHub. Le site en ligne sera mis à jour automatiquement par Vercel dans quelques instants.
 
+render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/App.jsx)
 render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/components/Team.jsx)
-render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/pages/admin/UserManagement.jsx)
-render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/pages/admin/BlogManager.jsx)
+render_diffs(file:///C:/Users/HERITIER/Desktop/JHJ/src/pages/public/Blog.jsx)

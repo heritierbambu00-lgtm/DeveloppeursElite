@@ -1,6 +1,5 @@
-- `[x]` Fix visibility issues for dynamic content (Team & Blog)
-    - `[x]` Make `refreshReveals` global in `App.jsx`
-    - `[x]` Call `refreshReveals` in `Team.jsx` after fetch
-    - `[x]` Call `refreshReveals` in `App.jsx` after fetching latest posts
-    - `[x]` Verify content visibility on the website
+- `[x]` Install `nodemailer` dependency
+- `[x]` Update `api/send-email.js` to use SMTP (Nodemailer)
+- `[x]` Delete obsolete PHP files
+- `[ ]` Verify build and deployment readiness
 - `[ ]` Push changes to GitHub
