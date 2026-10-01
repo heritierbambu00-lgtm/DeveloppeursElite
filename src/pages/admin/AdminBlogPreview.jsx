@@ -175,10 +175,7 @@ const AdminBlogPreview = () => {
 };
 
 const LogoIcon = ({ className }) => (
-  <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="15" y="15" width="50" height="70" rx="6" fill="currentColor" />
-    <path d="M65 15H75C83.2843 15 90 21.7157 90 30V70C90 78.2843 83.2843 85 75 85H65V15Z" fill="currentColor" />
-  </svg>
+  <img src="/logo.jpeg" alt="" className={`object-contain ${className}`} />
 );
 
 export default AdminBlogPreview;
