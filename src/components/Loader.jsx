@@ -19,18 +19,18 @@ const Loader = ({ onFinish }) => {
   return (
     <div id="loader" className={isDone ? 'is-done' : ''} aria-hidden="true">
       {/* Glow Backdrop */}
-      <div className="absolute w-80 h-80 bg-gradient-to-tr from-luma-purple/15 to-luma-blue/15 rounded-full blur-3xl pointer-events-none animate-pulse" />
+      <div className="absolute w-96 h-96 bg-gradient-to-tr from-luma-purple/20 to-luma-blue/20 rounded-full blur-3xl pointer-events-none animate-pulse" />
 
       {/* Status Badge */}
-      <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ink/5 border border-ink/10 text-[10px] font-black uppercase tracking-[0.3em] text-ink/70 ld-sub">
+      <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ink/5 border border-ink/10 text-[10px] font-black uppercase tracking-[0.3em] text-ink/70 ld-sub shadow-sm">
         <span className="w-2 h-2 rounded-full bg-luma-purple animate-ping" />
         DEVELITE OS v2.0
       </div>
 
-      {/* Large Logo Frame */}
+      {/* Extremely Large & Rounded Logo Frame */}
       <div className="ld-mark mb-6 relative">
-        <div className="absolute inset-0 bg-luma-purple/10 rounded-3xl blur-2xl filter" />
-        <Logo className="w-28 h-28 sm:w-36 sm:h-36 relative z-10 drop-shadow-[0_15px_35px_rgba(0,0,0,0.12)]" />
+        <div className="absolute inset-0 bg-luma-purple/20 rounded-[3rem] blur-3xl filter" />
+        <Logo className="w-40 h-40 sm:w-52 sm:h-52 relative z-10 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.18)] object-cover border-2 border-white/40 p-2 bg-white/80 backdrop-blur-md" />
       </div>
 
       <div className="ld-word" aria-label={word}>
@@ -49,7 +49,7 @@ const Loader = ({ onFinish }) => {
       </p>
 
       {/* Progress Bar */}
-      <div className="ld-track mt-8 w-56 sm:w-72 h-[3px] bg-mist overflow-hidden rounded-full relative">
+      <div className="ld-track mt-8 w-60 sm:w-80 h-[3px] bg-mist overflow-hidden rounded-full relative">
         <div className="ld-bar h-full bg-gradient-to-r from-luma-purple via-luma-blue to-luma-purple rounded-full"></div>
       </div>
 
