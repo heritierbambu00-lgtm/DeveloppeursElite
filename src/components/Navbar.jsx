@@ -8,7 +8,7 @@ import { useLanguage } from '../context/LanguageContext';
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
