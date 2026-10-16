@@ -61,7 +61,7 @@ const Navbar = () => {
           </a>
 
           {/* Desktop Links */}
-          <div className="hidden lg:flex items-center gap-8 xl:gap-10 text-[11px] font-black uppercase tracking-[0.2em] text-ink/40 dark:text-white/40">
+          <div className="hidden lg:flex items-center gap-3 xl:gap-5 text-[10px] font-black uppercase tracking-[0.15em] text-ink/50 dark:text-white/50">
             {navLinks.map((link) => (
               <a key={link.num} href={link.href} className="hover:text-clay dark:hover:text-clay transition-colors relative group py-2">
                 {link.label}
