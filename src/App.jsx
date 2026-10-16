@@ -10,6 +10,7 @@ import SkillsMatrix from './components/SkillsMatrix';
 import Impact from './components/Impact';
 import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
+import ApplyForm from './components/ApplyForm';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import Loader from './components/Loader';
@@ -33,6 +34,7 @@ const TestimonialManager = lazy(() => import('./pages/admin/TestimonialManager')
 const BlogManager = lazy(() => import('./pages/admin/BlogManager'));
 const AdminBlogPreview = lazy(() => import('./pages/admin/AdminBlogPreview'));
 const SkillsManager = lazy(() => import('./pages/admin/SkillsManager'));
+const ApplicationsManager = lazy(() => import('./pages/admin/ApplicationsManager'));
 
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -187,6 +189,7 @@ const LandingPage = () => {
 
         <Testimonials />
         <Contact />
+        <ApplyForm />
       </main>
       <Footer />
       <PublicAIChatbot />
@@ -261,6 +264,11 @@ function App() {
                 <Route path="inbox" element={
                   <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager']}>
                     <Inbox />
+                  </ProtectedRoute>
+                } />
+                <Route path="applications" element={
+                  <ProtectedRoute allowedRoles={['CEO', 'CTO', 'COO', 'admin', 'manager', 'member']}>
+                    <ApplicationsManager />
                   </ProtectedRoute>
                 } />
               </Route>

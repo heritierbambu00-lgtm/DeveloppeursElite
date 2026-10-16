@@ -50,6 +50,7 @@ const AdminLayout = () => {
     { label: 'Analytics', icon: 'fa-chart-pie', path: '/admin/analytics', roles: ['CEO', 'CTO', 'COO', 'admin'] },
     { label: 'Témoignages', icon: 'fa-comment-quote', path: '/admin/testimonials', roles: ['CEO', 'CTO', 'admin'] },
     { label: 'Messages', icon: 'fa-comment-dots', path: '/admin/inbox', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager'] },
+    { label: 'Candidatures', icon: 'fa-id-card', path: '/admin/applications', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager', 'member'] },
     { label: 'Équipe', icon: 'fa-user-group', path: '/admin/users', roles: ['CEO', 'CTO', 'admin', 'manager'] },
     { label: 'Mon Profil', icon: 'fa-user-gear', path: '/admin/profile', roles: ['CEO', 'CTO', 'COO', 'admin', 'manager', 'member'] },
   ];
