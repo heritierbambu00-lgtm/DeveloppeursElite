@@ -1,38 +1,35 @@
-# Implementation Plan - GSAP & Three.js High-End Scroll Animations Integration
+# Implementation Plan - Global Multi-Type & Multi-Color Three.js & GSAP Animations Everywhere
 
-Integrate **GSAP** (GreenSock Animation Platform with ScrollTrigger) and **Three.js** across the entire platform to provide high-end 3D background canvases, fluid scroll-driven animations, parallax effects, and cinematic interactions.
+Expand Three.js 3D visuals and GSAP scroll animations across **every single page and layout** (Landing Page, Blog, Admin Dashboards, Login, etc.) with diverse 3D types (particles, floating rings, geometric cubes/spheres) and a rich palette of neon colors (Purple, Electric Blue, Neon Green, Orange).
 
 ## User Review Required
 
 > [!IMPORTANT]
-> - **Dependencies**: We will install `gsap` and `three` via npm.
-> - **Performance & UX**: Three.js 3D canvas will render as an immersive background matrix effect (particles/nodes) with optimized render loops, and GSAP ScrollTrigger will power smooth section reveals and parallax.
+> - **Global Integration**: `<ThreeBackground />` and `<GsapScrollProvider />` will be moved to the root App level so they run across all pages and routes.
+> - **Diverse 3D Elements & Colors**: Three.js scene will feature multi-colored particles, spinning geometric wireframe rings, and floating cubes with vibrant neon hues (`#9E7AFF`, `#53B1FD`, `#00ff88`, `#FF4D00`).
 
 ## Open Questions
 
-- None. The goal is high-end cinematic scrolling and 3D effects across the site.
+- None.
 
 ## Proposed Changes
 
-### Dependencies & Setup
-#### [MODIFY] [package.json](file:///C:/Users/HERITIER/Desktop/JHJ/package.json)
-- Add `gsap` and `three` to dependencies.
+### Animation & 3D Core Components
 
-### 3D & Animation Core Components
+#### [MODIFY] [ThreeBackground.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/ThreeBackground.jsx)
+- Enhance with multiple Three.js geometry types (particle cloud + rotating wireframe torus rings + floating colored cubes).
+- Introduce multi-colored materials (Purple, Blue, Green, Orange) with additive blending and smooth mouse/scroll reactivity.
 
-#### [NEW] [ThreeBackground.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/ThreeBackground.jsx)
-- Interactive Three.js particle / node matrix background responding to mouse movement and scroll.
-
-#### [NEW] [GsapScrollProvider.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/GsapScrollProvider.jsx)
-- Global GSAP ScrollTrigger setup for smooth section reveals, pin effects, and parallax.
+#### [MODIFY] [GsapScrollProvider.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/GsapScrollProvider.jsx)
+- Ensure GSAP ScrollTrigger activates globally on route changes and across all pages.
 
 #### [MODIFY] [App.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/App.jsx)
-- Integrate `<ThreeBackground />` and `<GsapScrollProvider />` into the landing page and root layout.
+- Lift `<ThreeBackground />` and `<GsapScrollProvider />` to the root router level so they persist and animate every page in the app.
 
 ## Verification Plan
 
 ### Automated Tests
-- Run `npm run build` to verify clean compilation with GSAP and Three.js.
+- Run `npm run build` to verify clean compilation.
 
 ### Manual Verification
-- Deploy/run locally and test fluid scroll animations and 3D background interactions.
+- Verify that 3D multi-color shapes and GSAP scroll animations are active across all views (Landing, Blog, Admin).

@@ -102,8 +102,6 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-paper dark:bg-luma-dark selection:bg-clay selection:text-paper font-body text-ink dark:text-white antialiased transition-colors duration-500 relative">
-      <ThreeBackground />
-      <GsapScrollProvider />
       {loading && <Loader onFinish={() => setLoading(false)} />}
       <CustomCursor />
       <Navbar />
@@ -206,6 +204,8 @@ function App() {
     <ThemeProvider>
       <LanguageProvider>
         <Router>
+          <ThreeBackground />
+          <GsapScrollProvider />
           <Suspense fallback={
             <div className="min-h-screen bg-luma-dark flex items-center justify-center">
               <div className="w-10 h-10 border-4 border-luma-purple border-t-transparent rounded-full animate-spin"></div>
