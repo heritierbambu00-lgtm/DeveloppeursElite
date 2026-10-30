@@ -15,6 +15,8 @@ import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import Loader from './components/Loader';
 import PublicAIChatbot from './components/PublicAIChatbot';
+import ThreeBackground from './components/ThreeBackground';
+import GsapScrollProvider from './components/GsapScrollProvider';
 
 // Lazy load heavy pages
 const Blog = lazy(() => import('./pages/public/Blog'));
@@ -99,11 +101,13 @@ const LandingPage = () => {
   }, [loading]);
 
   return (
-    <div className="min-h-screen bg-paper dark:bg-luma-dark selection:bg-clay selection:text-paper font-body text-ink dark:text-white antialiased transition-colors duration-500">
+    <div className="min-h-screen bg-paper dark:bg-luma-dark selection:bg-clay selection:text-paper font-body text-ink dark:text-white antialiased transition-colors duration-500 relative">
+      <ThreeBackground />
+      <GsapScrollProvider />
       {loading && <Loader onFinish={() => setLoading(false)} />}
       <CustomCursor />
       <Navbar />
-      <main id="accueil">
+      <main id="accueil" className="relative z-10">
         <Hero />
         <Marquee />
         <section id="apropos" className="py-24 lg:py-32 bg-paper dark:bg-luma-dark relative overflow-hidden transition-colors duration-500">

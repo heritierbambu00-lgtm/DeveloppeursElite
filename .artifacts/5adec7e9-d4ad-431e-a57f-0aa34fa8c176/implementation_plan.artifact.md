@@ -1,41 +1,38 @@
-# Implementation Plan - Job Application Form (Formulaire pour Postuler)
+# Implementation Plan - GSAP & Three.js High-End Scroll Animations Integration
 
-Add a dedicated job application form ("Formulaire pour Postuler") to the platform as requested by the CEO, allowing candidates to apply for positions, submit their CV/details, and store submissions in Supabase (and notify admins/CEO).
+Integrate **GSAP** (GreenSock Animation Platform with ScrollTrigger) and **Three.js** across the entire platform to provide high-end 3D background canvases, fluid scroll-driven animations, parallax effects, and cinematic interactions.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> Please review the proposed components and fields for the application form:
-> - Name, Email, Phone, Position applied for (e.g., Software Engineer, AI Specialist, UI/UX Designer, Marketing, Other), Cover Letter / Message, and CV (file upload or link).
+> - **Dependencies**: We will install `gsap` and `three` via npm.
+> - **Performance & UX**: Three.js 3D canvas will render as an immersive background matrix effect (particles/nodes) with optimized render loops, and GSAP ScrollTrigger will power smooth section reveals and parallax.
 
 ## Open Questions
 
-- Should the application form be integrated directly as a section on the landing page (e.g., `#postuler`) or as a dedicated subpage/modal? *(Proposed: A prominent section on the landing page + quick navigation link in Navbar/Footer)*.
-- Should applications be stored in a new Supabase table `applications`? *(Proposed: Yes, with admin notification support)*.
+- None. The goal is high-end cinematic scrolling and 3D effects across the site.
 
 ## Proposed Changes
 
-### Component & UI Layer
+### Dependencies & Setup
+#### [MODIFY] [package.json](file:///C:/Users/HERITIER/Desktop/JHJ/package.json)
+- Add `gsap` and `three` to dependencies.
 
-#### [NEW] [ApplyForm.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/ApplyForm.jsx)
-- Create a modern, responsive application form component matching the site's dark/light aesthetics (Bricolage Grotesque, Tailwind CSS).
-- Fields: Full Name, Email, Phone Number, Position/Role selector, Cover Letter textarea, and CV upload input.
-- Handling: Supabase insertion into an `applications` table (or contact/applications table), success feedback state.
+### 3D & Animation Core Components
 
-#### [MODIFY] [Navbar.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/Navbar.jsx)
-- Add a "Postuler" / "Carrières" quick link in the navigation menu pointing to the application section.
+#### [NEW] [ThreeBackground.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/ThreeBackground.jsx)
+- Interactive Three.js particle / node matrix background responding to mouse movement and scroll.
 
-#### [MODIFY] [Footer.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/Footer.jsx)
-- Add quick links for careers / application.
+#### [NEW] [GsapScrollProvider.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/GsapScrollProvider.jsx)
+- Global GSAP ScrollTrigger setup for smooth section reveals, pin effects, and parallax.
 
 #### [MODIFY] [App.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/App.jsx)
-- Integrate `<ApplyForm />` into the landing page flow.
+- Integrate `<ThreeBackground />` and `<GsapScrollProvider />` into the landing page and root layout.
 
 ## Verification Plan
 
 ### Automated Tests
-- Run `npm run build` to ensure all components compile without errors.
+- Run `npm run build` to verify clean compilation with GSAP and Three.js.
 
 ### Manual Verification
-- Deploy/run locally and test submitting the application form with various fields.
-- Verify success feedback and database insertion.
+- Deploy/run locally and test fluid scroll animations and 3D background interactions.

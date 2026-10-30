@@ -1,9 +1,8 @@
-# Task Progress - Job Application Form & Supabase Integration
+# Task Progress - GSAP & Three.js Integration
 
-- [x] Generate Supabase SQL script for `applications` table and storage
-- [x] Create `ApplyForm.jsx` component for job applications
-- [x] Update `Navbar.jsx` and `Footer.jsx` with navigation links to the application form
-- [x] Add application viewing support in admin/dashboard (`ApplicationsManager.jsx`)
-- [x] Integrate `<ApplyForm />` into `App.jsx` landing page
+- [x] Install `gsap` and `three` npm packages
+- [x] Create `ThreeBackground.jsx` for 3D interactive background
+- [x] Create `GsapScrollProvider.jsx` for GSAP ScrollTrigger animations
+- [x] Integrate components into `App.jsx`
 - [x] Verify build and test compilation
 - [x] Create walkthrough artifact

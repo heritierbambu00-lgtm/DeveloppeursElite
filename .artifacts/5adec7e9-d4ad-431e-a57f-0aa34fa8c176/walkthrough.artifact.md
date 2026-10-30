@@ -1,30 +1,22 @@
-# Walkthrough - Job Application Feature & Supabase Integration
+# Walkthrough - GSAP & Three.js High-End Scroll Animations Integration
 
-Implemented the job application feature ("Formulaire pour Postuler") requested by the CEO, along with Supabase backend synchronization, team viewing access, and COO validation workflow.
+Successfully integrated **GSAP (ScrollTrigger)** and **Three.js** across the entire platform for high-end cinematic scroll animations and interactive 3D particle matrix backgrounds.
 
 ## Changes
 
-### [NEW] [supabase_applications.sql](file:///C:/Users/HERITIER/Desktop/JHJ/.artifacts/5adec7e9-d4ad-431e-a57f-0aa34fa8c176/scratch/supabase_applications.sql)
-- SQL script to create the `applications` table and Supabase Storage bucket (`cvs`) for candidate CV uploads.
+### [NEW] [ThreeBackground.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/ThreeBackground.jsx)
+- Created an immersive 3D interactive particle matrix background using Three.js that responds smoothly to mouse movement and scroll.
 
-### [NEW] [ApplyForm.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/ApplyForm.jsx)
-- Created the job application form section on the landing page allowing candidates to submit their name, email, phone, target position, cover letter, and CV file.
-
-### [NEW] [ApplicationsManager.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/pages/admin/ApplicationsManager.jsx)
-- Created an admin dashboard module where all team members can view submitted applications, and the COO can validate / update candidate statuses (Pending, Under Review, Accepted, Rejected).
+### [NEW] [GsapScrollProvider.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/GsapScrollProvider.jsx)
+- Configured GSAP and ScrollTrigger for high-end section reveals, smooth staggers, and parallax effects across all sections.
 
 ### [MODIFY] [App.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/App.jsx)
-- Integrated `<ApplyForm />` into the landing page flow.
-- Registered `/admin/applications` route for team and COO access.
+- Integrated `<ThreeBackground />` and `<GsapScrollProvider />` into the main landing page flow.
 
-### [MODIFY] [Navbar.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/components/Navbar.jsx) & [AdminLayout.jsx](file:///C:/Users/HERITIER/Desktop/JHJ/src/layouts/AdminLayout.jsx)
-- Added quick navigation links ("Postuler" / "Candidatures") both publicly and in the admin panel.
+### [MODIFY] [package.json](file:///C:/Users/HERITIER/Desktop/JHJ/package.json)
+- Added `gsap` and `three` dependencies.
 
 ## Verification Results
 
 ### Automated Tests
-- Ran `npm run build` successfully with zero errors. All assets and lazy-loaded chunks compiled cleanly.
-
-### SQL Execution
-> [!IMPORTANT]
-> Remember to execute the SQL script located at [.artifacts/5adec7e9-d4ad-431e-a57f-0aa34fa8c176/scratch/supabase_applications.sql](file:///C:/Users/HERITIER/Desktop/JHJ/.artifacts/5adec7e9-d4ad-431e-a57f-0aa34fa8c176/scratch/supabase_applications.sql) in your Supabase SQL Editor to create the `applications` table and `cvs` storage bucket.
+- Ran `npm run build` successfully with 0 errors. All assets and bundle chunks compiled cleanly.
