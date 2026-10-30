@@ -1,7 +1,5 @@
-# Task Progress - Global Multi-Type & Multi-Color Three.js & GSAP
+# Task Progress - Landing Page Sci-Fi Cyberpunk Redesign
 
-- [x] Enhance `ThreeBackground.jsx` with multi-colored shapes, particles, rings, and cubes
-- [x] Ensure `GsapScrollProvider.jsx` runs globally across all routes
-- [x] Lift components to root level in `App.jsx`
+- [x] Update `LandingPage` container in `App.jsx` to `bg-[#050810]` with cosmic cyberpunk ambient glow effects matching `LoginPage.jsx`
 - [x] Verify build and test compilation
 - [x] Create walkthrough artifact

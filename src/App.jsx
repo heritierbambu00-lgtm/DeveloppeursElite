@@ -101,14 +101,19 @@ const LandingPage = () => {
   }, [loading]);
 
   return (
-    <div className="min-h-screen bg-paper dark:bg-luma-dark selection:bg-clay selection:text-paper font-body text-ink dark:text-white antialiased transition-colors duration-500 relative">
+    <div className="min-h-screen bg-[#050810] selection:bg-[#00ff88]/30 selection:text-white font-body text-white antialiased transition-colors duration-500 relative overflow-hidden">
+      {/* Cosmic Cyberpunk Ambient Glows */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#9E7AFF]/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 right-1/4 w-[500px] h-[500px] bg-[#00ff88]/5 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-1/4 left-1/3 w-[600px] h-[600px] bg-[#53B1FD]/10 rounded-full blur-[180px] pointer-events-none" />
+
       {loading && <Loader onFinish={() => setLoading(false)} />}
       <CustomCursor />
       <Navbar />
       <main id="accueil" className="relative z-10">
         <Hero />
         <Marquee />
-        <section id="apropos" className="py-24 lg:py-32 bg-paper dark:bg-luma-dark relative overflow-hidden transition-colors duration-500">
+        <section id="apropos" className="py-24 lg:py-32 bg-transparent relative overflow-hidden transition-colors duration-500">
           <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem] grid lg:grid-cols-12 gap-12 relative z-10">
             <div className="lg:col-span-4 min-w-0">
               <p className="rv text-[11px] font-black uppercase tracking-[0.4em] text-clay">{t('section.about.badge')}</p>
@@ -140,7 +145,7 @@ const LandingPage = () => {
         <Impact />
 
         {/* BLOG SUMMARY SECTION */}
-        <section className="py-32 bg-white dark:bg-luma-dark text-left transition-colors duration-500">
+        <section className="py-32 bg-transparent text-left transition-colors duration-500">
            <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 xl:px-10 2xl:max-w-[90rem]">
               <div className="flex justify-between items-end mb-16 gap-6">
                  <div>
